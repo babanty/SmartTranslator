@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33815.320
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.App", "SmartTranslator.App\SmartTranslator.App.csproj", "{78861597-105C-4D60-AF65-2A718E6D75E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.App", "SmartTranslator.App\SmartTranslator.App.csproj", "{78861597-105C-4D60-AF65-2A718E6D75E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.TranslationCore", "SmartTranslator.TranslationCore\SmartTranslator.TranslationCore.csproj", "{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.Enums", "SmartTranslator.Enums\SmartTranslator.Enums.csproj", "{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{78861597-105C-4D60-AF65-2A718E6D75E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78861597-105C-4D60-AF65-2A718E6D75E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78861597-105C-4D60-AF65-2A718E6D75E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
