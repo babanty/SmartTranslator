@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using OpenAI;
+﻿using OpenAI;
 using OpenAI.Interfaces;
 using OpenAI.Managers;
 using OpenAI.ObjectModels;
@@ -16,10 +15,8 @@ public class GptTranslator : IGptTranslator
 
     private readonly GptTranslationOptions _options;
     private readonly IChatCompletionService _textChatGpt;
-    private readonly TranslationResultProvider _translationResultProvider;
 
-    public GptTranslator(GptTranslationOptions options,
-                         TranslationResultProvider translationResultHolder)
+    public GptTranslator(GptTranslationOptions options)
     {
         _options = options;
 
@@ -27,68 +24,22 @@ public class GptTranslator : IGptTranslator
         {
             ApiKey = _options.ApiKey,
         });
-        _translationResultProvider = translationResultHolder;
     }
 
 
     /// <inheritdoc/>
-    public async Task<TranslationResult> Translate(string text, Language from, Language to, TranslationStyle translationStyle)
+    public async Task<string> Translate(string text, string context, Language from, Language to, TranslationStyle translationStyle)
     {
         var messages = new List<ChatMessage>()
         {
-            ChatMessage.FromSystem($"You are a translator from {from} to {to}."),
-            ChatMessage.FromUser($"Translate into {to} using {translationStyle}: {text}")
+            ChatMessage.FromUser($"Translate this text into {to}: {text}; context:{context}; style: {translationStyle}")
         };
 
         var translation = await SendMessages(text, messages);
 
-        var result = new TranslationResult()
-        {
-            LanguageTo = to,
-            Translation = translation
-        };
-
-        _translationResultProvider.Result = result;
-        return result;
+        return translation;
     }
-
-
-    public async Task<TranslationResult> Translate(string text, (Language, Language) couple, TranslationStyle translationStyle)
-    {
-        // первая попытка
-        try
-        {
-            var messages = new List<ChatMessage>()
-            {
-                ChatMessage.FromSystem($@"You are a {couple.Item1}-{couple.Item2} translator."),
-                ChatMessage.FromUser($"JSON format: {{ \"Translation\": \"\", \"LanguageTo\": \"\" }}  Where the variable LanguageTo can only be {couple.Item1} or {couple.Item2}. Translate into JSON using {translationStyle} this text: '{text}'")
-            };
-
-            return await Translate(text, messages);
-        }
-        // вторая попытка
-        catch
-        {
-            var messages = new List<ChatMessage>()
-            {
-                ChatMessage.FromSystem($@"You are a {couple.Item1}-{couple.Item2} translator. Answer in JSON format: {{ ""Translation"": """", ""LanguageTo"": 0 }}  Where the variable LanguageTo can only be {(int)couple.Item1} - {couple.Item1}, {(int)couple.Item2} - {couple.Item2}."),
-                ChatMessage.FromUser($"Translate using {translationStyle}: {text}")
-            };
-
-            return await Translate(text, messages);
-        }
-    }
-
-    private async Task<TranslationResult> Translate(string text, List<ChatMessage> messages)
-    {
-        var responseJson = await SendMessages(text, messages);
-
-        var result = JsonConvert.DeserializeObject<TranslationResult>(responseJson);
-        _translationResultProvider.Result = result;
-
-        return result;
-    }
-
+ 
 
     private async Task<string> SendMessages(string text, List<ChatMessage> messages)
     {

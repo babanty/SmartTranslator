@@ -1,4 +1,4 @@
-﻿namespace SmartTranslator.TranslationCore;
+﻿namespace SmartTranslator.TranslationCore.Exceptions;
 
 public class TextIsTooLongException : Exception
 {

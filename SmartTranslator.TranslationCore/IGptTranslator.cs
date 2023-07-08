@@ -1,15 +1,15 @@
 ﻿using SmartTranslator.Enums;
-using SmartTranslator.TranslationCore.Exceptions;
 
 namespace SmartTranslator.TranslationCore;
 
+
 public interface IGptTranslator
 {
-    /// <exception cref="TextIsTooLongException"/>
-    /// <exception cref="FailedToTranslateException/">
-    Task<TranslationResult> Translate(string text, Language from, Language to, TranslationStyle translationStyle);
-
-    /// <exception cref="TextIsTooLongException"/>
-    /// <exception cref="FailedToTranslateException/">
-    Task<TranslationResult> Translate(string text, (Language, Language) couple, TranslationStyle translationStyle);
+    /// <summary> Regular translation </summary>
+    /// <param name="text"> Text to translate </param>
+    /// <param name="context"> Context passed to prompt </param>
+    /// <param name="to"> Language to translate to </param>
+    /// <param name="from"> Language to translate from </param>
+    /// <param name="translationStyle"> Translation style </param>
+    Task<string> Translate(string text, string context, Language from, Language to, TranslationStyle translationStyle = TranslationStyle.СonversationalStyle);
 }
