@@ -276,3 +276,4 @@ ChatGptTranslator.App/appsettings.rus_fra.json
 ChatGptTranslator.App/appsettings.rus_gre.json
 ChatGptTranslator.App/appsettings.rus_tur.json
 ChatGptTranslator.App/appsettings.rus_uzb.json
+/SmartTranslator.TranslationCore.Tests/optionsConfig.json
