@@ -7,7 +7,7 @@ using SmartTranslator.Enums;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Exceptions;
 
-namespace ChatGptTranslator.Management.GptTranslation;
+namespace SmartTranslator.TranslationCore;
 
 public class GptTranslator : IGptTranslator
 {
