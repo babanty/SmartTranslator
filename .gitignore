@@ -269,11 +269,4 @@ CRM.*Domain*/
 *.db-wal
 
 # Secrets
-ChatGptTranslator.App/appsettings.rus_deu.json
-ChatGptTranslator.App/appsettings.rus_eng.json
-ChatGptTranslator.App/appsettings.rus_esp.json
-ChatGptTranslator.App/appsettings.rus_fra.json
-ChatGptTranslator.App/appsettings.rus_gre.json
-ChatGptTranslator.App/appsettings.rus_tur.json
-ChatGptTranslator.App/appsettings.rus_uzb.json
-/SmartTranslator.TranslationCore.Tests/optionsConfig.json
+SmartTranslator.TranslationCore.Tests/optionsConfig.json
