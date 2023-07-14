@@ -5,26 +5,32 @@ namespace SmartTranslator.TranslationCore.Tests
 {
     public class GptTranslationTest
     {
-        private readonly IntegrationTestOptions _testOptions = new IntegrationTestOptions();
-        private readonly GptTranslationOptions _options = new GptTranslationOptions();
+        private readonly IntegrationTestOptions _testOptions;
+        private readonly GptTranslationOptions _options;
 
         public GptTranslationTest()
         {
             _testOptions = IntegrationTestOptionsProvider.GetIntegrationTestOptions();
-            _options.ApiKey = _testOptions.ApiKey;
-            _options.MaxTokens = _testOptions.MaxTokens;
+            _options = new GptTranslationOptions
+            {
+                ApiKey = _testOptions.ApiKey,
+                MaxTokens = _testOptions.MaxTokens
+            };
         }
 
         [Fact]
-        public void Translate_ValidInputWithoutContext_TranslatesCorrectly()
+        public async Task Translate_ValidInputWithoutContext_TranslatesCorrectly()
         {
             // Arrange
             GptTranslator translator = new (_options);
             string text = "Hello world!";
+            string context = "";
+            Language from = Language.English;
+            Language to = Language.Russian;
+            TranslationStyle translationStyle = TranslationStyle.СonversationalStyle;
 
             // Act
-            var asyncResult = translator.Translate(text, "", Language.English, Language.Russian, TranslationStyle.СonversationalStyle);
-            string result = asyncResult.Result;
+            var result = await translator.Translate(text, context, from, to, translationStyle);
 
             // Assert
             Assert.NotNull(result);
