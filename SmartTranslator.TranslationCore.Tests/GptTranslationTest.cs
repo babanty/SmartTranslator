@@ -22,12 +22,12 @@ namespace SmartTranslator.TranslationCore.Tests
         public async Task Translate_ValidInputWithoutContext_TranslatesCorrectly()
         {
             // Arrange
-            GptTranslator translator = new (_options);
-            string text = "Hello world!";
-            string context = "";
-            Language from = Language.English;
-            Language to = Language.Russian;
-            TranslationStyle translationStyle = TranslationStyle.СonversationalStyle;
+            var translator = new GptTranslator(_options);
+            var text = "Hello world!";
+            var context = "";
+            var from = Language.English;
+            var to = Language.Russian;
+            var translationStyle = TranslationStyle.СonversationalStyle;
 
             // Act
             var result = await translator.Translate(text, context, from, to, translationStyle);
