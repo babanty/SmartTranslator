@@ -1,12 +1,12 @@
-﻿
-namespace SmartTranslator.Enums;
+﻿namespace SmartTranslator.Enums;
 
 public enum Language
 {
     Unknown = 0,
-    /// <summary> Русский </summary>
+
+    /// <summary> Russian </summary>
     Russian = 1,
 
-    /// <summary> Английский </summary>
+    /// <summary> English </summary>
     English = 2
 }

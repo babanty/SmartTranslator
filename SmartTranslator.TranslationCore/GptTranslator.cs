@@ -4,7 +4,6 @@ using OpenAI.Managers;
 using OpenAI.ObjectModels;
 using OpenAI.ObjectModels.RequestModels;
 using SmartTranslator.Enums;
-using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Exceptions;
 
 namespace SmartTranslator.TranslationCore;
@@ -12,18 +11,13 @@ namespace SmartTranslator.TranslationCore;
 public class GptTranslator : IGptTranslator
 {
     private const int _sendAttemptsCount = 5;
-
     private readonly GptTranslationOptions _options;
-    private readonly IChatCompletionService _textChatGpt;
+    private readonly IGptHttpClient _gptHttpClient;
 
-    public GptTranslator(GptTranslationOptions options)
+    public GptTranslator(GptTranslationOptions options, IGptHttpClient gptHttpClient)
     {
         _options = options;
-
-        _textChatGpt = new OpenAIService(new OpenAiOptions()
-        {
-            ApiKey = _options.ApiKey,
-        });
+        _gptHttpClient = gptHttpClient;
     }
 
 
@@ -35,67 +29,8 @@ public class GptTranslator : IGptTranslator
             ChatMessage.FromUser($"Translate this text into {to}: {text}; context:{context}; style: {translationStyle}")
         };
 
-        var translation = await SendMessages(text, messages);
+        var translation = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable, _sendAttemptsCount);
 
         return translation;
-    }
- 
-
-    private async Task<string> SendMessages(string text, List<ChatMessage> messages)
-    {
-        for (int i = 0; i < _sendAttemptsCount; i++)
-        {
-            try
-            {
-                return await SendMessagesAttempt(text, messages);
-            }
-            catch (GptOverloadedException)
-            {
-            }
-            catch (TaskCanceledException)
-            {
-            }
-        }
-
-        throw new GptOverloadedException();
-    }
-
-
-    private async Task<string> SendMessagesAttempt(string text, List<ChatMessage> messages)
-    {
-        if (string.IsNullOrWhiteSpace(text))
-        {
-            return string.Empty;
-        }
-
-        if (text.Length > _options.MaxSymbols)
-        {
-            throw new TextIsTooLongException(_options.MaxSymbols, text.Length);
-        }
-
-        var completionResult = await _textChatGpt.CreateCompletion(new ChatCompletionCreateRequest
-        {
-            Messages = messages,
-            Model = Models.Gpt_4,
-            Temperature = 0.0f
-        });
-
-        if (!completionResult.Successful)
-        {
-            if (completionResult?.Error?.Message?.ToLower()?.Contains("rate limit") ?? false)
-            {
-                throw new RateLimitException();
-            }
-
-            if (completionResult?.Error?.Message?.ToLower()?.Contains("overloaded") ?? false) // "That model is currently overloaded with other requ..."
-            {
-                throw new GptOverloadedException();
-            }
-
-            throw new FailedToTranslateException(completionResult?.Error?.Message ?? "Ошибка не известна");
-
-        }
-
-        return completionResult.Choices.FirstOrDefault()?.Message?.Content ?? "Ответа нет";
     }
 }

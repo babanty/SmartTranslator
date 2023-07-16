@@ -7,6 +7,7 @@ namespace SmartTranslator.TranslationCore.Tests
     {
         private readonly IntegrationTestOptions _testOptions;
         private readonly GptTranslationOptions _options;
+        private readonly GptHttpClient _httpClient;
 
         public GptTranslationTest()
         {
@@ -16,13 +17,14 @@ namespace SmartTranslator.TranslationCore.Tests
                 ApiKey = _testOptions.ApiKey,
                 MaxTokens = _testOptions.MaxTokens
             };
+            _httpClient = new GptHttpClient(_options);
         }
 
         [Fact]
         public async Task Translate_ValidInputWithoutContext_TranslatesCorrectly()
         {
             // Arrange
-            var translator = new GptTranslator(_options);
+            var translator = new GptTranslator(_options, _httpClient);
             var text = "Hello world!";
             var context = "";
             var from = Language.English;
