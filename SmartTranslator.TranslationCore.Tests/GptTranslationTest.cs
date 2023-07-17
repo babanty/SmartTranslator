@@ -1,5 +1,5 @@
-﻿using Xunit;
-using SmartTranslator.Enums;
+﻿using SmartTranslator.Enums;
+using Xunit;
 
 namespace SmartTranslator.TranslationCore.Tests
 {
@@ -7,7 +7,7 @@ namespace SmartTranslator.TranslationCore.Tests
     {
         private readonly IntegrationTestOptions _testOptions;
         private readonly GptTranslationOptions _translationOptions;
-        private readonly GptHttpClientOptions _httpClientOptions; 
+        private readonly GptHttpClientOptions _httpClientOptions;
         private readonly GptHttpClient _httpClient;
 
         public GptTranslationTest()
@@ -15,7 +15,7 @@ namespace SmartTranslator.TranslationCore.Tests
             _testOptions = IntegrationTestOptionsProvider.GetIntegrationTestOptions();
 
             _translationOptions = new GptTranslationOptions
-            {                
+            {
                 MaxTokens = _testOptions.MaxTokens
             };
 

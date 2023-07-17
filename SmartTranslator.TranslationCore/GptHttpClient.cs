@@ -1,6 +1,6 @@
-﻿using OpenAI.Interfaces;
+﻿using OpenAI;
+using OpenAI.Interfaces;
 using OpenAI.Managers;
-using OpenAI;
 using OpenAI.ObjectModels.RequestModels;
 using SmartTranslator.Enums;
 using SmartTranslator.TranslationCore.Exceptions;
@@ -44,7 +44,7 @@ public class GptHttpClient : IGptHttpClient
 
     private async Task<string> SendMessagesAttempt(List<ChatMessage> messages, GptModel model)
     {
-       var completionResult = await _textChatGpt.CreateCompletion(new ChatCompletionCreateRequest
+        var completionResult = await _textChatGpt.CreateCompletion(new ChatCompletionCreateRequest
         {
             Messages = messages,
             Model = GptModelToString(model),
@@ -80,5 +80,5 @@ public class GptHttpClient : IGptHttpClient
             GptModel.GPT3d5StableLong => "gpt-3.5-turbo-16k-0613",
             _ => throw new UnknownModelException($"Unknown model: {gptModel}"),
         };
-    }        
+    }
 }

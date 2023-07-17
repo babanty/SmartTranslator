@@ -1,8 +1,4 @@
-﻿using OpenAI;
-using OpenAI.Interfaces;
-using OpenAI.Managers;
-using OpenAI.ObjectModels;
-using OpenAI.ObjectModels.RequestModels;
+﻿using OpenAI.ObjectModels.RequestModels;
 using SmartTranslator.Enums;
 using SmartTranslator.TranslationCore.Exceptions;
 
