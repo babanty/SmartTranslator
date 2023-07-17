@@ -18,7 +18,9 @@ public class LanguageManager : ILanguageManager
 
     public (Language, Language) GetLanguagePair()
     {
-        return (_languageOptions.From, _languageOptions.To);
+        var from = StringToLanguage(_languageOptions.From);
+        var to = StringToLanguage(_languageOptions.To);
+        return (from, to);
     }
 
 
@@ -36,7 +38,7 @@ public class LanguageManager : ILanguageManager
 
         var messages = new List<ChatMessage>()
         {
-            ChatMessage.FromUser($"What is the language of the text: \"{text}\". Language should be: eng, rus, other")
+            ChatMessage.FromUser($"What is the language of the text: \"{text}\"? As your answer only say one of the following words: English, Russian, Other")
         };
 
         var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable, _sendAttemptsCount);
@@ -49,9 +51,9 @@ public class LanguageManager : ILanguageManager
     {
         return text switch
         {
-            "eng" => Language.English,
-            "rus" => Language.Russian,
-            "other" => Language.Unknown,
+            "English" => Language.English,
+            "Russian" => Language.Russian,
+            "Other" => Language.Unknown,
             _ => throw new UnknownLanguageException($"Unknown language: {text}"),
         };
     }

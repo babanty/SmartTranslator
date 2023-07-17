@@ -1,9 +1,7 @@
-﻿using SmartTranslator.Enums;
-
-namespace SmartTranslator.TranslationCore;
+﻿namespace SmartTranslator.TranslationCore;
 
 public record LanguageOptions
 {
-    public Language From { get; set; } = default!;
-    public Language To { get; set; } = default!;
+    public string From { get; set; } = default!;
+    public string To { get; set; } = default!;
 }
