@@ -29,6 +29,7 @@ public class GptTranslator : IGptTranslator
         {
             throw new TextIsTooLongException(_options.MaxSymbols, text.Length);
         }
+
         var messages = new List<ChatMessage>()
         {
             ChatMessage.FromUser($"Translate this text into {to}: {text}; context:{context}; style: {translationStyle}")
