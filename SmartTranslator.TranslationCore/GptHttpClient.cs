@@ -9,10 +9,10 @@ namespace SmartTranslator.TranslationCore;
 
 public class GptHttpClient : IGptHttpClient
 {
-    private readonly GptTranslationOptions _options;
+    private readonly GptHttpClientOptions _options;
     private readonly IChatCompletionService _textChatGpt;
 
-    public GptHttpClient(GptTranslationOptions options)
+    public GptHttpClient(GptHttpClientOptions options)
     {
         _options = options;
 
@@ -44,22 +44,10 @@ public class GptHttpClient : IGptHttpClient
 
     private async Task<string> SendMessagesAttempt(List<ChatMessage> messages, GptModel model)
     {
-        var messageContent = messages.FirstOrDefault()?.Content;
-
-        if (string.IsNullOrWhiteSpace(messageContent))
-        {
-            return string.Empty;
-        }
-
-        if (messageContent.Length > _options.MaxSymbols)
-        {
-            throw new TextIsTooLongException(_options.MaxSymbols, messageContent.Length);
-        }
-
-        var completionResult = await _textChatGpt.CreateCompletion(new ChatCompletionCreateRequest
+       var completionResult = await _textChatGpt.CreateCompletion(new ChatCompletionCreateRequest
         {
             Messages = messages,
-            Model = gptModelToString(model),
+            Model = GptModelToString(model),
             Temperature = 0.0f
         });
 
@@ -82,21 +70,15 @@ public class GptHttpClient : IGptHttpClient
         return completionResult.Choices.FirstOrDefault()?.Message?.Content ?? "No answer";
     }
 
-    private string gptModelToString(GptModel gptModel)
+    private static string GptModelToString(GptModel gptModel)
     {
-        switch (gptModel)
+        return gptModel switch
         {
-            case GptModel.Gpt4StableLong:
-                return "gpt-4-32k-0613";
-            case GptModel.Gpt4Stable:
-                return "gpt-4-0613";
-            case GptModel.GPT3d5Stable:
-                return "gpt-3.5-turbo-0613";
-            case GptModel.GPT3d5StableLong:
-                return "gpt-3.5-turbo-16k-0613";
-            default:
-                throw new UnknownModelException($"Unknown model: {gptModel}");
-        }
-    }
-        
+            GptModel.Gpt4StableLong => "gpt-4-32k-0613",
+            GptModel.Gpt4Stable => "gpt-4-0613",
+            GptModel.GPT3d5Stable => "gpt-3.5-turbo-0613",
+            GptModel.GPT3d5StableLong => "gpt-3.5-turbo-16k-0613",
+            _ => throw new UnknownModelException($"Unknown model: {gptModel}"),
+        };
+    }        
 }

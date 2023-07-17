@@ -24,12 +24,21 @@ public class GptTranslator : IGptTranslator
     /// <inheritdoc/>
     public async Task<string> Translate(string text, string context, Language from, Language to, TranslationStyle translationStyle)
     {
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return string.Empty;
+        }
+
+        if (text.Length > _options.MaxSymbols)
+        {
+            throw new TextIsTooLongException(_options.MaxSymbols, text.Length);
+        }
         var messages = new List<ChatMessage>()
         {
             ChatMessage.FromUser($"Translate this text into {to}: {text}; context:{context}; style: {translationStyle}")
         };
 
-        var translation = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable, _sendAttemptsCount);
+        var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable, _sendAttemptsCount);
 
         return translation;
     }
