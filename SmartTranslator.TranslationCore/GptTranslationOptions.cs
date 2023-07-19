@@ -2,8 +2,6 @@
 
 public record GptTranslationOptions
 {
-    public string ApiKey { get; set; } = default!;
-
     public int MaxTokens { get; set; } = default!;
 
     public int MaxSymbols => (int)(MaxTokens * TokenToSymbolsMultiplier);
