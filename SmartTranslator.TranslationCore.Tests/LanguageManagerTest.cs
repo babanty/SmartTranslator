@@ -1,5 +1,7 @@
 ﻿using SmartTranslator.Enums;
 using Xunit;
+using Moq;
+using OpenAI.ObjectModels.RequestModels;
 
 namespace SmartTranslator.TranslationCore.Tests;
 
@@ -7,7 +9,7 @@ public class LanguageManagerTest
 {
     private readonly IntegrationTestOptions _testOptions;
     private readonly GptHttpClientOptions _httpClientOptions;
-    private readonly IGptHttpClient _httpClient;
+    private readonly Mock<IGptHttpClient> _httpClientMock;
 
     public LanguageManagerTest()
     {
@@ -18,7 +20,7 @@ public class LanguageManagerTest
             ApiKey = _testOptions.ApiKey
         };
 
-        _httpClient = new GptHttpClient(_httpClientOptions);
+        _httpClientMock = new Mock<IGptHttpClient>();
     }
 
 
@@ -27,8 +29,11 @@ public class LanguageManagerTest
     {
         // Arrange
         var languageOptions = GetLangugeOptions();
-        var manager = new LanguageManager(languageOptions, _httpClient);
+        var manager = new LanguageManager(languageOptions, _httpClientMock.Object);
         var text = "Hello world!";
+
+        _httpClientMock.Setup(h => h.Send(It.IsAny<List<ChatMessage>>(), It.IsAny<GptModel>()))
+                        .ReturnsAsync("English");
 
         // Act
         var result = await manager.DetermineLanguage(text);
@@ -43,8 +48,11 @@ public class LanguageManagerTest
     {
         // Arrange
         var languageOptions = GetLangugeOptions();
-        var manager = new LanguageManager(languageOptions, _httpClient);
+        var manager = new LanguageManager(languageOptions, _httpClientMock.Object);
         var text = "Привет, мир!";
+
+        _httpClientMock.Setup(h => h.Send(It.IsAny<List<ChatMessage>>(), It.IsAny<GptModel>()))
+            .ReturnsAsync("Russian");
 
         // Act
         var result = await manager.DetermineLanguage(text);
@@ -60,7 +68,7 @@ public class LanguageManagerTest
         // Arrange
         var languageOptions = GetLangugeOptions();
 
-        var manager = new LanguageManager(languageOptions, _httpClient);
+        var manager = new LanguageManager(languageOptions, _httpClientMock.Object);
 
         // Act
         var result = manager.GetLanguagePair();
@@ -69,7 +77,7 @@ public class LanguageManagerTest
         Assert.Equal((Language.English, Language.Russian), result);
     }
 
-    private LanguageOptions GetLangugeOptions() => new LanguageOptions()
+    private static LanguageOptions GetLangugeOptions() => new LanguageOptions()
     {
         From = Language.English,
         To = Language.Russian
