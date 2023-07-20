@@ -11,6 +11,7 @@ public class GptHttpClient : IGptHttpClient
 {
     private readonly GptHttpClientOptions _options;
     private readonly IChatCompletionService _textChatGpt;
+    private readonly int _attemptsCount;
 
     public GptHttpClient(GptHttpClientOptions options)
     {
@@ -20,12 +21,14 @@ public class GptHttpClient : IGptHttpClient
         {
             ApiKey = _options.ApiKey,
         });
+
+        _attemptsCount = _options.AttemptsCount;
     }
 
 
-    public async Task<string> Send(List<ChatMessage> messages, GptModel model, int attemptCount)
+    public async Task<string> Send(List<ChatMessage> messages, GptModel model)
     {
-        for (int i = 0; i < attemptCount; i++)
+        for (int i = 0; i < _attemptsCount; i++)
         {
             try
             {

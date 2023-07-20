@@ -7,8 +7,7 @@ public class LanguageManagerTest
 {
     private readonly IntegrationTestOptions _testOptions;
     private readonly GptHttpClientOptions _httpClientOptions;
-    private readonly LanguageOptions _languageOptions;
-    private readonly GptHttpClient _httpClient;
+    private readonly IGptHttpClient _httpClient;
 
     public LanguageManagerTest()
     {
@@ -20,12 +19,6 @@ public class LanguageManagerTest
         };
 
         _httpClient = new GptHttpClient(_httpClientOptions);
-
-        _languageOptions = new LanguageOptions
-        {
-            From = _testOptions.From,
-            To = _testOptions.To
-        };
     }
 
 
@@ -33,7 +26,8 @@ public class LanguageManagerTest
     public async Task DetermineLanguage_EnglishLanguage_DeterminesCorrectly()
     {
         // Arrange
-        var manager = new LanguageManager(_languageOptions, _httpClient);
+        var languageOptions = GetLangugeOptions();
+        var manager = new LanguageManager(languageOptions, _httpClient);
         var text = "Hello world!";
 
         // Act
@@ -48,7 +42,8 @@ public class LanguageManagerTest
     public async Task DetermineLanguage_RussianLanguage_DeterminesCorrectly()
     {
         // Arrange
-        var manager = new LanguageManager(_languageOptions, _httpClient);
+        var languageOptions = GetLangugeOptions();
+        var manager = new LanguageManager(languageOptions, _httpClient);
         var text = "Привет, мир!";
 
         // Act
@@ -63,7 +58,9 @@ public class LanguageManagerTest
     public void GetLanguagePair_ValidInput_ReturnsCorrectPair()
     {
         // Arrange
-        var manager = new LanguageManager(_languageOptions, _httpClient);
+        var languageOptions = GetLangugeOptions();
+
+        var manager = new LanguageManager(languageOptions, _httpClient);
 
         // Act
         var result = manager.GetLanguagePair();
@@ -71,4 +68,10 @@ public class LanguageManagerTest
         // Assert
         Assert.Equal((Language.English, Language.Russian), result);
     }
+
+    private LanguageOptions GetLangugeOptions() => new LanguageOptions()
+    {
+        From = Language.English,
+        To = Language.Russian
+    };
 }
