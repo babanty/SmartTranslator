@@ -65,7 +65,7 @@ public class GptTranslationIntegrationTest
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Percent: 1.", result);
+        Assert.Equal(1f, result.Percent);
     }
 
 
@@ -91,7 +91,8 @@ public class GptTranslationIntegrationTest
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal("Percent: 0. Who or what struck her with the book?", result);
+        Assert.Equal(0f, result.Percent);
+        Assert.NotNull(result.Request);
     }
 }
 

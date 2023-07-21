@@ -41,11 +41,11 @@ public class GptTranslator : IGptTranslator
     }
 
 
-    public async Task<string> EvaluateContext(string text, Language to)
+    public async Task<EvaluationResponse> EvaluateContext(string text, Language to)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
-            return "I can't translate empty text.";
+            throw new EmptyTextException();
         }
 
         if (text.Length > _options.MaxSymbols)
@@ -68,10 +68,6 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
         var evaluationJson = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
         var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);
 
-        var percent = result.Percent;
-        var question = result.Request.ClarifyingQuestion;
-
-        var percentAnswer = $"Percent: {percent}.";
-        return percent != 0 ? percentAnswer : percentAnswer + " " + question;
+        return result;
     }
 }
