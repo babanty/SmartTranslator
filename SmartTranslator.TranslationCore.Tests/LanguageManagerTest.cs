@@ -1,7 +1,7 @@
-﻿using SmartTranslator.Enums;
-using Xunit;
-using Moq;
+﻿using Moq;
 using OpenAI.ObjectModels.RequestModels;
+using SmartTranslator.Enums;
+using Xunit;
 
 namespace SmartTranslator.TranslationCore.Tests;
 

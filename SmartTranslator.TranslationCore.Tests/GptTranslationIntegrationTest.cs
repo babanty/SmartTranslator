@@ -18,9 +18,9 @@ public class GptTranslationIntegrationTest
     public async Task Translate_ValidInputWithoutContext_TranslatesCorrectly()
     {
         // Arrange
-        var translationOptions = new GptTranslationOptions 
-        { 
-            MaxTokens = _testOptions.MaxTokens 
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
         };
         var httpClientOptions = new GptHttpClientOptions
         {

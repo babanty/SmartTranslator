@@ -1,6 +1,4 @@
-﻿using SmartTranslator.Enums;
-
-namespace SmartTranslator.TranslationCore.Tests;
+﻿namespace SmartTranslator.TranslationCore.Tests;
 
 public record IntegrationTestOptions
 {

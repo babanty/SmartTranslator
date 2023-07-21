@@ -14,7 +14,7 @@ public class LanguageManager : ILanguageManager
         _languageOptions = options;
         _gptHttpClient = httpClient;
     }
-        
+
     public (Language, Language) GetLanguagePair() => (_languageOptions.From, _languageOptions.To);
 
 
