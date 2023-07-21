@@ -6,7 +6,6 @@ namespace SmartTranslator.TranslationCore;
 
 public class GptTranslator : IGptTranslator
 {
-    private const int _sendAttemptsCount = 5;
     private readonly GptTranslationOptions _options;
     private readonly IGptHttpClient _gptHttpClient;
 
@@ -29,12 +28,13 @@ public class GptTranslator : IGptTranslator
         {
             throw new TextIsTooLongException(_options.MaxSymbols, text.Length);
         }
+
         var messages = new List<ChatMessage>()
         {
             ChatMessage.FromUser($"Translate this text into {to}: {text}; context:{context}; style: {translationStyle}")
         };
 
-        var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable, _sendAttemptsCount);
+        var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
 
         return translation;
     }

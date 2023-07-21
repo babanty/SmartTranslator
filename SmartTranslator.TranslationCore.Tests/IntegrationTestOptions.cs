@@ -1,9 +1,8 @@
-﻿namespace SmartTranslator.TranslationCore.Tests
-{
-    public record IntegrationTestOptions
-    {
-        public string ApiKey { get; set; } = default!;
+﻿namespace SmartTranslator.TranslationCore.Tests;
 
-        public int MaxTokens { get; set; } = default!;
-    }
+public record IntegrationTestOptions
+{
+    public string ApiKey { get; set; } = default!;
+
+    public int MaxTokens { get; set; } = default!;
 }

@@ -1,41 +1,38 @@
-﻿using Moq;
-using OpenAI.ObjectModels.RequestModels;
-using SmartTranslator.Enums;
+﻿using SmartTranslator.Enums;
 using Xunit;
 
 namespace SmartTranslator.TranslationCore.Tests;
 
-public class GptTranslationTest
+public class GptTranslationIntegrationTest
 {
     private readonly IntegrationTestOptions _testOptions;
-    private readonly GptTranslationOptions _translationOptions;
-    private readonly Mock<IGptHttpClient> _httpClientMock;
 
-    public GptTranslationTest()
+
+    public GptTranslationIntegrationTest()
     {
         _testOptions = IntegrationTestOptionsProvider.GetIntegrationTestOptions();
-
-        _translationOptions = new GptTranslationOptions
-        {
-            MaxTokens = _testOptions.MaxTokens
-        };
-
-        _httpClientMock = new Mock<IGptHttpClient>();
     }
+
 
     [Fact]
     public async Task Translate_ValidInputWithoutContext_TranslatesCorrectly()
     {
         // Arrange
-        var translator = new GptTranslator(_translationOptions, _httpClientMock.Object);
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
+        };
+        var httpClientOptions = new GptHttpClientOptions
+        {
+            ApiKey = _testOptions.ApiKey
+        };
+        var httpClient = new GptHttpClient(httpClientOptions);
+        var translator = new GptTranslator(translationOptions, httpClient);
         var text = "Hello world!";
         var context = "";
         var from = Language.English;
         var to = Language.Russian;
         var translationStyle = TranslationStyle.СonversationalStyle;
-
-        _httpClientMock.Setup(h => h.Send(It.IsAny<List<ChatMessage>>(), It.IsAny<GptModel>()))
-    .ReturnsAsync("Привет, мир!");
 
         // Act
         var result = await translator.Translate(text, context, from, to, translationStyle);
@@ -45,3 +42,4 @@ public class GptTranslationTest
         Assert.Equal("Привет, мир!", result);
     }
 }
+

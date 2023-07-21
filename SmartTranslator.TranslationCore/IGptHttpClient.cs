@@ -5,5 +5,5 @@ namespace SmartTranslator.TranslationCore;
 
 public interface IGptHttpClient
 {
-    Task<string> Send(List<ChatMessage> messages, GptModel model, int attemptCount);
+    Task<string> Send(List<ChatMessage> messages, GptModel model);
 }
