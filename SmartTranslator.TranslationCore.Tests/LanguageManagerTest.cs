@@ -7,19 +7,10 @@ namespace SmartTranslator.TranslationCore.Tests;
 
 public class LanguageManagerTest
 {
-    private readonly IntegrationTestOptions _testOptions;
-    private readonly GptHttpClientOptions _httpClientOptions;
     private readonly Mock<IGptHttpClient> _httpClientMock;
 
     public LanguageManagerTest()
     {
-        _testOptions = IntegrationTestOptionsProvider.GetIntegrationTestOptions();
-
-        _httpClientOptions = new GptHttpClientOptions
-        {
-            ApiKey = _testOptions.ApiKey
-        };
-
         _httpClientMock = new Mock<IGptHttpClient>();
     }
 

@@ -30,7 +30,7 @@ public class LanguageManager : ILanguageManager
 
         var messages = new List<ChatMessage>()
         {
-            ChatMessage.FromUser($"What is the language of the text: \"{textToCheck}\"? As your answer only say one of the following words: {possibleLanguages}")
+            ChatMessage.FromUser($"What is the language of the text: \"{textToCheck}\"? As your answer only say one of the following words: {possibleLanguages.Item1}, {possibleLanguages.Item2}")
         };
 
         var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
