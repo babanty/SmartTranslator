@@ -12,4 +12,7 @@ public interface IGptTranslator
     /// <param name="from"> Language to translate from </param>
     /// <param name="translationStyle"> Translation style </param>
     Task<string> Translate(string text, string context, Language from, Language to, TranslationStyle translationStyle = TranslationStyle.СonversationalStyle);
+
+
+    Task<StyleDefinitionResult> DefineStyle(string text, string? context, Language? from, Language? to);
 }

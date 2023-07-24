@@ -94,5 +94,42 @@ public class GptTranslationIntegrationTest
         Assert.Equal(0f, result.Percent);
         Assert.NotNull(result.Request);
     }
+
+
+    [Fact]
+    public async Task DefineStyle_ValidInput_AnswerOK()
+    {
+        // Arrange
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
+        };
+        var httpClientOptions = new GptHttpClientOptions
+        {
+            ApiKey = _testOptions.ApiKey
+        };
+        var httpClient = new GptHttpClient(httpClientOptions);
+        var translator = new GptTranslator(translationOptions, httpClient);
+        var text = "She was struck by the book.";
+        var context = "";
+        var from = Language.English;
+        var to = Language.Russian;
+        var expected = new StyleDefinitionResult
+        {
+            ProbabilityOfSuccess = new List<(float, TranslationStyle)>
+            {
+                (0.9f, TranslationStyle.OfficialStyle),
+                (0.1f, TranslationStyle.СonversationalStyle),
+                (0.05f, TranslationStyle.TeenageStyle)
+            }
+        };
+
+        //Act
+        var result = await translator.DefineStyle(text, context, from, to);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(expected, result);
+    }
 }
 
