@@ -66,8 +66,14 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
         };
 
         var evaluationJson = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
-        var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);
-
-        return result;
+        try
+        {
+            var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            throw new ContextEvaluationErrorException("Failed to evaluate context");
+        }
     }
 }
