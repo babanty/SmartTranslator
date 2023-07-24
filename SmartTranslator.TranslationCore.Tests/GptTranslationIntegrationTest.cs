@@ -41,5 +41,58 @@ public class GptTranslationIntegrationTest
         Assert.NotNull(result);
         Assert.Equal("Привет, мир!", result);
     }
+
+
+    [Fact]
+    public async Task EvaluateContext_UnequivocalInput_AnswerOK()
+    {
+        // Arrange
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
+        };
+        var httpClientOptions = new GptHttpClientOptions
+        {
+            ApiKey = _testOptions.ApiKey
+        };
+        var httpClient = new GptHttpClient(httpClientOptions);
+        var translator = new GptTranslator(translationOptions, httpClient);
+        var text = "Hello world!";
+        var to = Language.Russian;
+
+        // Act
+        var result = await translator.EvaluateContext(text, to);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(1f, result.Percent);
+    }
+
+
+    [Fact]
+    public async Task EvaluateContext_EquivocalInput_AnswerOK()
+    {
+        // Arrange
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
+        };
+        var httpClientOptions = new GptHttpClientOptions
+        {
+            ApiKey = _testOptions.ApiKey
+        };
+        var httpClient = new GptHttpClient(httpClientOptions);
+        var translator = new GptTranslator(translationOptions, httpClient);
+        var text = "She was struck by the book.";
+        var to = Language.Russian;
+
+        // Act
+        var result = await translator.EvaluateContext(text, to);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(0f, result.Percent);
+        Assert.NotNull(result.Request);
+    }
 }
 
