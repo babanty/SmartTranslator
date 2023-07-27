@@ -92,7 +92,7 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
         var styles = GetTranslationStyles();
 
         var prompt = $@"There are {styles.Count()} writing styles: {string.Join(", ", styles)}. 
-Determine which one the sentence '{text}' corresponds to in the format json 
+Determine which one the sentence '{text}' corresponds to in the format JSON: 
 {{
   ""ProbabilityOfSuccess"": [
     {{
@@ -103,7 +103,7 @@ Determine which one the sentence '{text}' corresponds to in the format json
   ]
 }} , where percent can be from 0 to 1, where 0 is absolutely not matching, and 1 is a complete match.
 Give probabilities of all said styles.
-Your answer should be only this JSON. Don't say any other words besides this json.";
+Your answer should be only this JSON. Don't say any other words besides this JSON.";
 
         var messages = new List<ChatMessage>()
         {

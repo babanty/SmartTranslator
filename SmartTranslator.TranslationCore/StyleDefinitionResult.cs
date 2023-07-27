@@ -1,8 +1,6 @@
-﻿using SmartTranslator.Enums;
-
-namespace SmartTranslator.TranslationCore;
+﻿namespace SmartTranslator.TranslationCore;
 
 public record StyleDefinitionResult 
 {
-    public List<(float, TranslationStyle)> ProbabilityOfSuccess { get; set; } = default!;
+    public List<StyleProbability> ProbabilityOfSuccess { get; set; } = default!;
 }

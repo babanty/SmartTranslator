@@ -32,7 +32,7 @@ public class GptTranslationIntegrationTest
         var context = "";
         var from = Language.English;
         var to = Language.Russian;
-        var translationStyle = TranslationStyle.СonversationalStyle;
+        var translationStyle = TranslationStyle.ConversationalStyle;
 
         // Act
         var result = await translator.Translate(text, context, from, to, translationStyle);
@@ -116,11 +116,11 @@ public class GptTranslationIntegrationTest
         var to = Language.Russian;
         var expected = new StyleDefinitionResult
         {
-            ProbabilityOfSuccess = new List<(float, TranslationStyle)>
+            ProbabilityOfSuccess = new List<StyleProbability>
             {
-                (0.9f, TranslationStyle.OfficialStyle),
-                (0.1f, TranslationStyle.СonversationalStyle),
-                (0.05f, TranslationStyle.TeenageStyle)
+                new StyleProbability { Probability = 0.8f, Style = TranslationStyle.OfficialStyle },
+                new StyleProbability { Probability = 0.2f, Style = TranslationStyle.ConversationalStyle },
+                new StyleProbability { Probability = 0.1f, Style = TranslationStyle.TeenageStyle }
             }
         };
 

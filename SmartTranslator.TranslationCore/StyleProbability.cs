@@ -2,7 +2,7 @@
 
 namespace SmartTranslator.TranslationCore;
 
-public record ProbabilityOfSuccessModel
+public record StyleProbability
 {
     public float Probability { get; set; }
     public TranslationStyle Style { get; set; }
