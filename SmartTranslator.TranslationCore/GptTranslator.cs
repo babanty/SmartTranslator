@@ -35,7 +35,7 @@ public class GptTranslator : IGptTranslator
             ChatMessage.FromUser($"Translate this text into {to}: {text}; context:{context}; style: {translationStyle}")
         };
 
-        var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
+        var translation = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable);
 
         return translation;
     }
@@ -65,7 +65,7 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
             ChatMessage.FromUser(prompt)
         };
 
-        var evaluationJson = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
+        var evaluationJson = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable);
         try
         {
             var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);

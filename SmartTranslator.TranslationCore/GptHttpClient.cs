@@ -77,8 +77,8 @@ public class GptHttpClient : IGptHttpClient
     {
         return gptModel switch
         {
-            GptModel.Gpt4StableLong => "gpt-4-32k-0613",
-            GptModel.Gpt4Stable => "gpt-4-0613",
+            GptModel.Gpt4StableLong => "gpt-3.5-turbo-0613", // TODO: change to "gpt-4-32k-0613" once it's accessible
+            GptModel.Gpt4Stable => "gpt-3.5-turbo-0613", // TODO: change to "gpt-4-0613" once it's accessible
             GptModel.GPT3d5Stable => "gpt-3.5-turbo-0613",
             GptModel.GPT3d5StableLong => "gpt-3.5-turbo-16k-0613",
             _ => throw new UnknownModelException($"Unknown model: {gptModel}"),
