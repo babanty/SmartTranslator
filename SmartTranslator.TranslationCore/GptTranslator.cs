@@ -71,11 +71,12 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
             var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);
             return result;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw new ContextEvaluationErrorException("Failed to evaluate context");
         }
     }
+
 
     public async Task<StyleDefinitionResult> DefineStyle(string text, string? context, Language? from, Language? to)
     {
@@ -116,11 +117,12 @@ Your answer should be only this JSON. Don't say any other words besides this JSO
             var result = JsonConvert.DeserializeObject<StyleDefinitionResult>(evaluationJson);
             return result;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             throw new StyleDefinitionErrorException("Failed to define text style.");
         }
     }
+
 
     private static List<string> GetTranslationStyles()
     {
