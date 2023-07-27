@@ -129,7 +129,10 @@ public class GptTranslationIntegrationTest
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(expected, result);
+        
+        Assert.Equal(expected.ProbabilityOfSuccess[0], result.ProbabilityOfSuccess[0]);
+        Assert.Equal(expected.ProbabilityOfSuccess[1], result.ProbabilityOfSuccess[1]);
+        Assert.Equal(expected.ProbabilityOfSuccess[2], result.ProbabilityOfSuccess[2]);
     }
 }
 

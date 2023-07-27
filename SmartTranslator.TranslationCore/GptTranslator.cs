@@ -95,10 +95,15 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
 Determine which one the sentence '{text}' corresponds to in the format json 
 {{
   ""ProbabilityOfSuccess"": [
-    [percent, ""TranslationStyle""],
+    {{
+      ""Probability"": 
+      ""Style"": 
+    }}
+    }}
   ]
-}}, where percent can be from 0 to 1, where 0 is absolutely not matching, and 1 is a complete match.
-Your answer should be only this JSON.";
+}} , where percent can be from 0 to 1, where 0 is absolutely not matching, and 1 is a complete match.
+Give probabilities of all said styles.
+Your answer should be only this JSON. Don't say any other words besides this json.";
 
         var messages = new List<ChatMessage>()
         {
