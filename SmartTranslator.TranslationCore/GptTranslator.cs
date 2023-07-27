@@ -103,8 +103,7 @@ Determine which one the sentence '{text}' corresponds to in the format JSON:
     }}
   ]
 }} , where percent can be from 0 to 1, where 0 is absolutely not matching, and 1 is a complete match.
-Give probabilities of all said styles.
-Your answer should be only this JSON. Don't say any other words besides this JSON.";
+Give probabilities of all said styles.";
 
         var messages = new List<ChatMessage>()
         {

@@ -117,8 +117,8 @@ public class GptTranslationIntegrationTest
         {
             ProbabilityOfSuccess = new List<StyleProbability>
             {
-                new StyleProbability { Probability = 0.8f, Style = TranslationStyle.OfficialStyle },
-                new StyleProbability { Probability = 0.2f, Style = TranslationStyle.ConversationalStyle },
+                new StyleProbability { Probability = 0.7f, Style = TranslationStyle.OfficialStyle },
+                new StyleProbability { Probability = 0.3f, Style = TranslationStyle.ConversationalStyle },
                 new StyleProbability { Probability = 0.1f, Style = TranslationStyle.TeenageStyle }
             }
         };
