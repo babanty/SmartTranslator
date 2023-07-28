@@ -17,9 +17,11 @@ public class LanguageManager : ILanguageManager
     }
 
 
+    /// <inheritdoc/>
     public (Language, Language) GetLanguagePair() => (_languageOptions.From, _languageOptions.To);
 
 
+    /// <inheritdoc/>
     public async Task<Language> DetermineLanguage(string text)
     {
         if (string.IsNullOrWhiteSpace(text))

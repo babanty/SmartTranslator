@@ -23,6 +23,15 @@ public interface IGptTranslator
 
 
     /// <summary>
+    /// Evaluates whether there is enough context to unequivocally translate the given text.
+    /// </summary>
+    /// <param name="text">The text to be evaluated.</param>
+    /// <param name="to">The language to which text will be translated.</param>
+    /// <returns>Probability of right translation. If it is low, also returns a clarifying question.</returns>
+    Task<EvaluationResponse> EvaluateContext(string text, Language to);
+
+
+    /// <summary>
     /// Defines the style of the input text.
     /// </summary>
     /// <param name="text">The text for which the style is to be defined.</param>

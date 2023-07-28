@@ -2,7 +2,7 @@
 
 public class ContextEvaluationErrorException : Exception
 {
-    public ContextEvaluationErrorException(string? message) : base(message)
+    public ContextEvaluationErrorException(string? message, Exception innerException) : base(message, innerException)
     {
     }
 }

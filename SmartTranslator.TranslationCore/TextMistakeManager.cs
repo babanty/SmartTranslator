@@ -18,6 +18,7 @@ public class TextMistakeManager : ITextMistakeManager
     }
 
 
+    /// <inheritdoc/>
     public async Task<string> Correct(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -40,7 +41,7 @@ public class TextMistakeManager : ITextMistakeManager
         try
         {
             var result = JsonConvert.DeserializeObject<SpellingCorrectorResponse>(correctSentence);
-            return result.Text;
+            return result!.Text;
         }
         catch (Exception ex)
         {
