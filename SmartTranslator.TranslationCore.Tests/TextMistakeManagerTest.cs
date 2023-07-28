@@ -2,18 +2,18 @@
 
 namespace SmartTranslator.TranslationCore.Tests;
 
-public class SpellingManagerIntegrationTest
+public class TextMistakeManagerTest
 {
     private readonly IntegrationTestOptions _testOptions;
 
-    public SpellingManagerIntegrationTest()
+    public TextMistakeManagerTest()
     {
         _testOptions = IntegrationTestOptionsProvider.GetIntegrationTestOptions();
     }
 
 
     [Fact]
-    public async Task CorrectSpelling_ValidIncorrectInput_AnswerOK()
+    public async Task Correct_ValidIncorrectInput_AnswerOK()
     {
         // Arrange
         var translationOptions = new GptTranslationOptions
@@ -25,10 +25,10 @@ public class SpellingManagerIntegrationTest
             ApiKey = _testOptions.ApiKey
         };
         var httpClient = new GptHttpClient(httpClientOptions);
-        var corrector = new SpellingManager(translationOptions, httpClient);
+        var corrector = new TextMistakeManager(translationOptions, httpClient);
         var text = "I have gone there yesterday.";
         var expected = "I went there yesterday.";
-        var result = await corrector.CorrectSpelling(text);
+        var result = await corrector.Correct(text);
 
         // Assert
         Assert.NotNull(result);
