@@ -1,9 +1,9 @@
 ﻿using Newtonsoft.Json;
 using OpenAI.ObjectModels.RequestModels;
 using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
-using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 
 namespace SmartTranslator.TranslationCore;
 

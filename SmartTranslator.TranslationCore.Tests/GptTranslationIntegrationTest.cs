@@ -1,5 +1,4 @@
-﻿using SmartTranslator.TranslationCore.Abstractions.Models;
-using SmartTranslator.TranslationCore.Enums;
+﻿using SmartTranslator.TranslationCore.Enums;
 using Xunit;
 
 namespace SmartTranslator.TranslationCore.Tests;
@@ -113,7 +112,7 @@ public class GptTranslationIntegrationTest
         var text = "She was struck by the book.";
         var context = "";
         var from = Language.English;
-        var to = Language.Russian;              
+        var to = Language.Russian;
 
 
         //Act
@@ -127,9 +126,9 @@ public class GptTranslationIntegrationTest
         var officialProb = GetProbability(TranslationStyle.OfficialStyle);
         var conversationalProb = GetProbability(TranslationStyle.ConversationalStyle);
         var teenageProb = GetProbability(TranslationStyle.TeenageStyle);
-        
+
         Assert.NotNull(result);
-        
+
         Assert.InRange(officialProb, 0.7f, 0.9f); // TODO: change to more appropriate values once GPT-4 is accessible
         Assert.InRange(conversationalProb, 0.1f, 0.3f); // TODO: change to more appropriate values once GPT-4 is accessible
         Assert.InRange(teenageProb, 0f, 0.2f); // TODO: change to more appropriate values once GPT-4 is accessible

@@ -9,7 +9,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton(config.GptHttpClientOptions);
         services.AddSingleton(config.GptTranslationOptions);
-        services.AddSingleton(config.LanguageOptions);        
+        services.AddSingleton(config.LanguageOptions);
 
         services.AddScoped<IGptHttpClient, GptHttpClient>();
         services.AddScoped<IGptTranslator, GptTranslator>();
