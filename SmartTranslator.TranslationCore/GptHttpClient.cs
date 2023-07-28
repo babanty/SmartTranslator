@@ -2,7 +2,7 @@
 using OpenAI.Interfaces;
 using OpenAI.Managers;
 using OpenAI.ObjectModels.RequestModels;
-using SmartTranslator.Enums;
+using SmartTranslator.TranslationCore.Enums;
 using SmartTranslator.TranslationCore.Exceptions;
 
 namespace SmartTranslator.TranslationCore;

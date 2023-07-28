@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.App", "Smar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TranslationCore", "SmartTranslator.TranslationCore\SmartTranslator.TranslationCore.csproj", "{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.Enums", "SmartTranslator.Enums\SmartTranslator.Enums.csproj", "{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TranslationCore.Tests", "SmartTranslator.TranslationCore.Tests\SmartTranslator.TranslationCore.Tests.csproj", "{8BF01CC1-A36E-466E-98B6-1EA231F6211F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.TranslationCore.Tests", "SmartTranslator.TranslationCore.Tests\SmartTranslator.TranslationCore.Tests.csproj", "{8BF01CC1-A36E-466E-98B6-1EA231F6211F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TranslationCore", "TranslationCore", "{87A2965A-6DF8-4CA8-B497-169F25C0B91D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TranslationCore.Enums", "SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj", "{8D1464E6-5318-4172-AE37-DE3BD95E66BA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,17 +27,22 @@ Global
 		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{47200F8C-D125-4DAC-9FB2-A2F885A0AA2A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8BF01CC1-A36E-466E-98B6-1EA231F6211F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8BF01CC1-A36E-466E-98B6-1EA231F6211F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BF01CC1-A36E-466E-98B6-1EA231F6211F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BF01CC1-A36E-466E-98B6-1EA231F6211F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D1464E6-5318-4172-AE37-DE3BD95E66BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D1464E6-5318-4172-AE37-DE3BD95E66BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D1464E6-5318-4172-AE37-DE3BD95E66BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D1464E6-5318-4172-AE37-DE3BD95E66BA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{7181C11A-5735-46BC-A1C5-8BCE311EBB4B} = {87A2965A-6DF8-4CA8-B497-169F25C0B91D}
+		{8BF01CC1-A36E-466E-98B6-1EA231F6211F} = {87A2965A-6DF8-4CA8-B497-169F25C0B91D}
+		{8D1464E6-5318-4172-AE37-DE3BD95E66BA} = {87A2965A-6DF8-4CA8-B497-169F25C0B91D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F00399C6-C5C9-43C3-A173-AA351851E770}

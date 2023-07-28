@@ -1,4 +1,4 @@
-﻿using SmartTranslator.Enums;
+﻿using SmartTranslator.TranslationCore.Enums;
 using Xunit;
 
 namespace SmartTranslator.TranslationCore.Tests;

@@ -1,4 +1,4 @@
-﻿namespace SmartTranslator.Enums;
+﻿namespace SmartTranslator.TranslationCore.Enums;
 
 public enum GptModel
 {

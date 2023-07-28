@@ -1,4 +1,4 @@
-﻿using SmartTranslator.Enums;
+﻿using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TranslationCore;
 

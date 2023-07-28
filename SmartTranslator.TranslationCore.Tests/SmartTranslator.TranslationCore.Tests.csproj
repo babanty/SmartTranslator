@@ -24,7 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartTranslator.Enums\SmartTranslator.Enums.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj" />
     <ProjectReference Include="..\SmartTranslator.TranslationCore\SmartTranslator.TranslationCore.csproj" />
   </ItemGroup>
 

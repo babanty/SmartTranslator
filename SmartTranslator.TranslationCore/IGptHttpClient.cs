@@ -1,5 +1,5 @@
 ﻿using OpenAI.ObjectModels.RequestModels;
-using SmartTranslator.Enums;
+using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TranslationCore;
 
