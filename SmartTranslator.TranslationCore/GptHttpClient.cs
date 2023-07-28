@@ -45,6 +45,7 @@ public class GptHttpClient : IGptHttpClient
         throw new GptOverloadedException();
     }
 
+
     private async Task<string> SendMessagesAttempt(List<ChatMessage> messages, GptModel model)
     {
         var completionResult = await _textChatGpt.CreateCompletion(new ChatCompletionCreateRequest
@@ -72,6 +73,7 @@ public class GptHttpClient : IGptHttpClient
 
         return completionResult.Choices.FirstOrDefault()?.Message?.Content ?? "No answer";
     }
+
 
     private static string GptModelToString(GptModel gptModel)
     {

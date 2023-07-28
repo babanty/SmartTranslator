@@ -32,7 +32,7 @@ public class GptTranslationTest
         var context = "";
         var from = Language.English;
         var to = Language.Russian;
-        var translationStyle = TranslationStyle.СonversationalStyle;
+        var translationStyle = TranslationStyle.ConversationalStyle;
 
         _httpClientMock.Setup(h => h.Send(It.IsAny<List<ChatMessage>>(), It.IsAny<GptModel>()))
     .ReturnsAsync("Привет, мир!");

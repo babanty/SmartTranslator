@@ -7,7 +7,6 @@ public class GptTranslationIntegrationTest
 {
     private readonly IntegrationTestOptions _testOptions;
 
-
     public GptTranslationIntegrationTest()
     {
         _testOptions = IntegrationTestOptionsProvider.GetIntegrationTestOptions();
@@ -32,7 +31,7 @@ public class GptTranslationIntegrationTest
         var context = "";
         var from = Language.English;
         var to = Language.Russian;
-        var translationStyle = TranslationStyle.СonversationalStyle;
+        var translationStyle = TranslationStyle.ConversationalStyle;
 
         // Act
         var result = await translator.Translate(text, context, from, to, translationStyle);
@@ -94,5 +93,49 @@ public class GptTranslationIntegrationTest
         Assert.Equal(0f, result.Percent);
         Assert.NotNull(result.Request);
     }
+
+
+    [Fact]
+    public async Task DefineStyle_ValidInput_AnswerOK()
+    {
+        // Arrange
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
+        };
+        var httpClientOptions = new GptHttpClientOptions
+        {
+            ApiKey = _testOptions.ApiKey
+        };
+        var httpClient = new GptHttpClient(httpClientOptions);
+        var translator = new GptTranslator(translationOptions, httpClient);
+        var text = "She was struck by the book.";
+        var context = "";
+        var from = Language.English;
+        var to = Language.Russian;        
+
+        float GetProbability(StyleDefinitionResult res, TranslationStyle style)
+        {
+            return res.ProbabilityOfSuccess.Where(prob => prob.Style == style).First().Probability;
+        }
+
+
+        //Act
+        var result = await translator.DefineStyle(text, context, from, to);
+
+        var officialProb = GetProbability(result, TranslationStyle.OfficialStyle);
+        var conversationalProb = GetProbability(result, TranslationStyle.ConversationalStyle);
+        var teenageProb = GetProbability(result, TranslationStyle.TeenageStyle);
+
+
+        // Assert
+        Assert.NotNull(result);
+        
+        Assert.InRange(officialProb, 0.7f, 0.9f); // TODO: change to more appropriate values once GPT-4 is accessible
+        Assert.InRange(conversationalProb, 0.1f, 0.3f); // TODO: change to more appropriate values once GPT-4 is accessible
+        Assert.InRange(teenageProb, 0f, 0.2f); // TODO: change to more appropriate values once GPT-4 is accessible
+    }
+
+
 }
 
