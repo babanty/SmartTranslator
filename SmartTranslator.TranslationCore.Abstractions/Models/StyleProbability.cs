@@ -1,6 +1,6 @@
 ﻿using SmartTranslator.TranslationCore.Enums;
 
-namespace SmartTranslator.TranslationCore;
+namespace SmartTranslator.TranslationCore.Abstractions.Models;
 
 public record StyleProbability
 {

@@ -1,4 +1,5 @@
-﻿using SmartTranslator.TranslationCore.Enums;
+﻿using SmartTranslator.TranslationCore.Abstractions.Models;
+using SmartTranslator.TranslationCore.Enums;
 using Xunit;
 
 namespace SmartTranslator.TranslationCore.Tests;

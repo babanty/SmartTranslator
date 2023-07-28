@@ -1,4 +1,4 @@
-﻿namespace SmartTranslator.TranslationCore;
+﻿namespace SmartTranslator.TranslationCore.Abstractions.Models;
 
 public record StyleDefinitionResult
 {

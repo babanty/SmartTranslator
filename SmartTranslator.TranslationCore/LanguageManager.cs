@@ -1,6 +1,7 @@
 ﻿using OpenAI.ObjectModels.RequestModels;
+using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Enums;
-using SmartTranslator.TranslationCore.Exceptions;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 
 namespace SmartTranslator.TranslationCore;
 
@@ -14,6 +15,7 @@ public class LanguageManager : ILanguageManager
         _languageOptions = options;
         _gptHttpClient = httpClient;
     }
+
 
     public (Language, Language) GetLanguagePair() => (_languageOptions.From, _languageOptions.To);
 

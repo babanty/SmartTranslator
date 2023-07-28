@@ -1,4 +1,4 @@
-﻿namespace SmartTranslator.TranslationCore.Exceptions;
+﻿namespace SmartTranslator.TranslationCore.Abstractions.Exceptions;
 
 public class StyleDefinitionErrorException : Exception
 {
