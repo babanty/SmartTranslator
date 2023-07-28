@@ -113,30 +113,25 @@ public class GptTranslationIntegrationTest
         var text = "She was struck by the book.";
         var context = "";
         var from = Language.English;
-        var to = Language.Russian;        
-
-        float GetProbability(StyleDefinitionResult res, TranslationStyle style)
-        {
-            return res.ProbabilityOfSuccess.Where(prob => prob.Style == style).First().Probability;
-        }
+        var to = Language.Russian;              
 
 
         //Act
         var result = await translator.DefineStyle(text, context, from, to);
 
-        var officialProb = GetProbability(result, TranslationStyle.OfficialStyle);
-        var conversationalProb = GetProbability(result, TranslationStyle.ConversationalStyle);
-        var teenageProb = GetProbability(result, TranslationStyle.TeenageStyle);
-
 
         // Assert
+        float GetProbability(TranslationStyle style) =>
+            result.ProbabilityOfSuccess.Where(prob => prob.Style == style).First().Probability;
+
+        var officialProb = GetProbability(TranslationStyle.OfficialStyle);
+        var conversationalProb = GetProbability(TranslationStyle.ConversationalStyle);
+        var teenageProb = GetProbability(TranslationStyle.TeenageStyle);
+        
         Assert.NotNull(result);
         
         Assert.InRange(officialProb, 0.7f, 0.9f); // TODO: change to more appropriate values once GPT-4 is accessible
         Assert.InRange(conversationalProb, 0.1f, 0.3f); // TODO: change to more appropriate values once GPT-4 is accessible
         Assert.InRange(teenageProb, 0f, 0.2f); // TODO: change to more appropriate values once GPT-4 is accessible
     }
-
-
 }
-
