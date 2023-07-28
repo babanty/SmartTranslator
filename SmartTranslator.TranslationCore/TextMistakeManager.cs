@@ -1,7 +1,8 @@
 ﻿using Newtonsoft.Json;
 using OpenAI.ObjectModels.RequestModels;
-using SmartTranslator.Enums;
-using SmartTranslator.TranslationCore.Exceptions;
+using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
+using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TranslationCore;
 
@@ -17,6 +18,7 @@ public class TextMistakeManager : ITextMistakeManager
     }
 
 
+    /// <inheritdoc/>
     public async Task<string> Correct(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -39,11 +41,11 @@ public class TextMistakeManager : ITextMistakeManager
         try
         {
             var result = JsonConvert.DeserializeObject<SpellingCorrectorResponse>(correctSentence);
-            return result.Text;
+            return result!.Text;
         }
         catch (Exception ex)
         {
             throw new CorrectionErrorException("Failed to correct text.", ex);
-        }        
+        }
     }
 }

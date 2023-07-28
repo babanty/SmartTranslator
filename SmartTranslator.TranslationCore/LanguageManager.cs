@@ -1,6 +1,7 @@
 ﻿using OpenAI.ObjectModels.RequestModels;
-using SmartTranslator.Enums;
-using SmartTranslator.TranslationCore.Exceptions;
+using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
+using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TranslationCore;
 
@@ -15,9 +16,12 @@ public class LanguageManager : ILanguageManager
         _gptHttpClient = httpClient;
     }
 
+
+    /// <inheritdoc/>
     public (Language, Language) GetLanguagePair() => (_languageOptions.From, _languageOptions.To);
 
 
+    /// <inheritdoc/>
     public async Task<Language> DetermineLanguage(string text)
     {
         if (string.IsNullOrWhiteSpace(text))

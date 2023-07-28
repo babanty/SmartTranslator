@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json;
 using OpenAI.ObjectModels.RequestModels;
-using SmartTranslator.Enums;
-using SmartTranslator.TranslationCore.Exceptions;
+using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
+using SmartTranslator.TranslationCore.Abstractions.Models;
+using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TranslationCore;
 
@@ -18,7 +20,7 @@ public class GptTranslator : IGptTranslator
 
 
     /// <inheritdoc/>
-    public async Task<string> Translate(string text, string context, Language from, Language to, TranslationStyle translationStyle)
+    public async Task<string> Translate(string text, string? context, Language from, Language to, TranslationStyle translationStyle)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -41,6 +43,7 @@ public class GptTranslator : IGptTranslator
     }
 
 
+    /// <inheritdoc/>
     public async Task<EvaluationResponse> EvaluateContext(string text, Language to)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -69,15 +72,16 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
         try
         {
             var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);
-            return result;
+            return result!;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw new ContextEvaluationErrorException("Failed to evaluate context");
+            throw new ContextEvaluationErrorException("Failed to evaluate context.", ex);
         }
     }
 
 
+    /// <inheritdoc/>
     public async Task<StyleDefinitionResult> DefineStyle(string text, string? context, Language? from, Language? to)
     {
         if (string.IsNullOrWhiteSpace(text))
@@ -114,7 +118,7 @@ Give probabilities of all said styles.";
         try
         {
             var result = JsonConvert.DeserializeObject<StyleDefinitionResult>(evaluationJson);
-            return result;
+            return result!;
         }
         catch (Exception ex)
         {

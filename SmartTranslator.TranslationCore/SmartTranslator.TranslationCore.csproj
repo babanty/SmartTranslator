@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -14,7 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartTranslator.Enums\SmartTranslator.Enums.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TranslationCore.Abstractions\SmartTranslator.TranslationCore.Abstractions.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj" />
   </ItemGroup>
 
 </Project>
