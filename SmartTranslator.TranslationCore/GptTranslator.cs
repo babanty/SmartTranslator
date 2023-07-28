@@ -116,9 +116,9 @@ Give probabilities of all said styles.";
             var result = JsonConvert.DeserializeObject<StyleDefinitionResult>(evaluationJson);
             return result;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw new StyleDefinitionErrorException("Failed to define text style.");
+            throw new StyleDefinitionErrorException("Failed to define text style.", ex);
         }
     }
 

@@ -2,7 +2,7 @@
 
 public class StyleDefinitionErrorException : Exception
 {
-    public StyleDefinitionErrorException(string? message) : base(message)
+    public StyleDefinitionErrorException(string? message, Exception innerException) : base(message, innerException)
     {
     }
 }
