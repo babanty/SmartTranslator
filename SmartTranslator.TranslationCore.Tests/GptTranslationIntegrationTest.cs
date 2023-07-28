@@ -115,7 +115,7 @@ public class GptTranslationIntegrationTest
         var to = Language.Russian;
         var expected = new StyleDefinitionResult
         {
-            ProbabilityOfSuccess = new List<StyleProbability>
+            ProbabilityOfSuccess = new List<StyleProbability> // TODO: change to more appropriate values once GPT-4 is accessible
             {
                 new StyleProbability { Probability = 0.8f, Style = TranslationStyle.OfficialStyle },
                 new StyleProbability { Probability = 0.2f, Style = TranslationStyle.ConversationalStyle },

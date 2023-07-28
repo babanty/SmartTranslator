@@ -117,9 +117,9 @@ Your answer should be only this JSON. Don't say any other words besides this JSO
             var result = JsonConvert.DeserializeObject<StyleDefinitionResult>(evaluationJson);
             return result;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            throw new StyleDefinitionErrorException("Failed to define text style.");
+            throw new StyleDefinitionErrorException("Failed to define text style.", ex);
         }
     }
 
