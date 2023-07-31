@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Microsoft.Extensions.Options;
+using SmartTranslator.TelegramBot.View.TemplateStrings;
 using SmartTranslator.TranslationCore;
 
 namespace SmartTranslator.TelegramBot.View.Filters.Infrastructure;
