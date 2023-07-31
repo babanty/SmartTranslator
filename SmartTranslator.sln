@@ -13,9 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TranslationCore", "Translat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TranslationCore.Enums", "SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj", "{8D1464E6-5318-4172-AE37-DE3BD95E66BA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.TranslationCore.Abstractions", "SmartTranslator.TranslationCore.Abstractions\SmartTranslator.TranslationCore.Abstractions.csproj", "{16CA6CE9-3631-4A24-AEAE-B15EDCE01FB2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TranslationCore.Abstractions", "SmartTranslator.TranslationCore.Abstractions\SmartTranslator.TranslationCore.Abstractions.csproj", "{16CA6CE9-3631-4A24-AEAE-B15EDCE01FB2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.TranslationCore.DI", "SmartTranslator.TranslationCore.DI\SmartTranslator.TranslationCore.DI.csproj", "{86B740B9-5611-4009-8468-9A9E13D5B698}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TranslationCore.DI", "SmartTranslator.TranslationCore.DI\SmartTranslator.TranslationCore.DI.csproj", "{86B740B9-5611-4009-8468-9A9E13D5B698}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.TelegramBot.View", "SmartTranslator.TelegramBot.View\SmartTranslator.TelegramBot.View.csproj", "{1ECDC631-6168-45B6-8D0A-8BAF856C3E76}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,6 +49,10 @@ Global
 		{86B740B9-5611-4009-8468-9A9E13D5B698}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{86B740B9-5611-4009-8468-9A9E13D5B698}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{86B740B9-5611-4009-8468-9A9E13D5B698}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1ECDC631-6168-45B6-8D0A-8BAF856C3E76}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1ECDC631-6168-45B6-8D0A-8BAF856C3E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1ECDC631-6168-45B6-8D0A-8BAF856C3E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1ECDC631-6168-45B6-8D0A-8BAF856C3E76}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
