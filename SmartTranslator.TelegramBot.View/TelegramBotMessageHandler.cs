@@ -17,15 +17,15 @@ using MediatR;
 
 namespace SmartTranslator.TelegramBot.View;
 
-public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
+public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
 {
     private readonly IServiceProvider _serviceProvider;
-    private readonly ILogger<TelegramBotView> _logger;
+    private readonly ILogger<TelegramBotMessageHandler> _logger;
     private readonly GptTranslationOptions _gptTranslationOptions;
 
 
-    public TelegramBotView(IServiceProvider serviceProvider,
-                           ILogger<TelegramBotView> logger,
+    public TelegramBotMessageHandler(IServiceProvider serviceProvider,
+                           ILogger<TelegramBotMessageHandler> logger,
                            IOptions<GptTranslationOptions> gptTranslationOptions)
     {
         _serviceProvider = serviceProvider;
@@ -48,11 +48,11 @@ public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
     }
 
 
-    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct)
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct, TelegramBotRoutingResolver router)
     {
         try
         {
-            await HandleRequest(botClient, update, ct);
+            await HandleRequest(botClient, update, ct, router);
         }
         catch (Exception e)
         {
@@ -61,20 +61,7 @@ public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
     }
 
 
-    protected override async Task ExecuteAsync(CancellationToken ct)
-    {
-        using var scope = _serviceProvider.CreateScope();
-        var gptTelegramBotBuilder = scope.ServiceProvider.GetRequiredService<IGptTelegramBotBuilder>();
-        await gptTelegramBotBuilder.Build();
-
-        while (!ct.IsCancellationRequested)
-        {
-            await Task.Delay(1000, ct);
-        }
-    }
-
-
-    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct)
+    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct, TelegramBotRoutingResolver router)
     {
         // TODO [NotImpl] - сделать ограничение на количество запросов от одного пользователя
 
@@ -82,7 +69,7 @@ public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
 
         var chatId = request?.Message?.From?.Id ?? request?.CallbackQuery?.From?.Id;
 
-        var handlingResult = await HandleMessageAndExceptions(request, scope);
+        var handlingResult = await HandleMessageAndExceptions(request, scope, router);
 
         await Render(handlingResult, chatId ?? 0, scope, ct);
     }
@@ -140,7 +127,7 @@ public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
     }
 
 
-    private async Task<string> HandleMessageAndExceptions(Update update, IServiceScope scope)
+    private async Task<string> HandleMessageAndExceptions(Update update, IServiceScope scope, TelegramBotRoutingResolver router)
     {
         var filtersHandlerChain = scope.ServiceProvider.GetRequiredService<IFiltersHandlerChain>();
         var domainEventDistributor = scope.ServiceProvider.GetRequiredService<IPublisher>();
@@ -151,7 +138,7 @@ public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
         {
             var cancellationTokenSource = await ActivateLoadingAnimation(messageSender, update?.Message?.Chat?.Id);
 
-            var result = await RouteMessageOrThrow(update, telegramBotViews);
+            var result = await router.RouteMessageOrThrow(update, telegramBotViews);
 
             DeactivateLoadingAnimation(cancellationTokenSource);
 
@@ -218,53 +205,6 @@ public class TelegramBotView : BackgroundService, IGptTelegramBotMessageHandler
     private void DeactivateLoadingAnimation(CancellationTokenSource cancellationTokenSource)
     {
         cancellationTokenSource.Cancel();
-    }
-
-    private async Task<string> RouteMessageOrThrow(Update update, List<ITelegramBotView> telegramBotViews)
-    {
-        T GetView<T>() where T : ITelegramBotView
-        {
-            var view = telegramBotViews.OfType<T>().FirstOrDefault();
-
-            return view is null ? throw new InvalidOperationException($"Не найден обработчик для сообщения типа {typeof(T).Name}") : view;
-        }
-
-        if (update is null)
-            return string.Empty;
-
-        // translation
-        if (update.Type == UpdateType.Message && update.Message?.Type == MessageType.Text)
-        {
-            var messageText = update?.Message?.Text;
-
-            return messageText switch
-            {
-
-            };
-        }
-
-        // /start /block etc
-        if (update.Type == UpdateType.MyChatMember
-            && update?.MyChatMember?.NewChatMember?.Status != update?.MyChatMember?.OldChatMember?.Status)
-        {
-            if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Kicked)
-            {
-                // return await GetView<BlockButtonView>().Render(update);
-            }
-
-            if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Member)
-            {
-                return string.Empty; // из-за особенностей телеграм ответ в секции "translation", реакция на TelegramBotButtons.Start -> StartButtonView
-            }
-        }
-
-        // audio msg
-        if (update?.Type == UpdateType.Message && update.Message?.Type == MessageType.Voice)
-        {
-            throw new VoiceMessageTypeNotImplementedException();
-        }
-
-        throw new UnknownMessageTypeException();
-    }
+    }    
 }
 

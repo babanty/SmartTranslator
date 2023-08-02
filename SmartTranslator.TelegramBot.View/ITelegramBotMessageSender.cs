@@ -3,7 +3,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View
 {
-    public interface ITelegramBotMessageSender
+    public interface ITelegramBotMessageSender // TODO: move to management
     {
         Task<Message> Send(string message, long chatId, IReplyMarkup? keyboard = null, CancellationToken ct = default);
 
