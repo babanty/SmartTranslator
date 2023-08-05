@@ -14,6 +14,7 @@ using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 using Telegram.Bot.Types.Enums;
 using MediatR;
+using OpenAI.ObjectModels.ResponseModels;
 
 namespace SmartTranslator.TelegramBot.View;
 
@@ -48,11 +49,11 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct, TelegramBotRoutingResolver router)
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct, TelegramBotRoutingResolver router, MessageView messageView)
     {
         try
         {
-            await HandleRequest(botClient, update, ct, router);
+            await HandleRequest(botClient, update, ct, router, messageView);
         }
         catch (Exception e)
         {
@@ -61,7 +62,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct, TelegramBotRoutingResolver router)
+    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct, TelegramBotRoutingResolver router, MessageView messageView)
     {
         // TODO [NotImpl] - сделать ограничение на количество запросов от одного пользователя
 
@@ -69,49 +70,33 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
 
         var chatId = request?.Message?.From?.Id ?? request?.CallbackQuery?.From?.Id;
 
-        var handlingResult = await HandleMessageAndExceptions(request, scope, router);
+        var handlingResultMessage = await HandleMessageAndExceptions(request, scope, router);
+        var handlingResult = handlingResultMessage.Text;
 
-        await Render(handlingResult, chatId ?? 0, scope, ct);
+        await Render(handlingResult, chatId ?? 0, scope, ct, messageView);
     }
 
 
-    private async Task Render(string handlingResult, long chatId, IServiceScope scope, CancellationToken ct)
+    private async Task Render(string handlingResult, long chatId, IServiceScope scope, CancellationToken ct, MessageView messageView)
     {
         if (string.IsNullOrEmpty(handlingResult) || chatId == default)
             return;
 
         var telegramBotMessageSender = scope.ServiceProvider.GetRequiredService<ITelegramBotMessageSender>();
 
-        await SendMessageWithButtons(handlingResult, chatId, telegramBotMessageSender, ct);
+        await SendMessageWithButtons(chatId, telegramBotMessageSender, ct, messageView);
     }
 
 
-    private async Task SendMessageWithButtons(string handlingResult,
-                                              long chatId,
+    private async Task SendMessageWithButtons(long chatId,
                                               ITelegramBotMessageSender telegramBotMessageSender,
-                                              CancellationToken ct)
+                                              CancellationToken ct,
+                                              MessageView messageView)
     {
-        var firstButtonLine = new List<KeyboardButton>()
-        {
-            // new KeyboardButton(TelegramBotButtons.Explain),
-        };
+        var text = messageView.Text;
+        var markup = messageView.Markup;
 
-        var secondButtonLine = new KeyboardButton[]
-        {
-            // new KeyboardButton(TelegramBotButtons.OfficialStyle),
-            // new KeyboardButton(TelegramBotButtons.TeenageStyle),
-        };
-
-        var markup = new ReplyKeyboardMarkup(new[]
-        {
-            firstButtonLine.ToArray(),
-            secondButtonLine
-        })
-        {
-            ResizeKeyboard = true
-        };
-
-        var markupedHandlingResult = $"`{handlingResult}`"; // чтобы весь текст мог копироваться и игнор таких проблем, типо не экранированных точек
+        var markupedHandlingResult = $"`{text}`"; // чтобы весь текст мог копироваться и игнор таких проблем, типо не экранированных точек
 
         await telegramBotMessageSender.Send(markupedHandlingResult, chatId, markup, ct);
     }
@@ -127,7 +112,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    private async Task<string> HandleMessageAndExceptions(Update update, IServiceScope scope, TelegramBotRoutingResolver router)
+    private async Task<MessageView?> HandleMessageAndExceptions(Update update, IServiceScope scope, TelegramBotRoutingResolver router)
     {
         var filtersHandlerChain = scope.ServiceProvider.GetRequiredService<IFiltersHandlerChain>();
         var domainEventDistributor = scope.ServiceProvider.GetRequiredService<IPublisher>();
@@ -138,7 +123,8 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
         {
             var cancellationTokenSource = await ActivateLoadingAnimation(messageSender, update?.Message?.Chat?.Id);
 
-            var result = await router.RouteMessageOrThrow(update, telegramBotViews);
+            var view = await router.RouteMessageOrThrow(update, telegramBotViews);
+            var result = view is null ? null : await view.Render(update);
 
             DeactivateLoadingAnimation(cancellationTokenSource);
 
@@ -148,7 +134,12 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
         {
             await domainEventDistributor.Publish(new HandleMessageFailedEvent(update, e));
 
-            return await filtersHandlerChain.FilterException(e);
+            var message = await filtersHandlerChain.FilterException(e);
+            return new MessageView
+            {
+                Text = message,
+                Markup = null
+            };
         }
     }
 
