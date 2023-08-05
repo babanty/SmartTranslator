@@ -1,20 +1,13 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
 using SmartTranslator.TelegramBot.View.Views;
-using SmartTranslator.TranslationCore.Enums;
 using SmartTranslator.TranslationCore;
-using SmartTranslator.TelegramBot.View.Exceptions;
 using Telegram.Bot;
-using Microsoft.Extensions.Hosting;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
-using Telegram.Bot.Types.Enums;
-using MediatR;
-using OpenAI.ObjectModels.ResponseModels;
 
 namespace SmartTranslator.TelegramBot.View;
 
@@ -176,7 +169,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
             catch (OperationCanceledException)
             {
             }
-            catch (Exception e)
+            catch (Exception)
             {
             }
 
@@ -196,6 +189,6 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     private void DeactivateLoadingAnimation(CancellationTokenSource cancellationTokenSource)
     {
         cancellationTokenSource.Cancel();
-    }    
+    }
 }
 

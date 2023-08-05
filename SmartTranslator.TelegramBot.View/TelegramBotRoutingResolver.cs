@@ -41,7 +41,7 @@ public class TelegramBotRoutingResolver
 
             if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Member)
             {
-                return GetView<ChangedStatusToMemberView>(); 
+                return GetView<ChangedStatusToMemberView>();
             }
         }
 

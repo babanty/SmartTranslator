@@ -15,7 +15,7 @@ public class FiltersHandlerChain : IFiltersHandlerChain
     public Task<string> FilterException(Exception e)
     {
         var filters = GetFilters();
-        
+
         var filter = filters.FirstOrDefault(f => f.CanHandle(e));
 
         if (filter is null)
