@@ -8,5 +8,5 @@ namespace SmartTranslator.TelegramBot.View;
 public interface IGptTelegramBotMessageHandler // TODO: move to management
 {
     Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken);
-    Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken, TelegramBotRoutingResolver router, MessageView messageView);
+    Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken);
 }

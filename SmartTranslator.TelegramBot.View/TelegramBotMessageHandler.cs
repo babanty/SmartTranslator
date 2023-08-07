@@ -42,11 +42,11 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct, TelegramBotRoutingResolver router, MessageView messageView)
+    public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct)
     {
         try
         {
-            await HandleRequest(botClient, update, ct, router, messageView);
+            await HandleRequest(botClient, update, ct);
         }
         catch (Exception e)
         {
@@ -55,7 +55,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct, TelegramBotRoutingResolver router, MessageView messageView)
+    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct)
     {
         // TODO [NotImpl] - сделать ограничение на количество запросов от одного пользователя
 
@@ -63,10 +63,10 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
 
         var chatId = request?.Message?.From?.Id ?? request?.CallbackQuery?.From?.Id;
 
-        var handlingResultMessage = await HandleMessageAndExceptions(request, scope, router);
-        var handlingResult = handlingResultMessage.Text;
+        var handlingResult = await HandleMessageAndExceptions(request, scope);
+        var handlingResultText = handlingResult.Text;
 
-        await Render(handlingResult, chatId ?? 0, scope, ct, messageView);
+        await Render(handlingResultText, chatId ?? 0, scope, ct, handlingResult);
     }
 
 
@@ -105,12 +105,13 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    private async Task<MessageView?> HandleMessageAndExceptions(Update update, IServiceScope scope, TelegramBotRoutingResolver router)
+    private async Task<MessageView?> HandleMessageAndExceptions(Update update, IServiceScope scope)
     {
         var filtersHandlerChain = scope.ServiceProvider.GetRequiredService<IFiltersHandlerChain>();
         var domainEventDistributor = scope.ServiceProvider.GetRequiredService<IPublisher>();
         var telegramBotViews = scope.ServiceProvider.GetServices<ITelegramBotView>().ToList();
         var messageSender = scope.ServiceProvider.GetRequiredService<ITelegramBotMessageSender>();
+        var router = scope.ServiceProvider.GetRequiredService<TelegramBotRoutingResolver>();
 
         try
         {
