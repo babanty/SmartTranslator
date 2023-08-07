@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Telegram.Bot;
+﻿using Telegram.Bot;
 
 namespace SmartTranslator.TelegramBot.Management.GptTelegramBots;
 

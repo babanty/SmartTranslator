@@ -1,12 +1,10 @@
 ﻿using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
 using SmartTranslator.TelegramBot.View.Views;
-using SmartTranslator.TranslationCore;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
