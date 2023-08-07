@@ -1,9 +1,9 @@
 ﻿using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace SmartTranslator.TelegramBot.View
+namespace SmartTranslator.TelegramBot.Management.GptTelegramBots
 {
-    public interface ITelegramBotMessageSender // TODO: move to management
+    public interface ITelegramBotMessageSender
     {
         Task<Message> Send(string message, long chatId, IReplyMarkup? keyboard = null, CancellationToken ct = default);
 

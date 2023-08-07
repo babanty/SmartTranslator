@@ -2,7 +2,7 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace SmartTranslator.TelegramBot.View;
+namespace SmartTranslator.TelegramBot.Management.GptTelegramBots;
 
 /// <summary> Обрабатывает сообщения из телеграм бота согласно сигнатуре методов-eventHandler-ов </summary>
 public interface IGptTelegramBotMessageHandler // TODO: move to management
