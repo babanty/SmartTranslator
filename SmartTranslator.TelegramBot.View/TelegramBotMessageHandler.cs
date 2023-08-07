@@ -2,6 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SmartTranslator.TelegramBot.Management.GptTelegramBots;
+using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
 using SmartTranslator.TelegramBot.View.Views;
 using SmartTranslator.TranslationCore;
@@ -15,16 +17,13 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<TelegramBotMessageHandler> _logger;
-    private readonly GptTranslationOptions _gptTranslationOptions;
 
 
     public TelegramBotMessageHandler(IServiceProvider serviceProvider,
-                           ILogger<TelegramBotMessageHandler> logger,
-                           IOptions<GptTranslationOptions> gptTranslationOptions)
+                           ILogger<TelegramBotMessageHandler> logger)
     {
         _serviceProvider = serviceProvider;
         _logger = logger;
-        _gptTranslationOptions = gptTranslationOptions?.Value ?? new();
     }
 
 
