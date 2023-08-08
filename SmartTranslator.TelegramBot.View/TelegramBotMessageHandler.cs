@@ -1,10 +1,6 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
-using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
-using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
-using SmartTranslator.TelegramBot.View.Views;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -41,9 +37,12 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
 
     public async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken ct)
     {
+        var scope = CreateServiceScope(botClient);
+        var incomingMessageHandler = scope.ServiceProvider.GetRequiredService<TelegramIncomingMessageHandler>();
+
         try
         {
-            await HandleRequest(botClient, update, ct);
+            await incomingMessageHandler.HandleRequest(botClient, update, ct);
         }
         catch (Exception e)
         {
@@ -52,87 +51,13 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     }
 
 
-    private async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct)
-    {
-        // TODO [NotImpl] - сделать ограничение на количество запросов от одного пользователя
-
-        using var scope = CreateServiceScope(botClient);
-
-        var chatId = request?.Message?.From?.Id ?? request?.CallbackQuery?.From?.Id;
-
-        var handlingResult = await HandleMessageAndExceptions(request, scope);
-        var handlingResultText = handlingResult.Text;
-
-        await Render(handlingResultText, chatId ?? 0, scope, ct, handlingResult);
-    }
-
-
-    private async Task Render(string handlingResult, long chatId, IServiceScope scope, CancellationToken ct, MessageView messageView)
-    {
-        if (string.IsNullOrEmpty(handlingResult) || chatId == default)
-            return;
-
-        var telegramBotMessageSender = scope.ServiceProvider.GetRequiredService<ITelegramBotMessageSender>();
-
-        await SendMessageWithButtons(chatId, telegramBotMessageSender, ct, messageView);
-    }
-
-
-    private async Task SendMessageWithButtons(long chatId,
-                                              ITelegramBotMessageSender telegramBotMessageSender,
-                                              CancellationToken ct,
-                                              MessageView messageView)
-    {
-        var text = messageView.Text;
-        var markup = messageView.Markup;
-
-        var markupedHandlingResult = $"`{text}`"; // чтобы весь текст мог копироваться и игнор таких проблем, типо не экранированных точек
-
-        await telegramBotMessageSender.Send(markupedHandlingResult, chatId, markup, ct);
-    }
-
-
-    private IServiceScope CreateServiceScope(ITelegramBotClient botClient)
+    public IServiceScope CreateServiceScope(ITelegramBotClient botClient)
     {
         var scope = _serviceProvider.CreateScope();
 
         scope.ServiceProvider.GetRequiredService<ITelegramBotClientProvider>().Init(botClient);
 
         return scope;
-    }
-
-
-    private async Task<MessageView?> HandleMessageAndExceptions(Update update, IServiceScope scope)
-    {
-        var filtersHandlerChain = scope.ServiceProvider.GetRequiredService<IFiltersHandlerChain>();
-        var domainEventDistributor = scope.ServiceProvider.GetRequiredService<IPublisher>();
-        var telegramBotViews = scope.ServiceProvider.GetServices<ITelegramBotView>().ToList();
-        var messageSender = scope.ServiceProvider.GetRequiredService<ITelegramBotMessageSender>();
-        var router = scope.ServiceProvider.GetRequiredService<TelegramBotRoutingResolver>();
-        var loadingAnimator = scope.ServiceProvider.GetRequiredService<ILoadingAnimation>();
-
-        try
-        {
-            var cancellationTokenSource = await loadingAnimator.ActivateLoadingAnimation(messageSender, update?.Message?.Chat?.Id);
-
-            var view = await router.RouteMessageOrThrow(update, telegramBotViews);
-            var result = view is null ? null : await view.Render(update);
-
-            loadingAnimator.DeactivateLoadingAnimation(cancellationTokenSource);
-
-            return result;
-        }
-        catch (Exception e)
-        {
-            await domainEventDistributor.Publish(new HandleMessageFailedEvent(update, e));
-
-            var message = await filtersHandlerChain.FilterException(e);
-            return new MessageView
-            {
-                Text = message,
-                Markup = null
-            };
-        }
     }
 }
 
