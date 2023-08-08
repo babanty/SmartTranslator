@@ -1,12 +1,12 @@
 using MediatR;
 using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Infrastructure.Extensions;
+using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
+using SmartTranslator.TelegramBot.View;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
-using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TranslationCore.DI;
-using SmartTranslator.TelegramBot.View;
-using SmartTranslator.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 

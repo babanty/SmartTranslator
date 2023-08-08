@@ -18,7 +18,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddSingleton<TelegramBotHandlingStarter>();
         services.AddHostedService<TelegramBotHandlingStarter>();
-        services.AddScoped<IGptTelegramBotMessageHandler, TelegramBotMessageHandler>();        
+        services.AddScoped<IGptTelegramBotMessageHandler, TelegramBotMessageHandler>();
         services.AddScoped<IFiltersHandlerChain, FiltersHandlerChain>();
         services.AddScoped<FilterTools>();
 

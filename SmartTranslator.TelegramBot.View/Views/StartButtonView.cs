@@ -1,7 +1,4 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
-using SmartTranslator.Infrastructure.TemplateStrings;
-using SmartTranslator.TranslationCore;
-using System.Runtime.InteropServices;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
