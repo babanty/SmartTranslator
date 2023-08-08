@@ -41,18 +41,22 @@ public class TelegramIncomingMessageHandler
     {
         // TODO [NotImpl] - сделать ограничение на количество запросов от одного пользователя
 
+        if ((botClient == null) || (request == null))
+        {
+            return;
+        }
+
         var chatId = request?.Message?.From?.Id ?? request?.CallbackQuery?.From?.Id;
 
-        var handlingResult = await HandleMessageAndExceptions(request);
-        var handlingResultText = handlingResult.Text;
+        var handlingResult = await HandleMessageAndExceptions(request!);
 
-        await Render(handlingResultText, chatId ?? 0, ct, handlingResult);
+        await Render(handlingResult, chatId ?? 0, ct);
     }
 
 
-    private async Task Render(string handlingResult, long chatId, CancellationToken ct, MessageView messageView)
+    private async Task Render(MessageView? messageView, long chatId, CancellationToken ct)
     {
-        if (string.IsNullOrEmpty(handlingResult) || chatId == default)
+        if (messageView == null || chatId == default)
             return;
 
         await SendMessageWithButtons(chatId, _telegramBotMessageSender, ct, messageView);
@@ -79,8 +83,8 @@ public class TelegramIncomingMessageHandler
         {
             var cancellationTokenSource = await _loadingAnimator.ActivateLoadingAnimation(_messageSender, update?.Message?.Chat?.Id);
 
-            var view = await _router.RouteMessageOrThrow(update, _telegramBotViews);
-            var result = view is null ? null : await view.Render(update);
+            var view = await _router.RouteMessageOrThrow(update!, _telegramBotViews);
+            var result = view is null ? null : await view.Render(update!);
 
             _loadingAnimator.DeactivateLoadingAnimation(cancellationTokenSource);
 
