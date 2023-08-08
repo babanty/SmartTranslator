@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;

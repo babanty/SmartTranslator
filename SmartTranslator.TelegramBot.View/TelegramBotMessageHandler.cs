@@ -1,10 +1,6 @@
-﻿using MediatR;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
-using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
-using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
-using SmartTranslator.TelegramBot.View.Views;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Types;
@@ -43,7 +39,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     {
         var scope = CreateServiceScope(botClient);
         var incomingMessageHandler = scope.ServiceProvider.GetRequiredService<TelegramIncomingMessageHandler>();
-        
+
         try
         {
             await incomingMessageHandler.HandleRequest(botClient, update, ct);
