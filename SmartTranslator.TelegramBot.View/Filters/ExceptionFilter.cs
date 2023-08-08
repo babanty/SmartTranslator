@@ -3,7 +3,7 @@ using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
 
 namespace SmartTranslator.TelegramBot.View.Filters;
 
-/// <summary> Неизвестная ошибка, мы постараемся исправить ее как можно скорее. </summary>
+/// <summary> Unknown error, we are trying to fix it as soon as possible. </summary>
 public class ExceptionFilter : Filter
 {
     private readonly ILogger<ExceptionFilter> _logger;
@@ -21,8 +21,8 @@ public class ExceptionFilter : Filter
 
     public override async Task<string> Handle(Exception e)
     {
-        _logger.LogError(new EventId(1000002), e, "Перевод прошел неудачно");
+        _logger.LogError(new EventId(1000002), e, "Translation failed");
 
-        return await _tools.GetMessageUsingTempalate("UnknownErrorWeWillTryToFixItAsSoonAsPossible");
+        return await _tools.GetMessageUsingTemplate("UnknownErrorWeWillTryToFixItAsSoonAsPossible");
     }
 }

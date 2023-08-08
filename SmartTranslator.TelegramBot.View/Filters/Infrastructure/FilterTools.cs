@@ -23,8 +23,8 @@ public class FilterTools
     }
 
 
-    /// <returns> Сообщение на двух языках, пример: "Моя ошибка {следующая строка} My error" </returns>
-    public async Task<string> GetMessageUsingTempalate(string templateName, IEnumerable<KeyAndNewValue>? templateArgs = null)
+    /// <returns> A message in two languages, for example: "My error {New line} Моя ошибка" </returns>
+    public async Task<string> GetMessageUsingTemplate(string templateName, IEnumerable<KeyAndNewValue>? templateArgs = null)
     {
         var templates = await GetTemplates(templateName);
 

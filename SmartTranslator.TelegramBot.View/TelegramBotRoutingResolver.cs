@@ -14,7 +14,7 @@ public class TelegramBotRoutingResolver
         {
             var view = telegramBotViews.OfType<T>().FirstOrDefault();
 
-            return view is null ? throw new InvalidOperationException($"Не найден обработчик для сообщения типа {typeof(T).Name}") : view;
+            return view is null ? throw new InvalidOperationException($"No handler found for a message of type {typeof(T).Name}") : view;
         }
 
         if (update is null)

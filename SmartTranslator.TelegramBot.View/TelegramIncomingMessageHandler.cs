@@ -39,7 +39,7 @@ public class TelegramIncomingMessageHandler
 
     public async Task HandleRequest(ITelegramBotClient botClient, Update request, CancellationToken ct)
     {
-        // TODO [NotImpl] - сделать ограничение на количество запросов от одного пользователя
+        // TODO [NotImpl] - limit the number of requests from a single user
 
         if ((botClient == null) || (request == null))
         {
@@ -71,7 +71,7 @@ public class TelegramIncomingMessageHandler
         var text = messageView.Text;
         var markup = messageView.Markup;
 
-        var markupedHandlingResult = $"`{text}`"; // чтобы весь текст мог копироваться и игнор таких проблем, типо не экранированных точек
+        var markupedHandlingResult = $"`{text}`"; // So that all the text can be copied, ignoring such problems, like unescaped dots
 
         await telegramBotMessageSender.Send(markupedHandlingResult, chatId, markup, ct);
     }

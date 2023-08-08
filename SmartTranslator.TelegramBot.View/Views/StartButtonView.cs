@@ -28,10 +28,10 @@ public class StartButtonView : ITelegramBotView
 
     private Task<MessageView> GreetingLetterView(Update update)
     {
-        var greetingText = "Привет, новый пользователь";
+        var greetingText = "Привет, новый пользователь / Hello, new user";
         var replyKeyboard = new ReplyKeyboardMarkup(new[]
         {
-            new KeyboardButton("Качественно перевести новый текст")
+            new KeyboardButton("Качественно перевести новый текст / Translate the new text accurately")
         });
 
 

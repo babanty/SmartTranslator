@@ -7,7 +7,7 @@ public class TranslateButtonView : ITelegramBotView
 {
     public Task<MessageView> Render(Update update)
     {
-        var text = $"Была нажата кнопка {TelegramBotButtons.Translate}";
+        var text = $"'{TelegramBotButtons.Translate}' button was pressed";
 
         return Task.FromResult(new MessageView
         {

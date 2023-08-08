@@ -4,7 +4,7 @@ namespace SmartTranslator.Infrastructure.TemplateStrings;
 
 public static class ServiceCollectionExtension
 {
-    /// <summary> Добавляет в DI ITemplateStringService </summary>
+    /// <summary> Adds ITemplateStringService to DI </summary>
     public static IServiceCollection AddTemplateStringService(this IServiceCollection services)
     {
         services.AddScoped<TemplateStringDbContext>();

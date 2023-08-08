@@ -10,8 +10,8 @@ namespace SmartTranslator.TelegramBot.View;
 public static class ServiceCollectionExtensions
 {
     /// <summary> 
-    /// Добавить представление (View в MVC) для телеграм-бота-переводчка.
-    /// Для работы так же отдельно необходимо добавить GptTranslationOptions, ITelegramBotMessageSender, TranslationResultProvider, ITemplateStringService, IMapper
+    /// Add a view (View in MVC) for the telegram-bot-translator.
+    /// For it to work you also need to separately add GptTranslationOptions, ITelegramBotMessageSender, TranslationResultProvider, ITemplateStringService, IMapper
     /// </summary>
     /// <param name="assemblies"> AppDomain.CurrentDomain.GetAssemblies() </param>
     public static IServiceCollection AddTelegramTranslatorBotView(this IServiceCollection services, params Assembly[] assemblies)
@@ -44,7 +44,7 @@ public static class ServiceCollectionExtensions
             }
             catch
             {
-                // NOTE: заглушка для сервисов, которые необходимо в ручную регистрировать в DI
+                // NOTE: a placeholder for services that need to be manually registered in DI
             }
         }
 

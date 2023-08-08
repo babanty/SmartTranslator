@@ -1,9 +1,9 @@
 ﻿namespace SmartTranslator.Infrastructure.TemplateStrings;
 
-/// <summary> Контекст олицитворяющий одну главную физическую БД где поумолчанию будут записывать данные </summary>
+/// <summary> A context representing a single main physical database where data will be written by default </summary>
 internal class TemplateStringDbContext
 {
-    /// <summary> Коллекция шаблонов строк, хранящаяся в БД </summary>
+    /// <summary> A collection of string templates stored in the database </summary>
     private List<TemplateString> TemplateStringCollection { get; } = new()
     {
         new TemplateString(Guid.NewGuid(), "TextIsTooLongException", "Текст слишком длинный, максимальное количество символов: MaxSymbols, ваш текст: TextLength.", "", TemplateLanguage.Rus, EnvironmentType.Any),
