@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TranslationCore;
@@ -13,11 +12,11 @@ public class FilterTools
     private readonly ITemplateStringService _templateStringService;
 
 
-    public FilterTools(IOptions<GptTranslationOptions> gptTranslationOptions,
+    public FilterTools(GptTranslationOptions gptTranslationOptions,
                        IMapper mapper,
                        ITemplateStringService templateStringService)
     {
-        _gptTranslationOptions = gptTranslationOptions.Value ?? new();
+        _gptTranslationOptions = gptTranslationOptions ?? new();
         _mapper = mapper;
         _templateStringService = templateStringService;
     }

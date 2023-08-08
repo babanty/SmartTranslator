@@ -46,7 +46,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
         }
         catch (Exception e)
         {
-            _logger.LogError(new EventId(1000001), e, "Processing the telegram message failed. Most likely, the problem is in sending the response");
+            _logger.LogError(new EventId(1000001), e, "Processing of the telegram message failed. Most likely, the problem is in sending the response");
         }
     }
 

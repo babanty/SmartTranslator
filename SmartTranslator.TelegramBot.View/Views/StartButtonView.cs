@@ -1,4 +1,5 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -28,7 +29,7 @@ public class StartButtonView : ITelegramBotView
         var greetingText = "Привет, новый пользователь / Hello, new user";
         var replyKeyboard = new ReplyKeyboardMarkup(new[]
         {
-            new KeyboardButton("Качественно перевести новый текст / Translate the new text accurately")
+            new KeyboardButton(TelegramBotButtons.Translate)
         });
 
 

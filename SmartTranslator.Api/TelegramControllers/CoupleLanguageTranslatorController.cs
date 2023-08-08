@@ -8,4 +8,9 @@ public class CoupleLanguageTranslatorController
     {
         return;
     }
+
+    public Task<string> Translate(Message message)
+    {
+        return Task.FromResult("I don't know how to translate yet");
+    }
 }

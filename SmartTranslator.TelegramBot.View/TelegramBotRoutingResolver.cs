@@ -29,6 +29,7 @@ public class TelegramBotRoutingResolver
             {
                 var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
                 var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
+                _ => GetView<DefaultTranslateButtonView>()
             };
         }
 
