@@ -109,15 +109,16 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
         var telegramBotViews = scope.ServiceProvider.GetServices<ITelegramBotView>().ToList();
         var messageSender = scope.ServiceProvider.GetRequiredService<ITelegramBotMessageSender>();
         var router = scope.ServiceProvider.GetRequiredService<TelegramBotRoutingResolver>();
+        var loadingAnimator = scope.ServiceProvider.GetRequiredService<ILoadingAnimation>();
 
         try
         {
-            var cancellationTokenSource = await ActivateLoadingAnimation(messageSender, update?.Message?.Chat?.Id);
+            var cancellationTokenSource = await loadingAnimator.ActivateLoadingAnimation(messageSender, update?.Message?.Chat?.Id);
 
             var view = await router.RouteMessageOrThrow(update, telegramBotViews);
             var result = view is null ? null : await view.Render(update);
 
-            DeactivateLoadingAnimation(cancellationTokenSource);
+            loadingAnimator.DeactivateLoadingAnimation(cancellationTokenSource);
 
             return result;
         }
@@ -132,61 +133,6 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
                 Markup = null
             };
         }
-    }
-
-    private async Task<CancellationTokenSource> ActivateLoadingAnimation(ITelegramBotMessageSender messageSender, long? chatId)
-    {
-        // NOTE: анимация загрузки представляет из себя просто точки, например "....", каждую секунду количество точек становится больше на одну
-
-        CancellationTokenSource cts = new();
-
-        if (chatId is null)
-        {
-            return cts;
-        }
-
-        string loadingMessage = "\\.\\.";
-        var loadingMessageId = (await messageSender.SendOrUpdateMessage(loadingMessage, chatId.Value)).MessageId;
-
-        _ = Task.Run(async () =>
-        {
-            try
-            {
-                var dotsCounter = 2;
-                var maxDots = 15;
-                while (!cts.Token.IsCancellationRequested && dotsCounter < maxDots)
-                {
-                    await Task.Delay(TimeSpan.FromSeconds(1), cts.Token);
-
-                    loadingMessage += "\\.";
-                    dotsCounter++;
-
-                    await messageSender.SendOrUpdateMessage(loadingMessage, chatId.Value, loadingMessageId);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-            }
-            catch (Exception)
-            {
-            }
-
-            try
-            {
-                await messageSender.DeleteMessage(chatId.Value, loadingMessageId);
-            }
-            catch
-            {
-            }
-
-        }, cts.Token);
-
-        return cts;
-    }
-
-    private void DeactivateLoadingAnimation(CancellationTokenSource cancellationTokenSource)
-    {
-        cancellationTokenSource.Cancel();
     }
 }
 
