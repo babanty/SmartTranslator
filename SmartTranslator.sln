@@ -21,7 +21,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TelegramBot
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.Infrastructure", "SmartTranslator.Infrastructure\SmartTranslator.Infrastructure.csproj", "{DA392B1C-7147-4B11-9E6D-92D026D2C312}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.TelegramBot.Management", "SmartTranslator.TelegramBot.Management\SmartTranslator.TelegramBot.Management.csproj", "{E2B13308-8D2F-49E2-8B7F-A1EC75162360}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.TelegramBot.Management", "SmartTranslator.TelegramBot.Management\SmartTranslator.TelegramBot.Management.csproj", "{E2B13308-8D2F-49E2-8B7F-A1EC75162360}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.Api", "SmartTranslator.Api\SmartTranslator.Api.csproj", "{C07DDD5D-1375-4430-88EC-352DEFA235A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{E2B13308-8D2F-49E2-8B7F-A1EC75162360}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E2B13308-8D2F-49E2-8B7F-A1EC75162360}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E2B13308-8D2F-49E2-8B7F-A1EC75162360}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C07DDD5D-1375-4430-88EC-352DEFA235A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07DDD5D-1375-4430-88EC-352DEFA235A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07DDD5D-1375-4430-88EC-352DEFA235A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07DDD5D-1375-4430-88EC-352DEFA235A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

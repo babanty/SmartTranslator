@@ -1,4 +1,5 @@
-﻿using SmartTranslator.TelegramBot.View.Exceptions;
+﻿using SmartTranslator.TelegramBot.View.Controls;
+using SmartTranslator.TelegramBot.View.Exceptions;
 using SmartTranslator.TelegramBot.View.Views;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -26,7 +27,8 @@ public class TelegramBotRoutingResolver
 
             return messageText switch
             {
-
+                var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
+                var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
             };
         }
 

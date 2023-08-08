@@ -12,10 +12,10 @@ public class GptTelegramBotBuilder : IGptTelegramBotBuilder
     private readonly GptTelegramBotOptions _botOptions;
 
     public GptTelegramBotBuilder(IGptTelegramBotMessageHandler gptTelegramBotMessageHandler,
-                                 IOptions<GptTelegramBotOptions> botOptions)
+                                 GptTelegramBotOptions botOptions)
     {
         _gptTelegramBotMessageHandler = gptTelegramBotMessageHandler;
-        _botOptions = botOptions.Value;
+        _botOptions = botOptions;
     }
 
     /// <inheritdoc/>
