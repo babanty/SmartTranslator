@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 
 namespace SmartTranslator.TelegramBot.View;
 

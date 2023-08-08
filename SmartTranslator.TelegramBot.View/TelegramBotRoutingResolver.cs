@@ -7,7 +7,7 @@ namespace SmartTranslator.TelegramBot.View;
 
 public class TelegramBotRoutingResolver
 {
-    public async Task<string> RouteMessageOrThrow(Update update, List<ITelegramBotView> telegramBotViews)
+    public async Task<ITelegramBotView?> RouteMessageOrThrow(Update update, List<ITelegramBotView> telegramBotViews)
     {
         T GetView<T>() where T : ITelegramBotView
         {
@@ -17,7 +17,7 @@ public class TelegramBotRoutingResolver
         }
 
         if (update is null)
-            return string.Empty;
+            return null;
 
         // translation
         if (update.Type == UpdateType.Message && update.Message?.Type == MessageType.Text)
@@ -41,7 +41,7 @@ public class TelegramBotRoutingResolver
 
             if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Member)
             {
-                return string.Empty; // из-за особенностей телеграм ответ в секции "translation", реакция на TelegramBotButtons.Start -> StartButtonView
+                return GetView<ChangedStatusToMemberView>();
             }
         }
 
