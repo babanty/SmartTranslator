@@ -1,31 +1,33 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.TelegramBot.View.Controls;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
+using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
-public class DefaultTranslateButtonView : ITelegramBotView
+public class EnglishInputButtonView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
 
-    public DefaultTranslateButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public EnglishInputButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
     }
 
+
     public async Task<MessageView> Render(Update update)
     {
-        var text = update?.Message is null ? string.Empty : await _coupleLanguageTranslatorController.Translate(update.Message);
+        await _coupleLanguageTranslatorController.SetLanguage(Language.English);
 
-        return new MessageView
+        return await Task.FromResult(new MessageView
         {
-            Text = text,
+            Text = "Language set to English",
             Markup = new ReplyKeyboardMarkup(new[]
             {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
-        };
+        });
     }
 }
-

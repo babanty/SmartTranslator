@@ -9,7 +9,6 @@ public class StartButtonView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
 
-
     public StartButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;

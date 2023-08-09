@@ -29,6 +29,9 @@ public class TelegramBotRoutingResolver
             {
                 var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
                 var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
+                var text when text == "Determine" => await Task.FromResult(GetView<DetermineLanguageView>()),
+                var text when text == TelegramBotButtons.English => await Task.FromResult(GetView<EnglishInputButtonView>()),
+                var text when text == TelegramBotButtons.Russian => await Task.FromResult(GetView<RussianInputButtonView>()),
                 _ => GetView<DefaultTranslateButtonView>()
             };
         }
