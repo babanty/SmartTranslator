@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.Extensions.Options;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TranslationCore;
@@ -13,18 +12,18 @@ public class FilterTools
     private readonly ITemplateStringService _templateStringService;
 
 
-    public FilterTools(IOptions<GptTranslationOptions> gptTranslationOptions,
+    public FilterTools(GptTranslationOptions gptTranslationOptions,
                        IMapper mapper,
                        ITemplateStringService templateStringService)
     {
-        _gptTranslationOptions = gptTranslationOptions.Value ?? new();
+        _gptTranslationOptions = gptTranslationOptions ?? new();
         _mapper = mapper;
         _templateStringService = templateStringService;
     }
 
 
-    /// <returns> Сообщение на двух языках, пример: "Моя ошибка {следующая строка} My error" </returns>
-    public async Task<string> GetMessageUsingTempalate(string templateName, IEnumerable<KeyAndNewValue>? templateArgs = null)
+    /// <returns> A message in two languages, for example: "My error {New line} Моя ошибка" </returns>
+    public async Task<string> GetMessageUsingTemplate(string templateName, IEnumerable<KeyAndNewValue>? templateArgs = null)
     {
         var templates = await GetTemplates(templateName);
 

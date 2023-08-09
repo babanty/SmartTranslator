@@ -1,4 +1,5 @@
-﻿using SmartTranslator.TelegramBot.View.Exceptions;
+﻿using SmartTranslator.TelegramBot.View.Controls;
+using SmartTranslator.TelegramBot.View.Exceptions;
 using SmartTranslator.TelegramBot.View.Views;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -13,7 +14,7 @@ public class TelegramBotRoutingResolver
         {
             var view = telegramBotViews.OfType<T>().FirstOrDefault();
 
-            return view is null ? throw new InvalidOperationException($"Не найден обработчик для сообщения типа {typeof(T).Name}") : view;
+            return view is null ? throw new InvalidOperationException($"No handler found for a message of type {typeof(T).Name}") : view;
         }
 
         if (update is null)
@@ -26,7 +27,9 @@ public class TelegramBotRoutingResolver
 
             return messageText switch
             {
-
+                var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
+                var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
+                _ => GetView<DefaultTranslateButtonView>()
             };
         }
 

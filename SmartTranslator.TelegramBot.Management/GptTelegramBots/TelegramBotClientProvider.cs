@@ -8,7 +8,7 @@ public class TelegramBotClientProvider : ITelegramBotClientProvider
     public ITelegramBotClient? Instance { get; private set; }
 
     public ITelegramBotClient GetInstanceOrThrow() => Instance
-        ?? throw new NullReferenceException("Пытаемся получить ITelegramBotClient до того как он был инициализирован в TelegramBotClientProvider");
+        ?? throw new NullReferenceException("Trying to get ITelegramBotClient before it was initialized in TelegramBotClientProvider");
 
     public void Init(ITelegramBotClient client) => Instance = client;
 }

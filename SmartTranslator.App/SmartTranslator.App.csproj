@@ -7,7 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="MediatR" Version="10.0.1" />
+<PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartTranslator.Api\SmartTranslator.Api.csproj" />
+    <ProjectReference Include="..\SmartTranslator.Infrastructure\SmartTranslator.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TelegramBot.Management\SmartTranslator.TelegramBot.Management.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TelegramBot.View\SmartTranslator.TelegramBot.View.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TranslationCore.Abstractions\SmartTranslator.TranslationCore.Abstractions.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TranslationCore.DI\SmartTranslator.TranslationCore.DI.csproj" />
     <ProjectReference Include="..\SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj" />
+    <ProjectReference Include="..\SmartTranslator.TranslationCore\SmartTranslator.TranslationCore.csproj" />
   </ItemGroup>
 
 </Project>
