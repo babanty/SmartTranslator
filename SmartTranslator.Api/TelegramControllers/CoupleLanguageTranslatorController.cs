@@ -1,4 +1,5 @@
-﻿using SmartTranslator.TranslationCore.Enums;
+﻿using SmartTranslator.TranslationCore.Abstractions.Models;
+using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
 
 namespace SmartTranslator.Api.TelegramControllers;
@@ -24,5 +25,20 @@ public class CoupleLanguageTranslatorController
     public async Task SetLanguage(Language language)
     {
         return;
+    }
+
+
+    public async Task<EvaluationResponse> EvaluateContext(Message message)
+    {
+        var response = new EvaluationResponse
+        {
+            Percent = 0,
+            Request = new ClarificationRequest
+            {
+                ClarifyingQuestion = "What is the meaning of life?"
+            }
+        };
+
+        return await Task.FromResult(response);
     }
 }
