@@ -7,10 +7,4 @@ public static class TelegramBotButtons
 
     /// <summary> Regularly translate text </summary>
     public const string Translate = "Translate new text accurately / Качественно перевести новый текст";
-
-    /// <summary> English language </summary>
-    public const string English = "English";
-
-    /// <summary> Russian language </summary>
-    public const string Russian = "Russian";
 }

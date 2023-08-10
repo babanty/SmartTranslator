@@ -1,6 +1,7 @@
 ﻿using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TelegramBot.View.Exceptions;
 using SmartTranslator.TelegramBot.View.Views;
+using System.Reflection;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -30,8 +31,7 @@ public class TelegramBotRoutingResolver
                 var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
                 var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
                 var text when text == "Determine" => await Task.FromResult(GetView<DetermineLanguageView>()),
-                var text when text == TelegramBotButtons.English => await Task.FromResult(GetView<EnglishInputButtonView>()),
-                var text when text == TelegramBotButtons.Russian => await Task.FromResult(GetView<RussianInputButtonView>()),
+                var text when IsMatchWithLanguageButtons(text) => await Task.FromResult(GetView<LanguageButtonView>()),
                 _ => GetView<DefaultTranslateButtonView>()
             };
         }
@@ -58,5 +58,15 @@ public class TelegramBotRoutingResolver
         }
 
         throw new UnknownMessageTypeException();
+    }
+
+    /// <summary>
+    /// Checks whether provided text is one of TelegramBotLanguageButtons
+    /// </summary>
+    private bool IsMatchWithLanguageButtons(string text)
+    {
+        return typeof(TelegramBotLanguageButtons)
+            .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
+            .Any(fi => fi.IsLiteral && !fi.IsInitOnly && fi.GetValue(null).ToString() == text);
     }
 }

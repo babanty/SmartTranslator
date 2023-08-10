@@ -7,11 +7,11 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
-public class EnglishInputButtonView : ITelegramBotView
+public class LanguageButtonView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
 
-    public EnglishInputButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public LanguageButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
     }
@@ -19,15 +19,29 @@ public class EnglishInputButtonView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        await _coupleLanguageTranslatorController.SetLanguage(Language.English);
+        var language = StringToLanguage(update.Message.Text);
+
+        await _coupleLanguageTranslatorController.SetLanguage(language);
 
         return await Task.FromResult(new MessageView
         {
-            Text = "Language set to English",
+            Text = $"Language set to {update.Message.Text}",
             Markup = new ReplyKeyboardMarkup(new[]
             {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
         });
+    }
+
+
+    private static Language StringToLanguage(string text)
+    {
+        return text switch
+        {
+            TelegramBotLanguageButtons.English => Language.English,
+            TelegramBotLanguageButtons.Russian => Language.Russian,
+            "Other" => Language.Unknown,
+            _ => throw new UnknownLanguageException($"Unknown language: {text}"),
+        };
     }
 }

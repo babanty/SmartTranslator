@@ -38,8 +38,8 @@ public class DetermineLanguageView : ITelegramBotView
 
         var replyKeyboard = new ReplyKeyboardMarkup(new[]
         {
-            new KeyboardButton(TelegramBotButtons.Russian),
-            new KeyboardButton(TelegramBotButtons.English)
+            new KeyboardButton(TelegramBotLanguageButtons.Russian),
+            new KeyboardButton(TelegramBotLanguageButtons.English)
         });
 
         return Task.FromResult(new MessageView
