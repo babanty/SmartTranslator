@@ -1,5 +1,4 @@
-﻿using OpenAI.ObjectModels.ResponseModels;
-using SmartTranslator.Api.TelegramControllers;
+﻿using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;

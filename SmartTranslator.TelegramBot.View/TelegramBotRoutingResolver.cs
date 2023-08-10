@@ -30,9 +30,11 @@ public class TelegramBotRoutingResolver
             {
                 var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
                 var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
-                var text when text == "Determine" => await Task.FromResult(GetView<DetermineLanguageView>()),
+                var text when text == "Determine language" => await Task.FromResult(GetView<DetermineLanguageView>()),
                 var text when text == "Clarify" => await Task.FromResult(GetView<ClarifyContextView>()),
-                var text when IsMatchWithLanguageButtons(text) => await Task.FromResult(GetView<LanguageButtonView>()),
+                var text when text == "Determine style" => await Task.FromResult(GetView<DetermineStyleView>()),
+                var text when IsCertainButtonType(text, typeof(TelegramBotLanguageButtons)) => await Task.FromResult(GetView<LanguageButtonView>()),
+                var text when IsCertainButtonType(text, typeof(TelegramBotStyleButtons)) => await Task.FromResult(GetView<StyleButtonView>()),
                 _ => GetView<DefaultTranslateButtonView>()
             };
         }
@@ -62,11 +64,11 @@ public class TelegramBotRoutingResolver
     }
 
     /// <summary>
-    /// Checks whether provided text is one of TelegramBotLanguageButtons
+    /// Checks whether provided text is one of given type of buttons
     /// </summary>
-    private bool IsMatchWithLanguageButtons(string text)
+    private bool IsCertainButtonType(string text, Type classType)
     {
-        return typeof(TelegramBotLanguageButtons)
+        return classType
             .GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)
             .Any(fi => fi.IsLiteral && !fi.IsInitOnly && fi.GetValue(null).ToString() == text);
     }

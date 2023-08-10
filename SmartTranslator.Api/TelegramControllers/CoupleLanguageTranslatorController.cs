@@ -41,4 +41,16 @@ public class CoupleLanguageTranslatorController
 
         return await Task.FromResult(response);
     }
+
+
+    public Task<TranslationStyle> DetermineStyle(Message message)
+    {
+        return Task.FromResult(TranslationStyle.Unknown);
+    }
+
+
+    public async Task SetStyle(TranslationStyle style)
+    {
+        return;
+    }
 }
