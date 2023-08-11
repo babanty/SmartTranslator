@@ -27,7 +27,7 @@ public class StyleButtonView : ITelegramBotView
         {
             Text = $"Style set to {update.Message.Text}",
             Markup = new ReplyKeyboardMarkup(new[]
-    {
+            {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
         });

@@ -53,4 +53,10 @@ public class CoupleLanguageTranslatorController
     {
         return;
     }
+
+
+    public async Task<string> GiveFinalAnswer(Message message)
+    {
+        return $"Your message was: {message.Text}";
+    }
 }

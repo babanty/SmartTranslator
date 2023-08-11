@@ -33,6 +33,7 @@ public class TelegramBotRoutingResolver
                 var text when text == "Determine language" => await Task.FromResult(GetView<DetermineLanguageView>()),
                 var text when text == "Clarify" => await Task.FromResult(GetView<ClarifyContextView>()),
                 var text when text == "Determine style" => await Task.FromResult(GetView<DetermineStyleView>()),
+                var text when text == "Answer" => await Task.FromResult(GetView<FinalAnswerView>()),
                 var text when IsCertainButtonType(text, typeof(TelegramBotLanguageButtons)) => await Task.FromResult(GetView<LanguageButtonView>()),
                 var text when IsCertainButtonType(text, typeof(TelegramBotStyleButtons)) => await Task.FromResult(GetView<StyleButtonView>()),
                 _ => GetView<DefaultTranslateButtonView>()
