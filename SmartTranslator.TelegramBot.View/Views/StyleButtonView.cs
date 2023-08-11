@@ -1,6 +1,5 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.TelegramBot.View.Controls;
-using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -37,11 +36,11 @@ public class StyleButtonView : ITelegramBotView
     private static TranslationStyle ButtonToStyle(string text)
     {
         return text switch
-        {           
+        {
             TelegramBotStyleButtons.OfficialStyle => TranslationStyle.OfficialStyle,
             TelegramBotStyleButtons.ConversationalStyle => TranslationStyle.ConversationalStyle,
             TelegramBotStyleButtons.TeenageStyle => TranslationStyle.TeenageStyle,
-                _ => throw new Exception("Unknown style")
+            _ => throw new Exception("Unknown style")
         };
     }
 }

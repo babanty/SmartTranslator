@@ -21,7 +21,7 @@ public class DetermineLanguageView : ITelegramBotView
     {
         var language = await _coupleLanguageTranslatorController.DetermineLanguage(update.Message);
 
-        if (language == Language.Unknown) 
+        if (language == Language.Unknown)
         {
             return await UnknownLanguageView();
         }
