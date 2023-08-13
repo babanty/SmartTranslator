@@ -1,7 +1,6 @@
 ﻿using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TelegramBot.View.Exceptions;
 using SmartTranslator.TelegramBot.View.Views;
-using System.Reflection;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -28,14 +27,14 @@ public class TelegramBotRoutingResolver
 
             return messageText switch
             {
-                var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
-                var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
-                var text when text == "Determine language" => await Task.FromResult(GetView<DetermineLanguageView>()),
-                var text when text == "Clarify" => await Task.FromResult(GetView<ClarifyContextView>()),
-                var text when text == "Determine style" => await Task.FromResult(GetView<DetermineStyleView>()),
-                var text when text == "Answer" => await Task.FromResult(GetView<FinalAnswerView>()),
-                var text when IsCertainButtonType(text, new TelegramBotLanguageButtons()) => await Task.FromResult(GetView<LanguageButtonView>()),
-                var text when IsCertainButtonType(text, new TelegramBotStyleButtons()) => await Task.FromResult(GetView<StyleButtonView>()),
+                var text when text == TelegramBotButtons.Start => GetView<StartButtonView>(),
+                var text when text == TelegramBotButtons.Translate => GetView<TranslateButtonView>(),
+                var text when text == "Determine language" => GetView<DetermineLanguageView>(),
+                var text when text == "Clarify" => GetView<ClarifyContextView>(),
+                var text when text == "Determine style" => GetView<DetermineStyleView>(),
+                var text when text == "Answer" => GetView<FinalAnswerView>(),
+                var text when IsCertainButtonType(text, new TelegramBotLanguageButtons()) => GetView<LanguageButtonView>(),
+                var text when IsCertainButtonType(text, new TelegramBotStyleButtons()) => GetView<StyleButtonView>(),
                 _ => GetView<DefaultTranslateButtonView>()
             };
         }
