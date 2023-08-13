@@ -1,6 +1,6 @@
 ﻿namespace SmartTranslator.TelegramBot.View.Controls;
 
-public static class TelegramBotButtons
+public class TelegramBotButtons : IButtonsHolder
 {
     /// <summary> The bot has been turned on </summary>
     public const string Start = @"/start";

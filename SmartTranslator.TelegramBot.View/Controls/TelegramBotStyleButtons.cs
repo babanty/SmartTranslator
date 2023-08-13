@@ -1,6 +1,6 @@
 ﻿namespace SmartTranslator.TelegramBot.View.Controls;
 
-public class TelegramBotStyleButtons
+public class TelegramBotStyleButtons : IButtonsHolder
 {
     /// <summary> Translate in teenage style </summary>
     public const string ConversationalStyle = @"💬 conversational style";
