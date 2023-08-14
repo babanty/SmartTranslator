@@ -21,5 +21,4 @@ public class TranslationManager : ITranslationManager
                                .OrderByDescending(t => t.CreatedAt)
                                .FirstOrDefaultAsync();
     }
-
 }
