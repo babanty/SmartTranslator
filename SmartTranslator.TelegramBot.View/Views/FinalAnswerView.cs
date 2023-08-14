@@ -5,27 +5,26 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
-public class DefaultTranslateButtonView : ITelegramBotView
+public class FinalAnswerView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
 
-    public DefaultTranslateButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public FinalAnswerView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
     }
 
     public async Task<MessageView> Render(Update update)
     {
-        var text = update?.Message is null ? string.Empty : await _coupleLanguageTranslatorController.Translate(update.Message);
+        var result = _coupleLanguageTranslatorController.GiveFinalAnswer(update.Message).Result;
 
-        return new MessageView
+        return await Task.FromResult(new MessageView
         {
-            Text = text,
+            Text = result,
             Markup = new ReplyKeyboardMarkup(new[]
             {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
-        };
+        });
     }
 }
-

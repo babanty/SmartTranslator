@@ -27,8 +27,14 @@ public class TelegramBotRoutingResolver
 
             return messageText switch
             {
-                var text when text == TelegramBotButtons.Start => await Task.FromResult(GetView<StartButtonView>()),
-                var text when text == TelegramBotButtons.Translate => await Task.FromResult(GetView<TranslateButtonView>()),
+                var text when text == TelegramBotButtons.Start => GetView<StartButtonView>(),
+                var text when text == TelegramBotButtons.Translate => GetView<TranslateButtonView>(),
+                var text when text == "Determine language" => GetView<DetermineLanguageView>(),
+                var text when text == "Clarify" => GetView<ClarifyContextView>(),
+                var text when text == "Determine style" => GetView<DetermineStyleView>(),
+                var text when text == "Answer" => GetView<FinalAnswerView>(),
+                var text when IsCertainButtonType(text, new TelegramBotLanguageButtons()) => GetView<LanguageButtonView>(),
+                var text when IsCertainButtonType(text, new TelegramBotStyleButtons()) => GetView<StyleButtonView>(),
                 _ => GetView<DefaultTranslateButtonView>()
             };
         }
@@ -56,4 +62,9 @@ public class TelegramBotRoutingResolver
 
         throw new UnknownMessageTypeException();
     }
+
+    /// <summary>
+    /// Checks whether provided text is one of given type of buttons
+    /// </summary>
+    private bool IsCertainButtonType(string text, IButtonsHolder holder) => holder.Buttons.Contains(text);
 }
