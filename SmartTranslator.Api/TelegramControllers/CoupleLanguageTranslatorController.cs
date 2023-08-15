@@ -1,4 +1,5 @@
-﻿using SmartTranslator.DataAccess.Entities;
+﻿using SmartTranslator.Api.Exceptions;
+using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
@@ -63,9 +64,12 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationEntity> GetLatest(Update update, ITranslationManager manager)
+    public async Task<TelegramTranslationEntity?> GetLatest(Update update, ITranslationManager manager)
     {
-        var userName = update.Message.From.ToString(); // NOTE: messages sent to group chats have no sender username
+        if (update?.Message?.From == null)
+            throw new ChannelsNotSupportedException();
+
+        var userName = update.Message.From.ToString(); 
         var chatId = update.Message.Chat.Id;
 
         return await manager.GetLatest(userName, chatId);

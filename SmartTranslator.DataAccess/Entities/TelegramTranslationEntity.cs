@@ -2,12 +2,16 @@
 
 namespace SmartTranslator.DataAccess.Entities;
 
+/// <summary> One specific translation from a specific user in a specific chat  </summary>
 public record TelegramTranslationEntity
 {
-    public string Id { get; set; } = default!;
+    /// <summary> Id of the translation </summary>
+    public string Id { get; set; } = Guid.NewGuid().ToString();
 
+    /// <summary> Unique user Id in Telegram (also their username) </summary>
     public string UserName { get; set; } = default!;
 
+    /// <summary> Id of the chat where the translation resides </summary>
     public long ChatId { get; set; }
 
     /// <summary> Creation date (UTC) </summary>
@@ -33,18 +37,4 @@ public record TelegramTranslationEntity
 
     /// <summary> Contexts of the translation </summary>
     public IReadOnlyCollection<Context> Contexts { get; set; } = new List<Context>();
-
-
-    /// <summary> Generate id, will always be the same with the same parameters </summary>
-    /// <param name="chatId"> Chat from which the message was sent </param>
-    /// <param name="userName"> Who sent the message </param>
-    public static string GetId(long chatId, string userName) => $"{chatId}-{userName}";
 }
-
-public record Context
-{
-    public string Question { get; set; } = default!;
-
-    public string Response { get; set; } = default!;
-}
-

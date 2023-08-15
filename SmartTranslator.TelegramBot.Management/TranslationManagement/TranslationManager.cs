@@ -14,7 +14,7 @@ public class TranslationManager : ITranslationManager
     }
 
 
-    public async Task<TelegramTranslationEntity> GetLatest(string username, long chatId)
+    public async Task<TelegramTranslationEntity?> GetLatest(string username, long chatId)
     {
         return await _dbContext.TelegramTranslations
                                .Where(t => t.UserName == username && t.ChatId == chatId)

@@ -25,7 +25,7 @@ public class TranslationManagerTests : IDisposable
     }
 
     [Fact]
-    public async void GetLatest_ReturnsNullIfNoTranslationExists()
+    public async void GetLatest_NoTranslation_ReturnsNull()
     {
         // Arrange
         var username = "nonExistingUser";
@@ -40,7 +40,7 @@ public class TranslationManagerTests : IDisposable
 
 
     [Fact]
-    public async void GetLatest_ReturnsTranslation()
+    public async void GetLatest_OneTranslation_ReturnsCorrectly()
     {
         // Arrange
         var username = "testUser";
@@ -50,7 +50,7 @@ public class TranslationManagerTests : IDisposable
 
         var translation = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId, username + "new"),
+            Id = Guid.NewGuid().ToString(),
             UserName = username,
             ChatId = chatId,
             CreatedAt = DateTime.UtcNow,
@@ -65,12 +65,12 @@ public class TranslationManagerTests : IDisposable
         var result = await _translationManager.GetLatest(username, chatId);
 
         // Assert
-        Assert.Equal(translation.Id, result.Id);
+        Assert.Equal(translation.Id, result?.Id);
     }
 
 
     [Fact]
-    public async void GetLatest_ReturnsLatestTranslation()
+    public async void GetLatest_MultipleTranslations_ReturnsLatest()
     {
         // Arrange
         var username = "testUser";
@@ -81,7 +81,7 @@ public class TranslationManagerTests : IDisposable
 
         var oldTranslation = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId, username),
+            Id = Guid.NewGuid().ToString(),
             UserName = username,
             ChatId = chatId,
             CreatedAt = DateTime.UtcNow.AddDays(-1),
@@ -92,7 +92,7 @@ public class TranslationManagerTests : IDisposable
 
         var latestTranslation = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId, username + "new"),
+            Id = Guid.NewGuid().ToString(),
             UserName = username,
             ChatId = chatId,
             CreatedAt = DateTime.UtcNow,
@@ -109,12 +109,12 @@ public class TranslationManagerTests : IDisposable
         var result = await _translationManager.GetLatest(username, chatId);
 
         // Assert
-        Assert.Equal(latestTranslation.Id, result.Id);
+        Assert.Equal(latestTranslation.Id, result?.Id);
     }
 
 
     [Fact]
-    public async void GetLatest_ReturnsOneOfTranslationsWithSameCreationTime()
+    public async void GetLatest_MultipleTranslationsWithSameCreationTime_ReturnsAny()
     {
         // Arrange
         var username = "testUser";
@@ -126,7 +126,7 @@ public class TranslationManagerTests : IDisposable
 
         var translation1 = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId, username + "1"),
+            Id = Guid.NewGuid().ToString(),
             UserName = username,
             ChatId = chatId,
             CreatedAt = createdAtTime,
@@ -137,7 +137,7 @@ public class TranslationManagerTests : IDisposable
 
         var translation2 = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId, username + "2"),
+            Id = Guid.NewGuid().ToString(),
             UserName = username,
             ChatId = chatId,
             CreatedAt = createdAtTime,
@@ -154,12 +154,12 @@ public class TranslationManagerTests : IDisposable
         var result = await _translationManager.GetLatest(username, chatId);
 
         // Assert
-        Assert.True(result.Id == translation1.Id || result.Id == translation2.Id);
+        Assert.True(result?.Id == translation1.Id || result?.Id == translation2.Id);
     }
 
 
     [Fact]
-    public async void GetLatest_ReturnsTranslationOnlyForSpecificUserAndChat()
+    public async void GetLatest_MultipleUsersAndChats_ReturnsCorrectOne()
     {
         // Arrange
         var username1 = "testUser1";
@@ -171,7 +171,7 @@ public class TranslationManagerTests : IDisposable
 
         var translationForUser1 = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId1, username1),
+            Id = Guid.NewGuid().ToString(),
             UserName = username1,
             ChatId = chatId1,
             CreatedAt = DateTime.UtcNow,
@@ -182,7 +182,7 @@ public class TranslationManagerTests : IDisposable
 
         var translationForUser2 = new TelegramTranslationEntity
         {
-            Id = TelegramTranslationEntity.GetId(chatId2, username2),
+            Id = Guid.NewGuid().ToString(),
             UserName = username2,
             ChatId = chatId2,
             CreatedAt = DateTime.UtcNow,
@@ -197,15 +197,11 @@ public class TranslationManagerTests : IDisposable
 
         // Act
         var resultForUser1 = await _translationManager.GetLatest(username1, chatId1);
-
-        // Assert
-        Assert.Equal(translationForUser1.Id, resultForUser1.Id);
-
-        // Act
         var resultForUser2 = await _translationManager.GetLatest(username2, chatId2);
 
         // Assert
-        Assert.Equal(translationForUser2.Id, resultForUser2.Id);
+        Assert.Equal(translationForUser1.Id, resultForUser1?.Id);
+        Assert.Equal(translationForUser2.Id, resultForUser2?.Id);
     }
 
 

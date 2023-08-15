@@ -18,6 +18,11 @@ public class StyleButtonView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
+        if (update.Message == null)
+            throw new ArgumentException("StyleButtonView got incorrect update (Message == null)");
+        if (update.Message?.Text == null)
+            throw new ArgumentException("StyleButtonView got incorrect update (Text == null)");
+
         var style = ButtonToStyle(update.Message.Text);
 
         await _coupleLanguageTranslatorController.SetStyle(style);
