@@ -1,7 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TelegramBot.Management;
 using Xunit;
 
 namespace SmartTranslator.Tests;
@@ -10,6 +12,8 @@ public class TranslationManagerTests : IDisposable
 {
     private readonly TelegramTranslationDbContext _dbContext;
     private readonly TranslationManager _translationManager;
+    private readonly MapperConfiguration _mapperConfiguration;
+    private readonly Mapper _mapper;
 
     public TranslationManagerTests()
     {
@@ -21,7 +25,13 @@ public class TranslationManagerTests : IDisposable
         _dbContext.Database.OpenConnection();
         _dbContext.Database.EnsureCreated();
 
-        _translationManager = new TranslationManager(_dbContext);
+        _mapperConfiguration = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<TelegramTranslationMappingProfile>();
+        });
+        _mapper = new Mapper(_mapperConfiguration);
+
+        _translationManager = new TranslationManager(_dbContext, _mapper);
     }
 
     [Fact]

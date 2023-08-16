@@ -4,6 +4,7 @@ using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.DataAccess;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.TelegramBot.Management;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.View;
@@ -18,6 +19,7 @@ var translationCoreOptions = builder.Services.AddConfig<TranslationCoreOptions>(
 builder.Services.AddConfig<GptTelegramBotOptions>(builder.Configuration, "GptTelegramBotOptions");
 
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddAutoMapper(typeof(TelegramTranslationMappingProfile));
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IGptTelegramBotBuilder, GptTelegramBotBuilder>();

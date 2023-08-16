@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using SmartTranslator.Contracts.Dto;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
@@ -8,19 +10,23 @@ namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 public class TranslationManager : ITranslationManager
 {
     private readonly TelegramTranslationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public TranslationManager(TelegramTranslationDbContext dbContext)
+    public TranslationManager(TelegramTranslationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
 
-    public async Task<TelegramTranslationEntity?> GetLatest(string username, long chatId)
+    public async Task<TelegramTranslationDto?> GetLatest(string username, long chatId)
     {
-        return await _dbContext.TelegramTranslations
+        var entity = await _dbContext.TelegramTranslations
                                .Where(t => t.UserName == username && t.ChatId == chatId)
                                .OrderByDescending(t => t.CreatedAt)
                                .FirstOrDefaultAsync();
+
+        return entity == null ? null : _mapper.Map<TelegramTranslationDto>(entity);
     }
 
 

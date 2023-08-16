@@ -1,4 +1,5 @@
 ﻿using SmartTranslator.Api.Exceptions;
+using SmartTranslator.Contracts.Dto;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Abstractions.Models;
@@ -64,7 +65,7 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationEntity?> GetLatest(Update update, ITranslationManager manager)
+    public async Task<TelegramTranslationDto?> GetLatest(Update update, ITranslationManager manager)
     {
         if (update?.Message?.From == null)
             throw new ChannelsNotSupportedException();

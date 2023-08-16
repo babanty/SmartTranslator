@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.Tests", "Sm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.Enums", "SmartTranslator.Enums\SmartTranslator.Enums.csproj", "{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.Contracts", "SmartTranslator.Contracts\SmartTranslator.Contracts.csproj", "{BB7E7D70-BDCE-44F3-8BD4-D79980D4643C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -89,6 +91,10 @@ Global
 		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7E7D70-BDCE-44F3-8BD4-D79980D4643C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7E7D70-BDCE-44F3-8BD4-D79980D4643C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7E7D70-BDCE-44F3-8BD4-D79980D4643C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7E7D70-BDCE-44F3-8BD4-D79980D4643C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
