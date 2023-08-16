@@ -1,4 +1,5 @@
-﻿using SmartTranslator.TranslationCore.Enums;
+﻿using SmartTranslator.Enums;
+using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.DataAccess.Entities;
 
@@ -24,17 +25,20 @@ public record TelegramTranslationEntity
     public string BaseText { get; set; } = default!;
 
     /// <summary> The actual translation </summary>
-    public string Translation { get; set; } = default!;
+    public string? Translation { get; set; } = default!;
 
     /// <summary> Language from which the translation was made </summary>
-    public Language LanguageFrom { get; set; }
+    public Language? LanguageFrom { get; set; }
 
     /// <summary> Language to which the translation was made </summary>
-    public Language LanguageTo { get; set; }
+    public Language? LanguageTo { get; set; }
 
     /// <summary> Which translation style was used </summary>
-    public TranslationStyle TranslationStyle { get; set; }
+    public TranslationStyle? TranslationStyle { get; set; }
 
     /// <summary> Contexts of the translation </summary>
     public IReadOnlyCollection<Context> Contexts { get; set; } = new List<Context>();
+
+    /// <summary> State of the translation </summary>
+    public TelegramTranslationState State { get; set; } = default!;
 }

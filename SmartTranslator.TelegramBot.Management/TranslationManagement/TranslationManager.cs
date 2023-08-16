@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.Enums;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
@@ -20,5 +21,31 @@ public class TranslationManager : ITranslationManager
                                .Where(t => t.UserName == username && t.ChatId == chatId)
                                .OrderByDescending(t => t.CreatedAt)
                                .FirstOrDefaultAsync();
+    }
+
+
+    private TelegramTranslationState DetermineState(TelegramTranslationEntity entity)
+    {
+        var state = TelegramTranslationState.Unknown;
+
+        if (entity.Translation == null)
+            state = TelegramTranslationState.WaitingForTranslation;
+
+        if (entity.TranslationStyle == null)
+            state = TelegramTranslationState.WaitingForStyle;
+
+        if (entity.Contexts.Any(context => context.Response == null))
+            state = TelegramTranslationState.WaitingForContext;
+
+        if (entity.LanguageFrom != null && entity.LanguageTo != null)
+            state = TelegramTranslationState.LanguageDetermined;
+
+        if (entity.CreatedAt == entity.UpdatedAt)
+            state = TelegramTranslationState.Created;
+
+        if (entity.Translation != null)
+            state = TelegramTranslationState.Finished;
+
+        return state;
     }
 }

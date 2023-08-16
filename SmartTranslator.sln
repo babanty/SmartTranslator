@@ -27,7 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.Api", "Smar
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.DataAccess", "SmartTranslator.DataAccess\SmartTranslator.DataAccess.csproj", "{17DB98CB-D597-4970-9086-704CBEC322E7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.Tests", "SmartTranslator.Tests\SmartTranslator.Tests.csproj", "{CCEC4881-363A-44EB-B77E-754CF304F256}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartTranslator.Tests", "SmartTranslator.Tests\SmartTranslator.Tests.csproj", "{CCEC4881-363A-44EB-B77E-754CF304F256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartTranslator.Enums", "SmartTranslator.Enums\SmartTranslator.Enums.csproj", "{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{CCEC4881-363A-44EB-B77E-754CF304F256}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCEC4881-363A-44EB-B77E-754CF304F256}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCEC4881-363A-44EB-B77E-754CF304F256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59C9A8D3-EF4C-425B-BA13-F4A9CE86BE48}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
