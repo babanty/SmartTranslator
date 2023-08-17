@@ -5,6 +5,8 @@ using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.Management;
 using Xunit;
+using SmartTranslator.TranslationCore.Enums;
+using SmartTranslator.Enums;
 
 namespace SmartTranslator.Tests;
 
@@ -214,6 +216,82 @@ public class TranslationManagerTests : IDisposable
         Assert.Equal(translationForUser2.Id, resultForUser2?.Id);
     }
 
+
+    [Fact]
+    public async void DetermineState_LanguageDetermined_ReturnsCorrectly()
+    {
+        // Arrange
+        var translation = new TelegramTranslationEntity
+        {
+            UpdatedAt = DateTime.UtcNow.AddSeconds(5),
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test",
+            LanguageFrom = Language.English,
+            LanguageTo = Language.Russian
+        };
+        var expected = TelegramTranslationState.LanguageDetermined;
+
+        // Act
+        var result = _translationManager.DetermineState(translation);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+
+    [Fact]
+    public async void DetermineState_UnknownContext_WaitingForContext()
+    {
+        // Arrange
+        var context = new Context
+        {
+            Question = "What is the meaning of life?"
+        };
+        var translation = new TelegramTranslationEntity
+        {
+            UpdatedAt = DateTime.UtcNow.AddSeconds(5),
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test",
+            LanguageFrom = Language.English,
+            LanguageTo = Language.Russian,
+            Contexts = new[]{ context }
+        };
+        var expected = TelegramTranslationState.WaitingForContext;
+
+        // Act
+        var result = _translationManager.DetermineState(translation);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+
+    [Fact]
+    public async void DetermineState_UnknownStyle_WaitingForStyle()
+    {
+        // Arrange
+        var context = new Context
+        {
+            Question = "What is the meaning of life?",
+            Response = "42"
+        };
+        var translation = new TelegramTranslationEntity
+        {
+            UpdatedAt = DateTime.UtcNow.AddSeconds(5),
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test",
+            LanguageFrom = Language.English,
+            LanguageTo = Language.Russian,
+            Contexts = new[] { context }
+        };
+        var expected = TelegramTranslationState.WaitingForStyle;
+
+        // Act
+        var result = _translationManager.DetermineState(translation);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
 
     public void Dispose()
     {

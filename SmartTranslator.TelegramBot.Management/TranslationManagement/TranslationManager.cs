@@ -30,28 +30,29 @@ public class TranslationManager : ITranslationManager
     }
 
 
-    private TelegramTranslationState DetermineState(TelegramTranslationEntity entity)
+    public TelegramTranslationState DetermineState(TelegramTranslationEntity entity)
     {
-        var state = TelegramTranslationState.Unknown;
-
-        if (entity.Translation == null)
-            state = TelegramTranslationState.WaitingForTranslation;
-
-        if (entity.TranslationStyle == null)
-            state = TelegramTranslationState.WaitingForStyle;
-
-        if (entity.Contexts.Any(context => context.Response == null))
-            state = TelegramTranslationState.WaitingForContext;
-
-        if (entity.LanguageFrom != null && entity.LanguageTo != null)
-            state = TelegramTranslationState.LanguageDetermined;
-
-        if (entity.CreatedAt == entity.UpdatedAt)
-            state = TelegramTranslationState.Created;
-
+        // 1. If the translation is done
         if (entity.Translation != null)
-            state = TelegramTranslationState.Finished;
+            return TelegramTranslationState.Finished;
 
-        return state;
+        // 2. If translation style is filled out
+        if (entity.TranslationStyle != null)
+            return TelegramTranslationState.WaitingForTranslation;
+
+        // 3. If all contexts are filled
+        if (entity.Contexts.All(context => context.Response != null))
+            return TelegramTranslationState.WaitingForStyle;
+
+        // 4. If there are contexts awaiting a response
+        if (entity.Contexts.Any(context => context.Response == null))
+            return TelegramTranslationState.WaitingForContext;
+
+        // 5. If languages are not determined
+        if (entity.LanguageFrom == null || entity.LanguageTo == null)
+            return TelegramTranslationState.WaitingForLanguage;
+
+        // If none of the conditions were met
+        return entity.State;
     }
 }
