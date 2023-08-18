@@ -1,5 +1,6 @@
 ﻿using SmartTranslator.Contracts.Dto;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.Enums;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 

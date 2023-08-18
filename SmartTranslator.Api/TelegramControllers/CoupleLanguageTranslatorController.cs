@@ -15,10 +15,12 @@ public class CoupleLanguageTranslatorController
         return;
     }
 
+
     public Task<string> Translate(Message message)
     {
         return Task.FromResult("I don't know how to translate yet");
     }
+
 
     public Task<Language> DetermineLanguage(Message message)
     {
@@ -74,5 +76,13 @@ public class CoupleLanguageTranslatorController
         var chatId = update.Message.Chat.Id;
 
         return await manager.GetLatest(userName, chatId);
+    }
+
+
+    public async Task<TelegramTranslationEntity> CreateTranslation()
+    {
+        var entity = new TelegramTranslationEntity();
+        // Add to db (?)
+        return entity;
     }
 }
