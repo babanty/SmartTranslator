@@ -83,7 +83,7 @@ public class TelegramIncomingMessageHandler
         {
             var cancellationTokenSource = await _loadingAnimator.ActivateLoadingAnimation(_messageSender, update?.Message?.Chat?.Id);
 
-            var view = await _router.RouteMessageOrThrow(update!, _telegramBotViews);
+            var view = await _router.RouteMessageOrThrow(update!);
             var result = view is null ? null : await view.Render(update!);
 
             _loadingAnimator.DeactivateLoadingAnimation(cancellationTokenSource);

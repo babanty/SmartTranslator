@@ -40,6 +40,7 @@ public class DetermineStyleView : ITelegramBotView
     {
         var text = "Failed to determine style of request, please choose one of the options provided";
 
+        // TODO: get rid of reflection
         var buttons = typeof(TelegramBotStyleButtons)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
             .Select(field => new KeyboardButton(field.GetValue(null)!.ToString()!))

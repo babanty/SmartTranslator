@@ -40,6 +40,7 @@ public class DetermineLanguageView : ITelegramBotView
     {
         var text = "Failed to determine request language, please choose one of the options provided";
 
+        // TODO: get rid of reflection
         var buttons = typeof(TelegramBotLanguageButtons)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
             .Select(field => new KeyboardButton(field.GetValue(null)!.ToString()!))

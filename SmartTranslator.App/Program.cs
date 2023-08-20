@@ -8,6 +8,7 @@ using SmartTranslator.TelegramBot.Management;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.View;
+using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.DI;
@@ -31,6 +32,8 @@ builder.Services.AddScoped<ITranslationManager, TranslationManager>();
 builder.Services.AddScoped<CoupleLanguageTranslatorController>();
 builder.Services.AddScoped<TelegramBotRoutingResolver>();
 builder.Services.AddScoped<TelegramIncomingMessageHandler>();
+builder.Services.AddScoped<TelegramBotLanguageButtons>();
+builder.Services.AddScoped<TelegramBotStyleButtons>();
 builder.Services.AddTemplateStringService();
 
 builder.Services.AddTranslationCore(translationCoreOptions);

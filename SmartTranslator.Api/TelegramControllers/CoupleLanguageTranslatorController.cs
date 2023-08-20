@@ -79,10 +79,30 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationEntity> CreateTranslation()
+    public async Task<TelegramTranslationDto> CreateTranslation(Update update)
     {
-        var entity = new TelegramTranslationEntity();
-        // Add to db (?)
-        return entity;
+        var stub = new TelegramTranslationDto
+        {
+            Id = "new id",
+            State = Enums.TelegramTranslationState.WaitingForLanguage
+        };
+
+        return stub;
+    }
+
+
+    public async Task AddExtraContext(Update update)
+    {
+        var context = update.Message.Text;
+        // Sends context to manager
+        return;
+    }
+
+
+    public async Task AddAnswerToContextQuestion(Update update)
+    {
+        var context = update.Message.Text;
+        // Sends context to manager 
+        return;
     }
 }

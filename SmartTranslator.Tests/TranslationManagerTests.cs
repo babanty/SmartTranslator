@@ -218,7 +218,7 @@ public class TranslationManagerTests : IDisposable
 
 
     [Fact]
-    public async void DetermineState_LanguageDetermined_ReturnsCorrectly()
+    public async void DetermineState_WaitingForStyle_ReturnsCorrectly()
     {
         // Arrange
         var translation = new TelegramTranslationEntity
@@ -229,7 +229,7 @@ public class TranslationManagerTests : IDisposable
             LanguageFrom = Language.English,
             LanguageTo = Language.Russian
         };
-        var expected = TelegramTranslationState.LanguageDetermined;
+        var expected = TelegramTranslationState.WaitingForStyle;
 
         // Act
         var result = _translationManager.DetermineState(translation);

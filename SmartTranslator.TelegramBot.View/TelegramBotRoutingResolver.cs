@@ -11,22 +11,18 @@ namespace SmartTranslator.TelegramBot.View;
 public class TelegramBotRoutingResolver
 {
     private readonly ITranslationManager _translationManager;
+    private readonly TelegramViewProvider _viewProvider;
 
-    public TelegramBotRoutingResolver(ITranslationManager translationManager)
+    public TelegramBotRoutingResolver(ITranslationManager translationManager,
+                                      TelegramViewProvider viewProvider)
     {
         _translationManager = translationManager;
+        _viewProvider = viewProvider;   
     }
 
 
-    public async Task<ITelegramBotView?> RouteMessageOrThrow(Update update, List<ITelegramBotView> telegramBotViews)
+    public async Task<ITelegramBotView?> RouteMessageOrThrow(Update update)
     {
-        T GetView<T>() where T : ITelegramBotView
-        {
-            var view = telegramBotViews.OfType<T>().FirstOrDefault();
-
-            return view is null ? throw new InvalidOperationException($"No handler found for a message of type {typeof(T).Name}") : view;
-        }
-
         if (update is null)
             return null;
 
@@ -37,14 +33,14 @@ public class TelegramBotRoutingResolver
 
             return messageText switch
             {
-                var text when text == TelegramBotButtons.Start => GetView<StartButtonView>(),
-                var text when text == TelegramBotButtons.Translate => GetView<TranslateButtonView>(),
-                var text when text == "Determine language" => GetView<DetermineLanguageView>(),
-                var text when text == "Clarify" => GetView<ClarifyContextView>(),
-                var text when text == "Determine style" => GetView<DetermineStyleView>(),
-                var text when text == "Answer" => GetView<FinalAnswerView>(),
-                var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => GetView<LanguageButtonView>(),
-                var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => GetView<StyleButtonView>(),
+                var text when text == TelegramBotButtons.Start => _viewProvider.GetView<StartButtonView>(),
+                var text when text == TelegramBotButtons.Translate => _viewProvider.GetView<TranslateButtonView>(),
+                var text when text == "Determine language" => _viewProvider.GetView<DetermineLanguageView>(),
+                var text when text == "Clarify" => _viewProvider.GetView<ClarifyContextView>(),
+                var text when text == "Determine style" => _viewProvider.GetView<DetermineStyleView>(),
+                var text when text == "Answer" => _viewProvider.GetView<FinalAnswerView>(),
+                var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => _viewProvider.GetView<LanguageButtonView>(),
+                var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => _viewProvider.GetView<StyleButtonView>(),
             };
         }
 
@@ -59,7 +55,7 @@ public class TelegramBotRoutingResolver
 
             if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Member)
             {
-                return GetView<ChangedStatusToMemberView>();
+                return _viewProvider.GetView<ChangedStatusToMemberView>();
             }
         }
 
@@ -73,21 +69,18 @@ public class TelegramBotRoutingResolver
         {
             var latest = await _translationManager.GetLatest(update.Message.From.Username, update.Message.Chat.Id);
 
+            if (latest == null)
+                return _viewProvider.GetView<NewTranslationView>();
+
             return latest.State switch
             {
-                var state when state == TelegramTranslationState.Finished => GetView<NewTranslationView>(),
+                var state when state == TelegramTranslationState.Finished => _viewProvider.GetView<NewTranslationView>(),
+                var state when state == TelegramTranslationState.WaitingForTranslation => _viewProvider.GetView<WaitingForTranslationView>(),
+                var state when state == TelegramTranslationState.WaitingForStyle => _viewProvider.GetView<AddExtraContextInsteadOfStyleView>(),
+                var state when state == TelegramTranslationState.WaitingForContext => _viewProvider.GetView<FillContextView>(),
+                var state when state == TelegramTranslationState.WaitingForLanguage => _viewProvider.GetView<AddExtraContextInsteadOfLanguageView>(),
             };
         }
-
-        // Получаем последний переведённый текст +
-        // Проверяем заполненность текста! +
-        // Если текст.статус == завершен, тогда возвращать вьюшку new tranlation, которая вызывает метод контроллера create и получает результат
-        //          Результат - translation, в зависимости от статуса получает новую view и вызывает метод render()
-        //          Возможные варианты получаемых view в зависимости от статуса: выбор языка, стиля, контекста, перевода
-        // Если текст.статус == ожидаемКонтекст, тогда вернуть вьюшку FillContext, который возвращает последний активный вопрос о контексте
-        // Если текст.статус == 
-        //var text when(await _translationManager.GetLatest(update.Message.From.Username, update.Message.Chat.Id)).State == TelegramTranslationState.WaitingForContext => GetView<ClarifyContextView>(),
-
 
         throw new UnknownMessageTypeException();
     }
