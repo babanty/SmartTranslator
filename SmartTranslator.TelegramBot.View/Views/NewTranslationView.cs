@@ -10,10 +10,10 @@ namespace SmartTranslator.TelegramBot.View.Views;
 public class NewTranslationView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
-    private readonly TelegramViewProvider _viewProvider;
+    private readonly TranslationViewProvider _viewProvider;
 
     public NewTranslationView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
-                              TelegramViewProvider viewProvider)
+                              TranslationViewProvider viewProvider)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
         _viewProvider = viewProvider;
@@ -24,14 +24,6 @@ public class NewTranslationView : ITelegramBotView
     {
         var translation = await _coupleLanguageTranslatorController.CreateTranslation(update);
         // Fill the properties
-        return translation.State switch
-        {
-            var state when state == TelegramTranslationState.Finished => await _viewProvider.GetView<TranslateButtonView>().Render(update),
-            var state when state == TelegramTranslationState.WaitingForTranslation => await _viewProvider.GetView<TranslateButtonView>().Render(update),
-            var state when state == TelegramTranslationState.WaitingForStyle => await _viewProvider.GetView<DetermineStyleView>().Render(update),
-            var state when state == TelegramTranslationState.WaitingForContext => await _viewProvider.GetView<ClarifyContextView>().Render(update),
-            var state when state == TelegramTranslationState.WaitingForLanguage => await _viewProvider.GetView<DetermineLanguageView>().Render(update),
-            _ => throw new UnknownStateException($"Unknown state: {translation.State}")
-        };
+        return await _viewProvider.GetTranslationView(translation).Render(update);
     }
 }

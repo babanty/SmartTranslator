@@ -31,17 +31,22 @@ public class TelegramBotRoutingResolver
         {
             var messageText = update?.Message?.Text;
 
-            return messageText switch
+            ITelegramBotView? result = messageText switch
             {
                 var text when text == TelegramBotButtons.Start => _viewProvider.GetView<StartButtonView>(),
                 var text when text == TelegramBotButtons.Translate => _viewProvider.GetView<TranslateButtonView>(),
                 var text when text == "Determine language" => _viewProvider.GetView<DetermineLanguageView>(),
+                // TODO: cleanup
                 var text when text == "Clarify" => _viewProvider.GetView<ClarifyContextView>(),
                 var text when text == "Determine style" => _viewProvider.GetView<DetermineStyleView>(),
                 var text when text == "Answer" => _viewProvider.GetView<FinalAnswerView>(),
                 var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => _viewProvider.GetView<LanguageButtonView>(),
                 var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => _viewProvider.GetView<StyleButtonView>(),
+                _ => null
             };
+
+            if (result != null)
+                return result;
         }
 
         // /start /block etc
@@ -79,6 +84,7 @@ public class TelegramBotRoutingResolver
                 var state when state == TelegramTranslationState.WaitingForStyle => _viewProvider.GetView<AddExtraContextInsteadOfStyleView>(),
                 var state when state == TelegramTranslationState.WaitingForContext => _viewProvider.GetView<FillContextView>(),
                 var state when state == TelegramTranslationState.WaitingForLanguage => _viewProvider.GetView<AddExtraContextInsteadOfLanguageView>(),
+                _ => throw new UnknownStateException($"Unknown state: {latest.State}")
             };
         }
 

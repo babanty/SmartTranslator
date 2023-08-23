@@ -13,7 +13,6 @@ public class TelegramIncomingMessageHandler
     private readonly ITelegramBotMessageSender _telegramBotMessageSender;
     private readonly IFiltersHandlerChain _filtersHandlerChain;
     private readonly IPublisher _domainEventDistributor;
-    private readonly List<ITelegramBotView> _telegramBotViews;
     private readonly ITelegramBotMessageSender _messageSender;
     private readonly TelegramBotRoutingResolver _router;
     private readonly ILoadingAnimation _loadingAnimator;
@@ -22,7 +21,6 @@ public class TelegramIncomingMessageHandler
     public TelegramIncomingMessageHandler(ITelegramBotMessageSender telegramBotMessageSender,
                                           IFiltersHandlerChain filtersHandlerChain,
                                           IPublisher domainEventDistributor,
-                                          IEnumerable<ITelegramBotView> telegramBotViews,
                                           ITelegramBotMessageSender messageSender,
                                           TelegramBotRoutingResolver router,
                                           ILoadingAnimation loadingAnimator)
@@ -30,7 +28,6 @@ public class TelegramIncomingMessageHandler
         _telegramBotMessageSender = telegramBotMessageSender;
         _filtersHandlerChain = filtersHandlerChain;
         _domainEventDistributor = domainEventDistributor;
-        _telegramBotViews = telegramBotViews.ToList();
         _messageSender = messageSender;
         _router = router;
         _loadingAnimator = loadingAnimator;

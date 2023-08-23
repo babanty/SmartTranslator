@@ -10,16 +10,12 @@ public class AddExtraContextInsteadOfStyleView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
     private readonly ITemplateStringService _templateStringService;
-    private readonly IButtonsHolder _telegramBotStyleButtons;
-
 
     public AddExtraContextInsteadOfStyleView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
-                               ITemplateStringService templateStringService,
-                               TelegramBotStyleButtons telegramBotStyleButtons)
+                               ITemplateStringService templateStringService)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
         _templateStringService = templateStringService;
-        _telegramBotStyleButtons = telegramBotStyleButtons;
     }
 
 
@@ -27,8 +23,7 @@ public class AddExtraContextInsteadOfStyleView : ITelegramBotView
     {
         await _coupleLanguageTranslatorController.AddExtraContext(update);
 
-        var buttons = _telegramBotStyleButtons.Buttons.Select(button => new KeyboardButton(button)).ToArray();
-        // TODO: add such a template to service
+        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseStyle");
         var markup = new ReplyKeyboardMarkup(buttons);
 

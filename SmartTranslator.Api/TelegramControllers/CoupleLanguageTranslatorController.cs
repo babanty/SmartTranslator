@@ -99,10 +99,11 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task AddAnswerToContextQuestion(Update update)
+    public async Task<TelegramTranslationEntity> AddAnswerToContextQuestion(Update update)
     {
         var context = update.Message.Text;
         // Sends context to manager 
-        return;
+        var entity = new TelegramTranslationEntity(); // Change to updated entity returned from manager
+        return entity;
     }
 }

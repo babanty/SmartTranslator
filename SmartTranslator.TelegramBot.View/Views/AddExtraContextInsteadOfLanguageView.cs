@@ -10,16 +10,13 @@ public class AddExtraContextInsteadOfLanguageView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
     private readonly ITemplateStringService _templateStringService;
-    private readonly IButtonsHolder _telegramBotLanguageButtons;
 
 
     public AddExtraContextInsteadOfLanguageView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
-                               ITemplateStringService templateStringService,
-                               TelegramBotLanguageButtons telegramBotLanguageButtons)
+                               ITemplateStringService templateStringService)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
         _templateStringService = templateStringService;
-        _telegramBotLanguageButtons = telegramBotLanguageButtons;
     }
 
 
@@ -27,8 +24,7 @@ public class AddExtraContextInsteadOfLanguageView : ITelegramBotView
     {
         await _coupleLanguageTranslatorController.AddExtraContext(update);
 
-        var buttons = _telegramBotLanguageButtons.Buttons.Select(button => new KeyboardButton(button)).ToArray();
-        // TODO: add such a template to service
+        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseLanguage");
         var markup = new ReplyKeyboardMarkup(buttons);
 

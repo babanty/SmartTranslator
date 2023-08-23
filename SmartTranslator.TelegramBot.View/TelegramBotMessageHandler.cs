@@ -39,7 +39,7 @@ public class TelegramBotMessageHandler : IGptTelegramBotMessageHandler
     {
         var scope = CreateServiceScope(botClient);
         var incomingMessageHandler = scope.ServiceProvider.GetRequiredService<TelegramIncomingMessageHandler>();
-
+        
         try
         {
             await incomingMessageHandler.HandleRequest(botClient, update, ct);
