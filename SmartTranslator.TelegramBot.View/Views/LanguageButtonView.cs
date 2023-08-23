@@ -19,7 +19,12 @@ public class LanguageButtonView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        var language = StringToLanguage(update.Message.Text);
+        if (update.Message == null)
+            throw new ArgumentException("LanguageButtonView got incorrect update (Message == null)");
+        if (update.Message?.Text == null)
+            throw new ArgumentException("LanguageButtonView got incorrect update (Text == null)");
+
+        var language = StringToLanguage(update!.Message.Text);
 
         await _coupleLanguageTranslatorController.SetLanguage(language);
 

@@ -19,6 +19,9 @@ public class DetermineLanguageView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
+        if (update.Message == null)
+            throw new ArgumentException("DetermineLanguageView got incorrect update (Message == null)");
+
         var language = await _coupleLanguageTranslatorController.DetermineLanguage(update.Message);
 
         if (language == Language.Unknown)
@@ -39,7 +42,7 @@ public class DetermineLanguageView : ITelegramBotView
 
         var buttons = typeof(TelegramBotLanguageButtons)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Select(field => new KeyboardButton(field.GetValue(null).ToString()))
+            .Select(field => new KeyboardButton(field.GetValue(null)!.ToString()!))
             .ToArray();
 
         var replyKeyboard = new ReplyKeyboardMarkup(buttons);

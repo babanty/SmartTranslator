@@ -19,6 +19,9 @@ public class DetermineStyleView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
+        if (update.Message == null)
+            throw new ArgumentException("DetermineStyleView got incorrect update (Message == null)");
+
         var language = await _coupleLanguageTranslatorController.DetermineLanguage(update.Message);
 
         if (language == Language.Unknown)
@@ -39,7 +42,7 @@ public class DetermineStyleView : ITelegramBotView
 
         var buttons = typeof(TelegramBotStyleButtons)
             .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Select(field => new KeyboardButton(field.GetValue(null).ToString()))
+            .Select(field => new KeyboardButton(field.GetValue(null)!.ToString()!))
             .ToArray();
 
         var replyKeyboard = new ReplyKeyboardMarkup(buttons);

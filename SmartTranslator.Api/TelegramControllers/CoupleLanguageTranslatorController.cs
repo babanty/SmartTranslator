@@ -1,4 +1,7 @@
-﻿using SmartTranslator.TranslationCore.Abstractions.Models;
+﻿using SmartTranslator.Api.Exceptions;
+using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
 
@@ -58,5 +61,17 @@ public class CoupleLanguageTranslatorController
     public async Task<string> GiveFinalAnswer(Message message)
     {
         return $"Your message was: {message.Text}";
+    }
+
+
+    public async Task<TelegramTranslationEntity?> GetLatest(Update update, ITranslationManager manager)
+    {
+        if (update?.Message?.From == null)
+            throw new ChannelsNotSupportedException();
+
+        var userName = update.Message.From.ToString(); 
+        var chatId = update.Message.Chat.Id;
+
+        return await manager.GetLatest(userName, chatId);
     }
 }

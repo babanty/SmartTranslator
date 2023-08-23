@@ -21,7 +21,7 @@ public class TelegramBotRoutingResolver
             return null;
 
         // translation
-        if (update.Type == UpdateType.Message && update.Message?.Type == MessageType.Text)
+        if (update.Type == UpdateType.Message && update.Message?.Type == MessageType.Text && update.Message?.Text != null)
         {
             var messageText = update?.Message?.Text;
 
@@ -33,8 +33,8 @@ public class TelegramBotRoutingResolver
                 var text when text == "Clarify" => GetView<ClarifyContextView>(),
                 var text when text == "Determine style" => GetView<DetermineStyleView>(),
                 var text when text == "Answer" => GetView<FinalAnswerView>(),
-                var text when IsCertainButtonType(text, new TelegramBotLanguageButtons()) => GetView<LanguageButtonView>(),
-                var text when IsCertainButtonType(text, new TelegramBotStyleButtons()) => GetView<StyleButtonView>(),
+                var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => GetView<LanguageButtonView>(),
+                var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => GetView<StyleButtonView>(),
                 _ => GetView<DefaultTranslateButtonView>()
             };
         }

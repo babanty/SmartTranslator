@@ -17,6 +17,9 @@ public class ClarifyContextView : ITelegramBotView
 
     public Task<MessageView> Render(Update update)
     {
+        if (update.Message == null)
+            throw new ArgumentException("ClarifyContextView got incorrect update (Message == null)");
+
         var response = _coupleLanguageTranslatorController.EvaluateContext(update.Message).Result;
 
         if (response.Percent != 0)

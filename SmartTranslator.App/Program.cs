@@ -1,8 +1,11 @@
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.DataAccess;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
+using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.View;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
@@ -22,6 +25,7 @@ builder.Services.AddScoped<IGptTranslator, GptTranslator>();
 builder.Services.AddScoped<ITelegramBotMessageSender, TelegramBotMessageSender>();
 builder.Services.AddScoped<ITelegramBotClientProvider, TelegramBotClientProvider>();
 builder.Services.AddScoped<ILoadingAnimation, LoadingAnimation>();
+builder.Services.AddScoped<ITranslationManager, TranslationManager>();
 builder.Services.AddScoped<CoupleLanguageTranslatorController>();
 builder.Services.AddScoped<TelegramBotRoutingResolver>();
 builder.Services.AddScoped<TelegramIncomingMessageHandler>();
@@ -29,6 +33,11 @@ builder.Services.AddTemplateStringService();
 
 builder.Services.AddTranslationCore(translationCoreOptions);
 builder.Services.AddTelegramTranslatorBotView(AppDomain.CurrentDomain.GetAssemblies());
+
+// databases
+builder.Services.AddDbContext<TelegramTranslationDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("TelegramTranslationDbConnection")
+                        ?? throw new ArgumentNullException("Database config not found")));
 
 // Add services to the container.
 
