@@ -16,6 +16,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartTranslator.Api\SmartTranslator.Api.csproj" />
+    <ProjectReference Include="..\SmartTranslator.Contracts\SmartTranslator.Contracts.csproj" />
+    <ProjectReference Include="..\SmartTranslator.Enums\SmartTranslator.Enums.csproj" />
     <ProjectReference Include="..\SmartTranslator.Infrastructure\SmartTranslator.Infrastructure.csproj" />
     <ProjectReference Include="..\SmartTranslator.TelegramBot.Management\SmartTranslator.TelegramBot.Management.csproj" />
     <ProjectReference Include="..\SmartTranslator.TranslationCore.Abstractions\SmartTranslator.TranslationCore.Abstractions.csproj" />

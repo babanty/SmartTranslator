@@ -1,24 +1,58 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using SmartTranslator.Contracts.Dto;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.Enums;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
 public class TranslationManager : ITranslationManager
 {
     private readonly TelegramTranslationDbContext _dbContext;
+    private readonly IMapper _mapper;
 
-    public TranslationManager(TelegramTranslationDbContext dbContext)
+    public TranslationManager(TelegramTranslationDbContext dbContext, IMapper mapper)
     {
         _dbContext = dbContext;
+        _mapper = mapper;
     }
 
 
-    public async Task<TelegramTranslationEntity?> GetLatest(string username, long chatId)
+    public async Task<TelegramTranslationDto?> GetLatest(string username, long chatId)
     {
-        return await _dbContext.TelegramTranslations
+        var entity = await _dbContext.TelegramTranslations
                                .Where(t => t.UserName == username && t.ChatId == chatId)
                                .OrderByDescending(t => t.CreatedAt)
                                .FirstOrDefaultAsync();
+
+        return entity == null ? null : _mapper.Map<TelegramTranslationDto>(entity);
+    }
+
+
+    public TelegramTranslationState DetermineState(TelegramTranslationEntity entity)
+    {
+        // 1. If the translation is done
+        if (entity.Translation != null)
+            return TelegramTranslationState.Finished;
+
+        // 2. If translation style is filled out
+        if (entity.TranslationStyle != null)
+            return TelegramTranslationState.WaitingForTranslation;
+
+        // 3. If all contexts are filled
+        if (entity.Contexts.All(context => context.Response != null))
+            return TelegramTranslationState.WaitingForStyle;
+
+        // 4. If there are contexts awaiting a response
+        if (entity.Contexts.Any(context => context.Response == null))
+            return TelegramTranslationState.WaitingForContext;
+
+        // 5. If languages are not determined
+        if (entity.LanguageFrom == null || entity.LanguageTo == null)
+            return TelegramTranslationState.WaitingForLanguage;
+
+        // If none of the conditions were met
+        return entity.State;
     }
 }

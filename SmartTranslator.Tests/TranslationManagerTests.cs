@@ -1,7 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TranslationCore.Enums;
 using Xunit;
 
 namespace SmartTranslator.Tests;
@@ -10,6 +14,8 @@ public class TranslationManagerTests : IDisposable
 {
     private readonly TelegramTranslationDbContext _dbContext;
     private readonly TranslationManager _translationManager;
+    private readonly MapperConfiguration _mapperConfiguration;
+    private readonly Mapper _mapper;
 
     public TranslationManagerTests()
     {
@@ -21,7 +27,13 @@ public class TranslationManagerTests : IDisposable
         _dbContext.Database.OpenConnection();
         _dbContext.Database.EnsureCreated();
 
-        _translationManager = new TranslationManager(_dbContext);
+        _mapperConfiguration = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile<TelegramTranslationMappingProfile>();
+        });
+        _mapper = new Mapper(_mapperConfiguration);
+
+        _translationManager = new TranslationManager(_dbContext, _mapper);
     }
 
     [Fact]
@@ -204,6 +216,82 @@ public class TranslationManagerTests : IDisposable
         Assert.Equal(translationForUser2.Id, resultForUser2?.Id);
     }
 
+
+    [Fact]
+    public async void DetermineState_WaitingForStyle_ReturnsCorrectly()
+    {
+        // Arrange
+        var translation = new TelegramTranslationEntity
+        {
+            UpdatedAt = DateTime.UtcNow.AddSeconds(5),
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test",
+            LanguageFrom = Language.English,
+            LanguageTo = Language.Russian
+        };
+        var expected = TelegramTranslationState.WaitingForStyle;
+
+        // Act
+        var result = _translationManager.DetermineState(translation);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+
+    [Fact]
+    public async void DetermineState_UnknownContext_WaitingForContext()
+    {
+        // Arrange
+        var context = new Context
+        {
+            Question = "What is the meaning of life?"
+        };
+        var translation = new TelegramTranslationEntity
+        {
+            UpdatedAt = DateTime.UtcNow.AddSeconds(5),
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test",
+            LanguageFrom = Language.English,
+            LanguageTo = Language.Russian,
+            Contexts = new[] { context }
+        };
+        var expected = TelegramTranslationState.WaitingForContext;
+
+        // Act
+        var result = _translationManager.DetermineState(translation);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+
+    [Fact]
+    public async void DetermineState_UnknownStyle_WaitingForStyle()
+    {
+        // Arrange
+        var context = new Context
+        {
+            Question = "What is the meaning of life?",
+            Response = "42"
+        };
+        var translation = new TelegramTranslationEntity
+        {
+            UpdatedAt = DateTime.UtcNow.AddSeconds(5),
+            Id = Guid.NewGuid().ToString(),
+            UserName = "test",
+            LanguageFrom = Language.English,
+            LanguageTo = Language.Russian,
+            Contexts = new[] { context }
+        };
+        var expected = TelegramTranslationState.WaitingForStyle;
+
+        // Act
+        var result = _translationManager.DetermineState(translation);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
 
     public void Dispose()
     {

@@ -12,12 +12,15 @@ using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.DI;
 
 var builder = WebApplication.CreateBuilder(args);
-
+var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
 var translationCoreOptions = builder.Services.AddConfig<TranslationCoreOptions>(builder.Configuration, "TranslationCoreOptions");
 builder.Services.AddConfig<GptTelegramBotOptions>(builder.Configuration, "GptTelegramBotOptions");
 
-builder.Services.AddAutoMapper(typeof(Program));
+//builder.Services.AddAutoMapper(typeof(Program));
+//builder.Services.AddAutoMapper(typeof(TelegramTranslationMappingProfile));
+
+builder.Services.AddAutoMapper((config) => { config.AllowNullCollections = true; }, assemblies);
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IGptTelegramBotBuilder, GptTelegramBotBuilder>();
@@ -29,6 +32,8 @@ builder.Services.AddScoped<ITranslationManager, TranslationManager>();
 builder.Services.AddScoped<CoupleLanguageTranslatorController>();
 builder.Services.AddScoped<TelegramBotRoutingResolver>();
 builder.Services.AddScoped<TelegramIncomingMessageHandler>();
+builder.Services.AddScoped<TelegramViewProvider>();
+builder.Services.AddScoped<TranslationViewProvider>();
 builder.Services.AddTemplateStringService();
 
 builder.Services.AddTranslationCore(translationCoreOptions);

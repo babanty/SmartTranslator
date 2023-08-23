@@ -1,4 +1,6 @@
-﻿using SmartTranslator.TelegramBot.View.Controls;
+﻿using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TelegramBot.View.Exceptions;
 using SmartTranslator.TelegramBot.View.Views;
 using Telegram.Bot.Types;
@@ -8,15 +10,19 @@ namespace SmartTranslator.TelegramBot.View;
 
 public class TelegramBotRoutingResolver
 {
-    public async Task<ITelegramBotView?> RouteMessageOrThrow(Update update, List<ITelegramBotView> telegramBotViews)
+    private readonly ITranslationManager _translationManager;
+    private readonly TelegramViewProvider _viewProvider;
+
+    public TelegramBotRoutingResolver(ITranslationManager translationManager,
+                                      TelegramViewProvider viewProvider)
     {
-        T GetView<T>() where T : ITelegramBotView
-        {
-            var view = telegramBotViews.OfType<T>().FirstOrDefault();
+        _translationManager = translationManager;
+        _viewProvider = viewProvider;
+    }
 
-            return view is null ? throw new InvalidOperationException($"No handler found for a message of type {typeof(T).Name}") : view;
-        }
 
+    public async Task<ITelegramBotView?> RouteMessageOrThrow(Update update)
+    {
         if (update is null)
             return null;
 
@@ -25,18 +31,22 @@ public class TelegramBotRoutingResolver
         {
             var messageText = update?.Message?.Text;
 
-            return messageText switch
+            ITelegramBotView? result = messageText switch
             {
-                var text when text == TelegramBotButtons.Start => GetView<StartButtonView>(),
-                var text when text == TelegramBotButtons.Translate => GetView<TranslateButtonView>(),
-                var text when text == "Determine language" => GetView<DetermineLanguageView>(),
-                var text when text == "Clarify" => GetView<ClarifyContextView>(),
-                var text when text == "Determine style" => GetView<DetermineStyleView>(),
-                var text when text == "Answer" => GetView<FinalAnswerView>(),
-                var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => GetView<LanguageButtonView>(),
-                var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => GetView<StyleButtonView>(),
-                _ => GetView<DefaultTranslateButtonView>()
+                var text when text == TelegramBotButtons.Start => _viewProvider.GetView<StartButtonView>(),
+                var text when text == TelegramBotButtons.Translate => _viewProvider.GetView<TranslateButtonView>(),
+                var text when text == "Determine language" => _viewProvider.GetView<DetermineLanguageView>(),
+                // TODO: cleanup
+                var text when text == "Clarify" => _viewProvider.GetView<ClarifyContextView>(),
+                var text when text == "Determine style" => _viewProvider.GetView<DetermineStyleView>(),
+                var text when text == "Answer" => _viewProvider.GetView<FinalAnswerView>(),
+                var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => _viewProvider.GetView<LanguageButtonView>(),
+                var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => _viewProvider.GetView<StyleButtonView>(),
+                _ => null
             };
+
+            if (result != null)
+                return result;
         }
 
         // /start /block etc
@@ -50,7 +60,7 @@ public class TelegramBotRoutingResolver
 
             if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Member)
             {
-                return GetView<ChangedStatusToMemberView>();
+                return _viewProvider.GetView<ChangedStatusToMemberView>();
             }
         }
 
@@ -58,6 +68,24 @@ public class TelegramBotRoutingResolver
         if (update?.Type == UpdateType.Message && update.Message?.Type == MessageType.Voice)
         {
             throw new VoiceMessageTypeNotImplementedException();
+        }
+
+        if (update.Type == UpdateType.Message && update.Message?.Type == MessageType.Text && update.Message?.Text != null)
+        {
+            var latest = await _translationManager.GetLatest(update.Message.From.Username, update.Message.Chat.Id);
+
+            if (latest == null)
+                return _viewProvider.GetView<NewTranslationView>();
+
+            return latest.State switch
+            {
+                var state when state == TelegramTranslationState.Finished => _viewProvider.GetView<NewTranslationView>(),
+                var state when state == TelegramTranslationState.WaitingForTranslation => _viewProvider.GetView<WaitingForTranslationView>(),
+                var state when state == TelegramTranslationState.WaitingForStyle => _viewProvider.GetView<AddExtraContextInsteadOfStyleView>(),
+                var state when state == TelegramTranslationState.WaitingForContext => _viewProvider.GetView<FillContextView>(),
+                var state when state == TelegramTranslationState.WaitingForLanguage => _viewProvider.GetView<AddExtraContextInsteadOfLanguageView>(),
+                _ => throw new UnknownStateException($"Unknown state: {latest.State}")
+            };
         }
 
         throw new UnknownMessageTypeException();

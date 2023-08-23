@@ -80,6 +80,19 @@ Moreover, there are other language pairs as well.
 🇷🇺 - 🇫🇷 @gtp_translator_rus_fra_bot
 🇷🇺 - 🇬🇷 @gtp_translator_rus_gre_bot
 🇷🇺 - 🇺🇿 @gpt_translator_rus_uzb_bot", "", TemplateLanguage.Rus_Eng, EnvironmentType.Any),
+
+        new TemplateString(Guid.NewGuid(), "ReceivedAdditionalContextNowPleaseChooseLanguage", "Мы получили предоставленный вами дополнительный контекст, теперь, пожалуйста, выберите один из предоставленных ниже вариантов языка.", "", TemplateLanguage.Rus, EnvironmentType.Any),
+        new TemplateString(Guid.NewGuid(), "ReceivedAdditionalContextNowPleaseChooseLanguage", "We have received the additional context you provided. Now, please select one of the language options provided below.", "", TemplateLanguage.Eng, EnvironmentType.Any),
+
+        new TemplateString(Guid.NewGuid(), "ReceivedAdditionalContextNowPleaseChooseStyle", "Мы получили предоставленный вами дополнительный контекст, теперь, пожалуйста, выберите один из предоставленных ниже вариантов стиля.", "", TemplateLanguage.Rus, EnvironmentType.Any),
+        new TemplateString(Guid.NewGuid(), "ReceivedAdditionalContextNowPleaseChooseStyle", "We have received the additional context you provided. Now, please select one of the style options provided below.", "", TemplateLanguage.Eng, EnvironmentType.Any),
+
+        new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "Похоже, что-то пошло не так, мы постараемся исправить это как можно скорее.", "", TemplateLanguage.Rus, EnvironmentType.Any),
+        new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "It seems, something went wrong. We're trying to fix it as soon as possible.", "", TemplateLanguage.Eng, EnvironmentType.Any),
+
+        new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "Похоже, что-то пошло не так, мы постараемся исправить это как можно скорее.", "", TemplateLanguage.Rus, EnvironmentType.Any),
+        new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "It seems, something went wrong. We're trying to fix it as soon as possible.", "", TemplateLanguage.Eng, EnvironmentType.Any),
+
     };
 
     private readonly object _templateStringCollectionLock = new();

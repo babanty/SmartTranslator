@@ -7,14 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="MediatR" Version="10.0.1" />
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="7.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="6.0.0" />
     <PackageReference Include="Telegram.Bot" Version="19.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartTranslator.Contracts\SmartTranslator.Contracts.csproj" />
     <ProjectReference Include="..\SmartTranslator.DataAccess\SmartTranslator.DataAccess.csproj" />
+    <ProjectReference Include="..\SmartTranslator.Enums\SmartTranslator.Enums.csproj" />
     <ProjectReference Include="..\SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj" />
   </ItemGroup>
 

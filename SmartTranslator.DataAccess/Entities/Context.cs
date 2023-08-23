@@ -7,5 +7,5 @@ public record Context
     public string Question { get; set; } = default!;
 
     /// <summary> User's responce to said question </summary>
-    public string Response { get; set; } = default!;
+    public string? Response { get; set; } = default!;
 }

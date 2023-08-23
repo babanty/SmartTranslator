@@ -1,7 +1,6 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TranslationCore.Enums;
-using System.Reflection;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -40,17 +39,14 @@ public class DetermineStyleView : ITelegramBotView
     {
         var text = "Failed to determine style of request, please choose one of the options provided";
 
-        var buttons = typeof(TelegramBotStyleButtons)
-            .GetFields(BindingFlags.Public | BindingFlags.Static)
-            .Select(field => new KeyboardButton(field.GetValue(null)!.ToString()!))
-            .ToArray();
+        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var markup = new ReplyKeyboardMarkup(buttons);
 
-        var replyKeyboard = new ReplyKeyboardMarkup(buttons);
 
         return Task.FromResult(new MessageView
         {
             Text = text,
-            Markup = replyKeyboard
+            Markup = markup
         });
     }
 }

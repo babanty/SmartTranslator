@@ -1,4 +1,5 @@
 ﻿using SmartTranslator.Api.Exceptions;
+using SmartTranslator.Contracts.Dto;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Abstractions.Models;
@@ -14,10 +15,12 @@ public class CoupleLanguageTranslatorController
         return;
     }
 
+
     public Task<string> Translate(Message message)
     {
         return Task.FromResult("I don't know how to translate yet");
     }
+
 
     public Task<Language> DetermineLanguage(Message message)
     {
@@ -64,14 +67,43 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationEntity?> GetLatest(Update update, ITranslationManager manager)
+    public async Task<TelegramTranslationDto?> GetLatest(Update update, ITranslationManager manager)
     {
         if (update?.Message?.From == null)
             throw new ChannelsNotSupportedException();
 
-        var userName = update.Message.From.ToString(); 
+        var userName = update.Message.From.ToString();
         var chatId = update.Message.Chat.Id;
 
         return await manager.GetLatest(userName, chatId);
+    }
+
+
+    public async Task<TelegramTranslationDto> CreateTranslation(Update update)
+    {
+        var stub = new TelegramTranslationDto
+        {
+            Id = "new id",
+            State = Enums.TelegramTranslationState.WaitingForLanguage
+        };
+
+        return stub;
+    }
+
+
+    public async Task AddExtraContext(Update update)
+    {
+        var context = update.Message.Text;
+        // Sends context to manager
+        return;
+    }
+
+
+    public async Task<TelegramTranslationEntity> AddAnswerToContextQuestion(Update update)
+    {
+        var context = update.Message.Text;
+        // Sends context to manager 
+        var entity = new TelegramTranslationEntity(); // Change to updated entity returned from manager
+        return entity;
     }
 }
