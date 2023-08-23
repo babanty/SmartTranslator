@@ -4,7 +4,6 @@ using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.DataAccess;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
-using SmartTranslator.TelegramBot.Management;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.View;

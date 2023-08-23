@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace SmartTranslator.TelegramBot.View.Controls;
+﻿namespace SmartTranslator.TelegramBot.View.Controls;
 
 public interface IButtonsHolder
 {

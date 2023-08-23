@@ -1,8 +1,4 @@
 using SmartTranslator.Api.TelegramControllers;
-using SmartTranslator.Enums;
-using SmartTranslator.TelegramBot.Management.TranslationManagement;
-using SmartTranslator.TelegramBot.View.Exceptions;
-using System.Runtime.CompilerServices;
 using Telegram.Bot.Types;
 
 namespace SmartTranslator.TelegramBot.View.Views;

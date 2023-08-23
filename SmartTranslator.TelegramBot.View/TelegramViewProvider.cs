@@ -1,7 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using SmartTranslator.Contracts.Dto;
-using SmartTranslator.Enums;
-using SmartTranslator.TelegramBot.View.Exceptions;
 using SmartTranslator.TelegramBot.View.Views;
 
 namespace SmartTranslator.TelegramBot.View;

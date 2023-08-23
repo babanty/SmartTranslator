@@ -2,11 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
-using SmartTranslator.TelegramBot.Management.TranslationManagement;
-using SmartTranslator.TelegramBot.Management;
-using Xunit;
-using SmartTranslator.TranslationCore.Enums;
 using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management;
+using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TranslationCore.Enums;
+using Xunit;
 
 namespace SmartTranslator.Tests;
 
@@ -254,7 +254,7 @@ public class TranslationManagerTests : IDisposable
             UserName = "test",
             LanguageFrom = Language.English,
             LanguageTo = Language.Russian,
-            Contexts = new[]{ context }
+            Contexts = new[] { context }
         };
         var expected = TelegramTranslationState.WaitingForContext;
 

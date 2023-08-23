@@ -72,7 +72,7 @@ public class CoupleLanguageTranslatorController
         if (update?.Message?.From == null)
             throw new ChannelsNotSupportedException();
 
-        var userName = update.Message.From.ToString(); 
+        var userName = update.Message.From.ToString();
         var chatId = update.Message.Chat.Id;
 
         return await manager.GetLatest(userName, chatId);

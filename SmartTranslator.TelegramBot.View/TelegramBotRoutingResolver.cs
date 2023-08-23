@@ -17,7 +17,7 @@ public class TelegramBotRoutingResolver
                                       TelegramViewProvider viewProvider)
     {
         _translationManager = translationManager;
-        _viewProvider = viewProvider;   
+        _viewProvider = viewProvider;
     }
 
 

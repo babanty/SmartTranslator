@@ -21,7 +21,7 @@ public class TranslationViewProvider
         var state when state == TelegramTranslationState.WaitingForTranslation => _viewProvider.GetView<TranslateButtonView>(),
         var state when state == TelegramTranslationState.WaitingForStyle => _viewProvider.GetView<DetermineStyleView>(),
         var state when state == TelegramTranslationState.WaitingForContext => _viewProvider.GetView<ClarifyContextView>(),
-        var state when state == TelegramTranslationState.WaitingForLanguage =>  _viewProvider.GetView<DetermineLanguageView>(),
+        var state when state == TelegramTranslationState.WaitingForLanguage => _viewProvider.GetView<DetermineLanguageView>(),
         _ => throw new UnknownStateException($"Unknown state: {translation.State}")
     };
 }

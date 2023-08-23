@@ -1,6 +1,5 @@
 ﻿using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
-using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 
 namespace SmartTranslator.TelegramBot.View.Filters;
 
