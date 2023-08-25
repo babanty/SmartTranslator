@@ -12,4 +12,5 @@ public interface ITranslationManager
     /// <param name="chatId">The ID of the chat.</param>
     /// <returns>The latest <see cref="TelegramTranslationEntity"/> in the chat with the specified user and chat ID.</returns>
     Task<TelegramTranslationDto?> GetLatest(string username, long chatId);
+    Task<TelegramTranslationEntity> Create();
 }

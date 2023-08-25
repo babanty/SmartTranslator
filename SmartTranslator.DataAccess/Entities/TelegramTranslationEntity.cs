@@ -37,7 +37,7 @@ public record TelegramTranslationEntity
     public TranslationStyle? TranslationStyle { get; set; }
 
     /// <summary> Contexts of the translation </summary>
-    public IReadOnlyCollection<Context> Contexts { get; set; } = new List<Context>();
+    public ICollection<Context> Contexts { get; set; } = new List<Context>();
 
     /// <summary> State of the translation </summary>
     public TelegramTranslationState State { get; set; } = default!;

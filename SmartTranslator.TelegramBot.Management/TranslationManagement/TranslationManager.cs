@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SmartTranslator.Contracts.Dto;
+using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
@@ -54,5 +55,29 @@ public class TranslationManager : ITranslationManager
 
         // If none of the conditions were met
         return entity.State;
+    }
+
+    public async Task<TelegramTranslationDto> Create(CreateTelegramTranslationEntityRequest request)
+    {
+        var entity = new TelegramTranslationEntity
+        {
+            Id = Guid.NewGuid().ToString(),
+            ChatId = request.ChatId,
+            UserName = request.UserName,
+            State = TelegramTranslationState.Created,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow,
+            BaseText = request.BaseText,
+            LanguageFrom = request.LanguageFrom,
+            LanguageTo = request.LanguageTo,
+            TranslationStyle = request.TranslationStyle,
+            Contexts = new List<Context>(),
+            Translation = null
+        };
+
+        _dbContext.TelegramTranslations.Add(entity);
+        await _dbContext.SaveChangesAsync();
+
+        return _mapper.Map<TelegramTranslationDto>(entity);
     }
 }

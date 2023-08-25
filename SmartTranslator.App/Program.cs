@@ -17,9 +17,6 @@ var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 var translationCoreOptions = builder.Services.AddConfig<TranslationCoreOptions>(builder.Configuration, "TranslationCoreOptions");
 builder.Services.AddConfig<GptTelegramBotOptions>(builder.Configuration, "GptTelegramBotOptions");
 
-//builder.Services.AddAutoMapper(typeof(Program));
-//builder.Services.AddAutoMapper(typeof(TelegramTranslationMappingProfile));
-
 builder.Services.AddAutoMapper((config) => { config.AllowNullCollections = true; }, assemblies);
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
