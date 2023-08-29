@@ -9,6 +9,7 @@ using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
@@ -83,18 +84,43 @@ public class TranslationManager : ITranslationManager
             BaseText = request.BaseText,
         };
 
-        _dbContext.TelegramTranslations.Add(entity);
+        var filledEntity = await ExecuteEntityProcessingPipeline(entity);
+
+        _dbContext.TelegramTranslations.Add(filledEntity);
         await _dbContext.SaveChangesAsync();
 
-        return _mapper.Map<TelegramTranslationDto>(entity);
+        return _mapper.Map<TelegramTranslationDto>(filledEntity);
     }
 
 
     private async Task<TelegramTranslationEntity> ExecuteEntityProcessingPipeline(TelegramTranslationEntity entity)
     {
-        var text = entity.BaseText;
+        entity = await AddLanguage(entity);
+        if (entity.State == TelegramTranslationState.WaitingForLanguage)
+            return entity;
+
+        entity = await AddContext(entity);
+        if (entity.State == TelegramTranslationState.WaitingForContext)
+            return entity;
+
+        entity = await AddStyle(entity);
+        if (entity.State == TelegramTranslationState.WaitingForStyle)
+            return entity;
+
+        var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
+        var translation = await _translator.Translate(entity.BaseText, contextString, entity.LanguageTo!.Value, entity.LanguageFrom!.Value, entity.TranslationStyle!.Value);
+        
+        var correctedTranslation = await _textMistakeManager.Correct(translation);
+        entity.Translation = correctedTranslation;
+
+        return entity;
+    }
+
+
+    private async Task<TelegramTranslationEntity> AddLanguage(TelegramTranslationEntity entity)
+    {
         var languagePair = _languageManager.GetLanguagePair();
-        // Определить язык
+        var text = entity.BaseText;
         var baseTextLanguage = await _languageManager.DetermineLanguage(text);
         if (baseTextLanguage == null)
         {
@@ -106,9 +132,14 @@ public class TranslationManager : ITranslationManager
         entity.LanguageFrom = baseTextLanguage;
         entity.LanguageTo = targetLanguage;
 
-        // Определить достаточно ли контекста
-        var contextEvaluation = await _translator.EvaluateContext(text, targetLanguage);
-        if (contextEvaluation.Percent == 0)
+        return entity;
+    }
+
+
+    private async Task<TelegramTranslationEntity> AddContext(TelegramTranslationEntity entity)
+    {
+        var contextEvaluation = await _translator.EvaluateContext(entity.BaseText, entity.LanguageTo!.Value);
+        if (contextEvaluation.Request?.ClarifyingQuestion != null)
         {
             entity.Contexts.Add(new Context
             {
@@ -118,15 +149,15 @@ public class TranslationManager : ITranslationManager
             return entity;
         }
 
-        // Определить стиль перевода
-        var contextString = "";
-        foreach (var context in entity.Contexts)
-        {
-            contextString += $@"-{context.Question}
--{context.Response}";
-        }
+        return entity;
+    }
 
-        var styleProbabilities = await _translator.DefineStyle(text, contextString, baseTextLanguage, targetLanguage);
+
+    private async Task<TelegramTranslationEntity> AddStyle(TelegramTranslationEntity entity)
+    {
+        var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
+
+        var styleProbabilities = await _translator.DefineStyle(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value);
         var style = GetMostProbableStyle(styleProbabilities);
 
         if (style == null)
@@ -136,13 +167,6 @@ public class TranslationManager : ITranslationManager
         }
 
         entity.TranslationStyle = style;
-
-        // отправка на перевод
-        var translation = await _translator.Translate(text, contextString, baseTextLanguage.Value, targetLanguage, style.Value);
-        // исправление орфографии
-        var correctedTranslation = await _textMistakeManager.Correct(translation);
-        entity.Translation = correctedTranslation;
-
         return entity;
     }
 
@@ -153,6 +177,9 @@ public class TranslationManager : ITranslationManager
         var mostProbableStyles = result.ProbabilityOfSuccess.Where(x => x.Probability == maxProbability).ToList();
 
         if (mostProbableStyles.Count != 1)
+            return null;
+
+        if (mostProbableStyles.Single().Probability < 0.8)
             return null;
 
         return mostProbableStyles.Single().Style;
