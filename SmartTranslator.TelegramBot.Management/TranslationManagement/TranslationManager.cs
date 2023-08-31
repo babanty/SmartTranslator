@@ -55,17 +55,17 @@ public class TranslationManager : ITranslationManager
         if (entity.TranslationStyle != null)
             return TelegramTranslationState.WaitingForTranslation;
 
-        // 3. If all contexts are filled
+        // 3. If languages are not determined
+        if (entity.LanguageFrom == null || entity.LanguageTo == null)
+            return TelegramTranslationState.WaitingForLanguage;
+
+        // 4. If all contexts are filled
         if (entity.Contexts.All(context => context.Response != null))
             return TelegramTranslationState.WaitingForStyle;
 
-        // 4. If there are contexts awaiting a response
+        // 5. If there are contexts awaiting a response
         if (entity.Contexts.Any(context => context.Response == null))
             return TelegramTranslationState.WaitingForContext;
-
-        // 5. If languages are not determined
-        if (entity.LanguageFrom == null || entity.LanguageTo == null)
-            return TelegramTranslationState.WaitingForLanguage;
 
         // If none of the conditions were met
         return entity.State;
@@ -93,7 +93,7 @@ public class TranslationManager : ITranslationManager
     }
 
 
-    private async Task<TelegramTranslationEntity> ExecuteEntityProcessingPipeline(TelegramTranslationEntity entity)
+    public async Task<TelegramTranslationEntity> ExecuteEntityProcessingPipeline(TelegramTranslationEntity entity)
     {
         entity = await AddLanguage(entity);
         if (entity.State == TelegramTranslationState.WaitingForLanguage)
@@ -139,7 +139,7 @@ public class TranslationManager : ITranslationManager
     private async Task<TelegramTranslationEntity> AddContext(TelegramTranslationEntity entity)
     {
         var contextEvaluation = await _translator.EvaluateContext(entity.BaseText, entity.LanguageTo!.Value);
-        if (contextEvaluation.Request?.ClarifyingQuestion != null)
+        if (contextEvaluation.Percent < 0.7)
         {
             entity.Contexts.Add(new Context
             {

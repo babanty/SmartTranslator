@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Moq;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.Management;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TranslationCore;
+using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Enums;
 using Xunit;
 
@@ -33,7 +36,11 @@ public class TranslationManagerTests : IDisposable
         });
         _mapper = new Mapper(_mapperConfiguration);
 
-        _translationManager = new TranslationManager(_dbContext, _mapper);
+        var mockGptTranslator = new Mock<IGptTranslator>();
+        var mockLanguageManager = new Mock<ILanguageManager>();
+        var mockTextMistakeManager = new Mock<ITextMistakeManager>();
+
+        _translationManager = new TranslationManager(_dbContext, _mapper, mockGptTranslator.Object, mockLanguageManager.Object, mockTextMistakeManager.Object);
     }
 
     [Fact]
@@ -299,4 +306,3 @@ public class TranslationManagerTests : IDisposable
         _dbContext.Dispose();
     }
 }
-
