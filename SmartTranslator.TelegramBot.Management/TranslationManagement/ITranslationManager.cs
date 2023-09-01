@@ -1,4 +1,5 @@
 ﻿using SmartTranslator.Contracts.Dto;
+using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
@@ -12,4 +13,5 @@ public interface ITranslationManager
     /// <param name="chatId">The ID of the chat.</param>
     /// <returns>The latest <see cref="TelegramTranslationEntity"/> in the chat with the specified user and chat ID.</returns>
     Task<TelegramTranslationDto?> GetLatest(string username, long chatId);
+    Task<TelegramTranslationDto> Create(CreateTelegramTranslationEntityRequest request);
 }

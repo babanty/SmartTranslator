@@ -17,14 +17,13 @@ var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 var translationCoreOptions = builder.Services.AddConfig<TranslationCoreOptions>(builder.Configuration, "TranslationCoreOptions");
 builder.Services.AddConfig<GptTelegramBotOptions>(builder.Configuration, "GptTelegramBotOptions");
 
-//builder.Services.AddAutoMapper(typeof(Program));
-//builder.Services.AddAutoMapper(typeof(TelegramTranslationMappingProfile));
-
 builder.Services.AddAutoMapper((config) => { config.AllowNullCollections = true; }, assemblies);
 builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddScoped<IGptTelegramBotBuilder, GptTelegramBotBuilder>();
 builder.Services.AddScoped<IGptTranslator, GptTranslator>();
+builder.Services.AddScoped<ILanguageManager, LanguageManager>();
+builder.Services.AddScoped<ITextMistakeManager, TextMistakeManager>();
 builder.Services.AddScoped<ITelegramBotMessageSender, TelegramBotMessageSender>();
 builder.Services.AddScoped<ITelegramBotClientProvider, TelegramBotClientProvider>();
 builder.Services.AddScoped<ILoadingAnimation, LoadingAnimation>();

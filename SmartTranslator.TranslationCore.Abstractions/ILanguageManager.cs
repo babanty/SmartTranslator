@@ -23,5 +23,5 @@ public interface ILanguageManager
     /// <returns>
     ///  <see cref="Language"/> of the given text.
     /// </returns>
-    Task<Language> DetermineLanguage(string text);
+    Task<Language?> DetermineLanguage(string text);
 }

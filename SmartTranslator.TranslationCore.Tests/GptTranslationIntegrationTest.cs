@@ -133,4 +133,56 @@ public class GptTranslationIntegrationTest
         Assert.InRange(conversationalProb, 0.1f, 0.3f); // TODO: change to more appropriate values once GPT-4 is accessible
         Assert.InRange(teenageProb, 0f, 0.2f); // TODO: change to more appropriate values once GPT-4 is accessible
     }
+
+    /*
+    [Fact]
+    public async Task Translate_DdosAttack_AnswerOK()
+    {
+        // Arrange
+        var translationOptions = new GptTranslationOptions
+        {
+            MaxTokens = _testOptions.MaxTokens
+        };
+        var httpClientOptions = new GptHttpClientOptions
+        {
+            ApiKey = _testOptions.ApiKey
+        };
+        var httpClient = new GptHttpClient(httpClientOptions);
+        var translator = new GptTranslator(translationOptions, httpClient);
+        var text = "\r\nЧто такое Lorem Ipsum?\r\nLorem Ipsum - это текст-\"рыба\", часто используемый в печати и вэб-дизайне. Lorem Ipsum является стандартной \"рыбой\" для текстов на латинице с начала XVI века. В то время некий безымянный печатник создал большую коллекцию размеров и форм шрифтов, используя Lorem Ipsum для распечатки образцов. Lorem Ipsum не только успешно пережил без заметных изменений пять веков, но и перешагнул в электронный дизайн. Его популяризации в новое время послужили публикация листов Letraset с образцами Lorem Ipsum в 60-х годах и, в более недавнее время, программы электронной вёрстки типа Aldus PageMaker, в шаблонах которых используется Lorem Ipsum.\r\n\r\nПочему он используется?\r\nДавно выяснено, что при оценке дизайна и композиции читаемый текст мешает сосредоточиться. Lorem Ipsum используют потому, что тот обеспечивает более или менее стандартное заполнение шаблона, а также реальное распределение букв и пробелов в абзацах, которое не получается при простой дубликации \"Здесь ваш текст.. Здесь ваш текст.. Здесь ваш текст..\" Многие программы электронной вёрстки и редакторы HTML используют Lorem Ipsum в качестве текста по умолчанию, так что поиск по ключевым словам \"lorem ipsum\" сразу показывает, как много веб-страниц всё ещё дожидаются своего настоящего рождения. За прошедшие годы текст Lorem Ipsum получил много версий. Некоторые версии появились по ошибке, некоторые - намеренно (например, юмористические варианты).\r\n\r\n";
+        var context = "";
+        var from = Language.English;
+        var to = Language.Russian;
+        var translationStyle = TranslationStyle.ConversationalStyle;
+
+        // Act
+        var tasks = new List<Task>();
+        int successfulCount = 0;
+
+        for (int i = 0; i < 2; i++)
+        {
+            var task = Task.Run(async () =>
+            {
+                try
+                {
+                    await translator.Translate(text, context, from, to, translationStyle);
+                    Interlocked.Increment(ref successfulCount);
+                }
+                catch
+                {
+                    // Обработка ошибки, если это необходимо
+                    // Иначе просто продолжаем
+                }
+            });
+
+            tasks.Add(task);
+        }
+
+        await Task.WhenAll(tasks);
+
+        Console.WriteLine($"Успешных переводов: {successfulCount}");
+
+        // Assert
+        Assert.Equal(1, 1);
+    }*/
 }

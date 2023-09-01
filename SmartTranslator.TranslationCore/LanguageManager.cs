@@ -22,7 +22,7 @@ public class LanguageManager : ILanguageManager
 
 
     /// <inheritdoc/>
-    public async Task<Language> DetermineLanguage(string text)
+    public async Task<Language?> DetermineLanguage(string text)
     {
         if (string.IsNullOrWhiteSpace(text))
         {
@@ -34,7 +34,7 @@ public class LanguageManager : ILanguageManager
 
         var messages = new List<ChatMessage>()
         {
-            ChatMessage.FromUser($"What is the language of the text: \"{textToCheck}\"? As your answer only say one of the following words: {possibleLanguages.Item1}, {possibleLanguages.Item2}")
+            ChatMessage.FromUser($"What is the language of the text: \"{textToCheck}\"? As your answer only say one of the following words: {possibleLanguages.Item1}, {possibleLanguages.Item2}, null")
         };
 
         var translation = await _gptHttpClient.Send(messages, GptModel.GPT3d5Stable);
@@ -43,14 +43,14 @@ public class LanguageManager : ILanguageManager
     }
 
 
-    private static Language StringToLanguage(string text)
+    private static Language? StringToLanguage(string text)
     {
-        return text switch
+        return text.ToLowerInvariant() switch
         {
-            "English" => Language.English,
-            "Russian" => Language.Russian,
-            "Other" => Language.Unknown,
-            _ => throw new UnknownLanguageException($"Unknown language: {text}"),
+            var t when t.Contains("english") => Language.English,
+            var t when t.Contains("russian") => Language.Russian,
+            var t when t.Contains("null") => null,
+            _ => throw new UnknownLanguageException($"Unknown language: {text}")
         };
     }
 }
