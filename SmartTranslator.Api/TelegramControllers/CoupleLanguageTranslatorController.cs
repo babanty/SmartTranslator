@@ -1,5 +1,7 @@
-﻿using SmartTranslator.Api.Exceptions;
+﻿using AutoMapper;
+using SmartTranslator.Api.Exceptions;
 using SmartTranslator.Contracts.Dto;
+using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Abstractions.Models;
@@ -10,6 +12,17 @@ namespace SmartTranslator.Api.TelegramControllers;
 
 public class CoupleLanguageTranslatorController
 {
+    private readonly ITranslationManager _translationManager;
+    private readonly IMapper _mapper;
+
+    public CoupleLanguageTranslatorController(ITranslationManager translationManager,
+                                              IMapper mapper)
+    {
+        _translationManager = translationManager;
+        _mapper = mapper;
+    }
+
+
     public async Task NewUser(ChatMemberUpdated chatMemberUpdated)
     {
         return;
@@ -67,7 +80,7 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationDto?> GetLatest(Update update, ITranslationManager manager)
+    public async Task<TelegramTranslationDto?> GetLatest(Update update)
     {
         if (update?.Message?.From == null)
             throw new ChannelsNotSupportedException();
@@ -75,19 +88,21 @@ public class CoupleLanguageTranslatorController
         var userName = update.Message.From.ToString();
         var chatId = update.Message.Chat.Id;
 
-        return await manager.GetLatest(userName, chatId);
+        return await _translationManager.GetLatest(userName, chatId);
     }
 
 
     public async Task<TelegramTranslationDto> CreateTranslation(Update update)
     {
-        var stub = new TelegramTranslationDto
+        var request = new CreateTelegramTranslationEntityRequest
         {
-            Id = "new id",
-            State = Enums.TelegramTranslationState.WaitingForLanguage
+            BaseText = update.Message.Text,
+            ChatId = update.Message.Chat.Id,
+            UserName = update.Message.From.Username
         };
+        var entity = await _translationManager.Create(request);
 
-        return stub;
+        return entity;
     }
 
 
@@ -105,5 +120,12 @@ public class CoupleLanguageTranslatorController
         // Sends context to manager 
         var entity = new TelegramTranslationEntity(); // Change to updated entity returned from manager
         return entity;
+    }
+
+    public async Task FinishLatestTranslation(Update update)
+    {
+        var entity = await GetLatest(update);
+        if (entity != null)
+            await _translationManager.FinishTranslation(entity.Id);
     }
 }

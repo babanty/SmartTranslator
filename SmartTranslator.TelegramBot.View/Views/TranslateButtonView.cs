@@ -1,21 +1,36 @@
-﻿using SmartTranslator.TelegramBot.View.Controls;
+﻿using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
 public class TranslateButtonView : ITelegramBotView
 {
-    public Task<MessageView> Render(Update update)
+    private readonly CoupleLanguageTranslatorController _languageTranslatorController;
+
+    public TranslateButtonView(CoupleLanguageTranslatorController languageTranslatorController)
+    {
+        _languageTranslatorController = languageTranslatorController;
+    }
+
+
+    public async Task<MessageView> Render(Update update)
     {
         if (update.Message == null)
             throw new ArgumentException("TranslateButtonView got incorrect update (Message == null)");
 
-        var text = $"'{TelegramBotButtons.Translate}' button was pressed";
+        await _languageTranslatorController.FinishLatestTranslation(update);
+        var text = $"Please, write the text that needs to be translated.";
 
-        return Task.FromResult(new MessageView
+        return new MessageView
         {
             Text = text,
-            Markup = null
-        });
+            Markup = new ReplyKeyboardMarkup(new[]
+            {
+                new KeyboardButton(TelegramBotButtons.Translate)
+            })
+        };
     }
 }

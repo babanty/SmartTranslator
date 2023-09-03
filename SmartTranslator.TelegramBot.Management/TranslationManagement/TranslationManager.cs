@@ -45,6 +45,19 @@ public class TranslationManager : ITranslationManager
     }
 
 
+    public async Task FinishTranslation(string translationId)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            return;
+
+        entity.State = TelegramTranslationState.Finished;
+        entity.UpdatedAt = DateTime.UtcNow;
+        await _dbContext.SaveChangesAsync();
+    }
+
+
     public TelegramTranslationState DetermineState(TelegramTranslationEntity entity)
     {
         // 1. If the translation is done
@@ -108,10 +121,11 @@ public class TranslationManager : ITranslationManager
             return entity;
 
         var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
-        var translation = await _translator.Translate(entity.BaseText, contextString, entity.LanguageTo!.Value, entity.LanguageFrom!.Value, entity.TranslationStyle!.Value);
+        var translation = await _translator.Translate(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value, entity.TranslationStyle!.Value);
         
         var correctedTranslation = await _textMistakeManager.Correct(translation);
         entity.Translation = correctedTranslation;
+        entity.State = TelegramTranslationState.Finished;
 
         return entity;
     }
@@ -139,7 +153,7 @@ public class TranslationManager : ITranslationManager
     private async Task<TelegramTranslationEntity> AddContext(TelegramTranslationEntity entity)
     {
         var contextEvaluation = await _translator.EvaluateContext(entity.BaseText, entity.LanguageTo!.Value);
-        if (contextEvaluation.Percent < 0.7)
+        if (contextEvaluation.Percent < 0.7f)
         {
             entity.Contexts.Add(new Context
             {
@@ -148,6 +162,8 @@ public class TranslationManager : ITranslationManager
             entity.State = DetermineState(entity);
             return entity;
         }
+
+        entity.UpdatedAt = DateTime.UtcNow;
 
         return entity;
     }
@@ -167,6 +183,8 @@ public class TranslationManager : ITranslationManager
         }
 
         entity.TranslationStyle = style;
+        entity.UpdatedAt = DateTime.UtcNow;
+
         return entity;
     }
 

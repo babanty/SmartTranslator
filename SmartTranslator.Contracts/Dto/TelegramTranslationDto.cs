@@ -6,4 +6,5 @@ public record TelegramTranslationDto
 {
     public string Id { get; set; } = default!;
     public TelegramTranslationState State { get; set; } = default!;
+    public string Translation { get; set; } = default!;
 }
