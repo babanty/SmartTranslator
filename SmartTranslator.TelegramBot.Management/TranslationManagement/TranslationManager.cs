@@ -5,6 +5,7 @@ using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management.Exceptions;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
@@ -45,6 +46,14 @@ public class TranslationManager : ITranslationManager
     }
 
 
+    public async Task<Language?> DetermineLanguage(string text)
+    {
+        var language = await _languageManager.DetermineLanguage(text);
+
+        return language;
+    }
+
+
     public async Task FinishTranslation(string translationId)
     {
         var entity = _dbContext.TelegramTranslations.Find(translationId);
@@ -55,6 +64,73 @@ public class TranslationManager : ITranslationManager
         entity.State = TelegramTranslationState.Finished;
         entity.UpdatedAt = DateTime.UtcNow;
         await _dbContext.SaveChangesAsync();
+    }
+
+
+    public async Task<TelegramTranslationDto> SetLanguages(string translationId, Language baseLanguage)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        var targetLanguage = GetTargetLanguage(baseLanguage);
+        entity.LanguageFrom = baseLanguage;
+        entity.LanguageTo = targetLanguage;
+        entity.UpdatedAt = DateTime.UtcNow;
+        entity.State = DetermineState(entity);
+
+        entity = await ExecuteEntityProcessingPipeline(entity);
+        await _dbContext.SaveChangesAsync();
+
+        return _mapper.Map<TelegramTranslationDto>(entity);
+    }
+
+
+    public async Task<(TelegramTranslationDto, string?)> DetermineContext(string translationId)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        var text = entity.BaseText;
+        var language = entity.LanguageTo.Value;
+        var evaluation = await _translator.EvaluateContext(text, language);
+
+        string? question = null;
+        if (evaluation.Percent < 0.7f)
+        {
+            question = evaluation.Request.ClarifyingQuestion;
+            entity.Contexts.Add(new Context
+            {
+                Question = question
+            });
+        }
+
+        entity.UpdatedAt = DateTime.UtcNow;
+        entity.State = DetermineState(entity);
+
+        entity = await ExecuteEntityProcessingPipeline(entity);
+        await _dbContext.SaveChangesAsync();
+
+        return (_mapper.Map<TelegramTranslationDto>(entity), question);
+    }
+
+
+    public async Task<TelegramTranslationDto> SetStyle(string translationId, TranslationStyle style)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        entity.TranslationStyle = style;
+        entity.UpdatedAt = DateTime.UtcNow;
+        entity.State = DetermineState(entity);
+        await _dbContext.SaveChangesAsync();
+
+        return _mapper.Map<TelegramTranslationDto>(entity);
     }
 
 
@@ -108,23 +184,33 @@ public class TranslationManager : ITranslationManager
 
     public async Task<TelegramTranslationEntity> ExecuteEntityProcessingPipeline(TelegramTranslationEntity entity)
     {
-        entity = await AddLanguage(entity);
-        if (entity.State == TelegramTranslationState.WaitingForLanguage)
-            return entity;
+        if (entity.LanguageFrom == null || entity.LanguageTo == null)
+        {
+            entity = await AddLanguage(entity);
+            if (entity.State == TelegramTranslationState.WaitingForLanguage)
+                return entity;
+        }
 
-        entity = await AddContext(entity);
-        if (entity.State == TelegramTranslationState.WaitingForContext)
-            return entity;
+        if (entity.Contexts.Count == 0)
+        {
+            entity = await AddContext(entity);
+            if (entity.State == TelegramTranslationState.WaitingForContext)
+                return entity;
+        }
 
-        entity = await AddStyle(entity);
-        if (entity.State == TelegramTranslationState.WaitingForStyle)
-            return entity;
+        if (entity.TranslationStyle == null)
+        {
+            entity = await AddStyle(entity);
+            if (entity.State == TelegramTranslationState.WaitingForStyle)
+                return entity;
+        }
 
         var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
         var translation = await _translator.Translate(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value, entity.TranslationStyle!.Value);
         
         var correctedTranslation = await _textMistakeManager.Correct(translation);
         entity.Translation = correctedTranslation;
+        entity.UpdatedAt = DateTime.UtcNow;
         entity.State = TelegramTranslationState.Finished;
 
         return entity;
@@ -133,7 +219,6 @@ public class TranslationManager : ITranslationManager
 
     private async Task<TelegramTranslationEntity> AddLanguage(TelegramTranslationEntity entity)
     {
-        var languagePair = _languageManager.GetLanguagePair();
         var text = entity.BaseText;
         var baseTextLanguage = await _languageManager.DetermineLanguage(text);
         if (baseTextLanguage == null)
@@ -142,9 +227,10 @@ public class TranslationManager : ITranslationManager
             return entity;
         }
 
-        var targetLanguage = baseTextLanguage == languagePair.Item1 ? languagePair.Item2 : languagePair.Item1;
+        var targetLanguage = GetTargetLanguage(baseTextLanguage.Value);
         entity.LanguageFrom = baseTextLanguage;
         entity.LanguageTo = targetLanguage;
+        entity.UpdatedAt = DateTime.UtcNow;
 
         return entity;
     }
@@ -201,5 +287,14 @@ public class TranslationManager : ITranslationManager
             return null;
 
         return mostProbableStyles.Single().Style;
+    }
+
+
+    private Language GetTargetLanguage(Language baseLanguage)
+    {
+        var languagePair = _languageManager.GetLanguagePair();
+        var targetLanguage = baseLanguage == languagePair.Item1 ? languagePair.Item2 : languagePair.Item1;
+
+        return targetLanguage;
     }
 }

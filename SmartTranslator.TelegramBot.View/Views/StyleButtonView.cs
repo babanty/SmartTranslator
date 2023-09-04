@@ -25,7 +25,7 @@ public class StyleButtonView : ITelegramBotView
 
         var style = ButtonToStyle(update.Message.Text);
 
-        await _coupleLanguageTranslatorController.SetStyle(style);
+        await _coupleLanguageTranslatorController.SetStyle(update, style);
 
         return await Task.FromResult(new MessageView
         {

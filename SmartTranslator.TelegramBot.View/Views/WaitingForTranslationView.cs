@@ -19,7 +19,6 @@ public class WaitingForTranslationView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        // TODO: add such a template to service
         var message = await _templateStringService.GetSingle("WaitAMomentPlease");
         var replyKeyboard = new ReplyKeyboardMarkup(new[]
 {

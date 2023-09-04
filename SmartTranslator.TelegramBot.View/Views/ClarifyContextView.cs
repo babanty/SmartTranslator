@@ -8,42 +8,33 @@ namespace SmartTranslator.TelegramBot.View.Views;
 public class ClarifyContextView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
+    private readonly TranslationViewProvider _viewProvider;
 
-    public ClarifyContextView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public ClarifyContextView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
+                              TranslationViewProvider viewProvider)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
+        _viewProvider = viewProvider;
     }
 
 
-    public Task<MessageView> Render(Update update)
+    public async Task<MessageView> Render(Update update)
     {
         if (update.Message == null)
             throw new ArgumentException("ClarifyContextView got incorrect update (Message == null)");
 
-        var response = _coupleLanguageTranslatorController.EvaluateContext(update.Message).Result;
+        var response = await _coupleLanguageTranslatorController.EvaluateContext(update);
 
-        if (response.Percent != 0)
+        var dto = response.Item1;
+        var question = response.Item2;
+
+        if (question == null)
+            return await _viewProvider.GetTranslationView(dto).Render(update);
+
+        return new MessageView
         {
-            return Task.FromResult(new MessageView
-            {
-                Text = "Enough context was provided",
-                Markup = new ReplyKeyboardMarkup(new[]
-                {
-                    new KeyboardButton(TelegramBotButtons.Translate)
-                })
-            });
-        }
-        else
-        {
-            return Task.FromResult(new MessageView
-            {
-                Text = $"Too little context provided, please, answer the following question: " +
-                $"{response.Request.ClarifyingQuestion}",
-                Markup = new ReplyKeyboardMarkup(new[]
-                {
-                    new KeyboardButton(TelegramBotButtons.Translate)
-                })
-            });
-        }
+            Text = $"Not enough context provided, please, answer the following quesion: {question}", // TODO: make multilingual
+            Markup = new ReplyKeyboardMarkup(new KeyboardButton(TelegramBotButtons.Translate))
+        };
     }
 }

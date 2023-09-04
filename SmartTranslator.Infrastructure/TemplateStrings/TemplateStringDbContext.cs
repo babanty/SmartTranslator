@@ -90,9 +90,8 @@ Moreover, there are other language pairs as well.
         new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "Похоже, что-то пошло не так, мы постараемся исправить это как можно скорее.", "", TemplateLanguage.Rus, EnvironmentType.Any),
         new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "It seems, something went wrong. We're trying to fix it as soon as possible.", "", TemplateLanguage.Eng, EnvironmentType.Any),
 
-        new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "Похоже, что-то пошло не так, мы постараемся исправить это как можно скорее.", "", TemplateLanguage.Rus, EnvironmentType.Any),
-        new TemplateString(Guid.NewGuid(), "SomethingWentWrongWorkingOnIt", "It seems, something went wrong. We're trying to fix it as soon as possible.", "", TemplateLanguage.Eng, EnvironmentType.Any),
-
+        new TemplateString(Guid.NewGuid(), "EntityNotFoundInDb", "Ваш перевод не был найден в базе данных, пожалуйста, начните новый.", "", TemplateLanguage.Rus, EnvironmentType.Any),
+        new TemplateString(Guid.NewGuid(), "EntityNotFoundInDb", "We couldn't find your translation in the database, please, start a new one.", "", TemplateLanguage.Eng, EnvironmentType.Any),
     };
 
     private readonly object _templateStringCollectionLock = new();

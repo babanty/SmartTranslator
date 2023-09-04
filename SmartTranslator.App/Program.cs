@@ -7,6 +7,7 @@ using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.View;
+using SmartTranslator.TelegramBot.View.Filters;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.DI;
@@ -37,6 +38,8 @@ builder.Services.AddTemplateStringService();
 
 builder.Services.AddTranslationCore(translationCoreOptions);
 builder.Services.AddTelegramTranslatorBotView(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddTransient<EntityNotFoundExceptionFilter>();
 
 // databases
 builder.Services.AddDbContext<TelegramTranslationDbContext>(options =>

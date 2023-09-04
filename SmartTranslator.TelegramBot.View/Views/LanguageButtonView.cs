@@ -10,10 +10,13 @@ namespace SmartTranslator.TelegramBot.View.Views;
 public class LanguageButtonView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
+    private readonly TranslationViewProvider _viewProvider;
 
-    public LanguageButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public LanguageButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController, 
+                              TranslationViewProvider viewProvider)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
+        _viewProvider = viewProvider;
     }
 
 
@@ -24,18 +27,11 @@ public class LanguageButtonView : ITelegramBotView
         if (update.Message?.Text == null)
             throw new ArgumentException("LanguageButtonView got incorrect update (Text == null)");
 
-        var language = StringToLanguage(update!.Message.Text);
+        var language = StringToLanguage(update.Message.Text);
 
-        await _coupleLanguageTranslatorController.SetLanguage(language);
+        var dto = await _coupleLanguageTranslatorController.SetLanguages(update, language);
 
-        return await Task.FromResult(new MessageView
-        {
-            Text = $"Language set to {update.Message.Text}",
-            Markup = new ReplyKeyboardMarkup(new[]
-            {
-                new KeyboardButton(TelegramBotButtons.Translate)
-            })
-        });
+        return await _viewProvider.GetTranslationView(dto).Render(update);
     }
 
 

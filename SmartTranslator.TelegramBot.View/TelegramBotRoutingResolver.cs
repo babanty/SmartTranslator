@@ -35,11 +35,13 @@ public class TelegramBotRoutingResolver
             {
                 var text when text == TelegramBotButtons.Start => _viewProvider.GetView<StartButtonView>(),
                 var text when text == TelegramBotButtons.Translate => _viewProvider.GetView<TranslateButtonView>(),
+                /*
                 var text when text == "Determine language" => _viewProvider.GetView<DetermineLanguageView>(),
                 // TODO: cleanup
                 var text when text == "Clarify" => _viewProvider.GetView<ClarifyContextView>(),
                 var text when text == "Determine style" => _viewProvider.GetView<DetermineStyleView>(),
                 var text when text == "Answer" => _viewProvider.GetView<FinalAnswerView>(),
+                */
                 var text when IsCertainButtonType(text!, new TelegramBotLanguageButtons()) => _viewProvider.GetView<LanguageButtonView>(),
                 var text when IsCertainButtonType(text!, new TelegramBotStyleButtons()) => _viewProvider.GetView<StyleButtonView>(),
                 _ => null

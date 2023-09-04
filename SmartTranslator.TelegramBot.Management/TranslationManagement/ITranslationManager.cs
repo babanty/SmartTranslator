@@ -1,6 +1,7 @@
 ﻿using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
@@ -15,4 +16,8 @@ public interface ITranslationManager
     Task<TelegramTranslationDto?> GetLatest(string username, long chatId);
     Task<TelegramTranslationDto> Create(CreateTelegramTranslationEntityRequest request);
     Task FinishTranslation(string translationId);
+    Task<Language?> DetermineLanguage(string text);
+    Task<(TelegramTranslationDto, string?)> DetermineContext(string translationId);
+    Task<TelegramTranslationDto> SetLanguages(string translationId, Language baseLanguage);
+    Task<TelegramTranslationDto> SetStyle(string translationId, TranslationStyle style);
 }

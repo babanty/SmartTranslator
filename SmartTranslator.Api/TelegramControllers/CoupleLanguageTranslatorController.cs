@@ -3,10 +3,12 @@ using SmartTranslator.Api.Exceptions;
 using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.TelegramBot.Management.Exceptions;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
+
 
 namespace SmartTranslator.Api.TelegramControllers;
 
@@ -35,42 +37,55 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public Task<Language> DetermineLanguage(Message message)
+    public async Task<Language?> DetermineLanguage(Update update)
     {
-        return Task.FromResult(Language.Unknown);
+        var text = update.Message.Text;
+        var language = await _translationManager.DetermineLanguage(text);
+
+        return language;
     }
 
 
-    public async Task SetLanguage(Language language)
+    public async Task<TelegramTranslationDto> SetLanguages(Update update,Language baseLanguage)
     {
-        return;
+        var entity = await GetLatest(update);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        var dto = await _translationManager.SetLanguages(entity.Id, baseLanguage);
+
+        return dto;
     }
 
 
-    public async Task<EvaluationResponse> EvaluateContext(Message message)
+    public async Task<(TelegramTranslationDto, string?)> EvaluateContext(Update update)
     {
-        var response = new EvaluationResponse
-        {
-            Percent = 0,
-            Request = new ClarificationRequest
-            {
-                ClarifyingQuestion = "What is the meaning of life?"
-            }
-        };
+        var entity = await GetLatest(update);
 
-        return await Task.FromResult(response);
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        var response = await _translationManager.DetermineContext(entity.Id);
+
+        return response;
     }
 
 
-    public Task<TranslationStyle> DetermineStyle(Message message)
+    public Task<TranslationStyle> DetermineStyle(Update update)
     {
         return Task.FromResult(TranslationStyle.Unknown);
     }
 
 
-    public async Task SetStyle(TranslationStyle style)
+    public async Task SetStyle(Update update, TranslationStyle style)
     {
-        return;
+        var entity = await GetLatest(update);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        await _translationManager.SetStyle(entity.Id, style);
     }
 
 
@@ -85,7 +100,7 @@ public class CoupleLanguageTranslatorController
         if (update?.Message?.From == null)
             throw new ChannelsNotSupportedException();
 
-        var userName = update.Message.From.ToString();
+        var userName = update.Message.From.Username;
         var chatId = update.Message.Chat.Id;
 
         return await _translationManager.GetLatest(userName, chatId);

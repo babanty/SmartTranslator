@@ -56,7 +56,7 @@ public class GptTranslator : IGptTranslator
             throw new TextIsTooLongException(_options.MaxSymbols, text.Length);
         }
 
-        var prompt = $@"Do you have enough context to unequivocally translate the following text into {to}: ""{text}"". Answer in JSON format: {{""percent"": 0}}, where 0 means not enough context and clarification is needed, and 1 means enough context for unequivocal translation. If percent < 0.7, request context in JSON format: {{
+        var prompt = $@"Do you have enough context to unequivocally translate the following text into {to}: ""{text}"". Answer in JSON format: {{""percent"": 0}}, where 0 means not enough context and clarification is needed, and 1 means enough context for unequivocal translation. If percent is less than 0.7, request context in JSON format: {{
 ""request"": {{
 ""clarifyingQuestion"": """"
 }}
