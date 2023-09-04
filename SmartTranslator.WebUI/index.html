@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Translator</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body class="page noscroll">
+    <header class="header">
+      <img src="./images/logo.svg" alt="logo" class="header__logo" />
+    </header>
+    <main class="main">
+      <h1 class="title">Переводчик, который вас понимает</h1>
+      <!-- поле -->
+      <section class="translator-box">
+        <div class="source">
+          <textarea
+            placeholder="Введите текст для перевода."
+            class="translator-box__text"
+            maxlength="3000"
+          ></textarea>
+          <div class="source__copyCounter">
+            <div class="source__counter">
+              <span class="counterCurrent">0</span>
+              <span class="counterLimit">/3000</span>
+            </div>
+            <img
+              src="./images/copy.svg"
+              alt="копировать текст"
+              class="source__copy"
+            />
+          </div>
+        </div>
+        <div class="translator-box__divider"></div>
+        <div class="target">
+          <textarea readonly class="translator-box__text">
+            SEO-анализ текста от Text.ru - это уникальный сервис, не имеющий аналогов. Возможность подсветки «воды», заспамленности и ключей в тексте позволяет сделать анализ текста интерактивным и легким для восприятия. SEO-анализ текста от Text.ru - это уникальный сервис, не имеющий аналогов. Возможность подсветки «воды», заспамленности и ключей в тексте позволяет сделать анализ текста интерактивным и легким для восприятия. SEO-анализ текста от Text.ru - это уникальный сервис, не имеющий аналогов. Возможность подсветки «воды», заспамленности и ключей в тексте позволяет сделать анализ текста интерактивным и легким для восприятия.</textarea
+          >
+          <img
+            src="./images/copy.svg"
+            alt="копировать текст"
+            class="target__copy"
+          />
+        </div>
+        <div class="translator-box__lang-box">
+          <div class="lang-box lang-box--source">
+            <div class="lang-box__dropdown dropdown-toggle">
+              <p class="lang-box__title">Определить язык</p>
+              <img
+                src="./images/arrow.svg"
+                alt="Arrow icon"
+                class="lang-box__arrow"
+              />
+            </div>
+            <ul class="lang-box__list dropdown-menut">
+              <li class="lang-box__item">Английский</li>
+              <li class="lang-box__item">Русский</li>
+            </ul>
+          </div>
+
+          <div class="lang-box lang-box--target">
+            <div class="lang-box__dropdown dropdown-toggle">
+              <p class="lang-box__title">Английский</p>
+              <img
+                src="./images/arrow.svg"
+                alt="Arrow icon"
+                class="lang-box__arrow"
+              />
+            </div>
+            <ul class="lang-box__list dropdown-menu">
+              <li class="lang-box__item">Английский</li>
+              <li class="lang-box__item">Русский</li>
+            </ul>
+          </div>
+        </div>
+        <button class="translator-box__button">
+          <img src="./images/translate.svg" alt="Описание изображения" />
+        </button>
+        <img
+          src="./images/switch.svg"
+          alt="Switch icon"
+          class="translator-box__switch"
+        />
+      </section>
+
+      <section class="settings">
+        <div class="context">
+          <div class="context__dropdown">
+            <h2 class="context__title">Дополнительный контекст</h2>
+
+            <aside class="context__info">
+              <img
+                class="context__info-icon"
+                src="./images/info.svg"
+                alt="info icon"
+              />
+              <div class="context__tooltip">
+                Например: “Здесь использованы медицинские термины” или “Это
+                инструкция к вентилятору."
+              </div>
+            </aside>
+          </div>
+          <div class="context__field">
+            <textarea
+              placeholder="Введите дополнительный контекст."
+              maxlength="200"
+              class="context__text"
+            ></textarea>
+            <div class="context__counter">
+              <span class="counterCurrent">0</span>
+              <span class="counterLimit">/200</span>
+            </div>
+          </div>
+        </div>
+        <div class="style">
+          <div class="style__dropdown dropdown-toggle">
+            <h2 class="style__choose-title">
+              Выбранный стиль:
+              <span class="style__title">Тинейджерский</span>
+            </h2>
+            <img class="style__info" src="./images/arrow.svg" alt="info icon" />
+          </div>
+          <ul class="style__list dropdown-menu">
+            <li class="style__item">Официальный</li>
+            <li class="style__item">Повседневный</li>
+          </ul>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer__line"></div>
+        <!-- Линия слева -->
+        <nav class="footer__navigation">
+          <a href="#" class="footer__link">О нас</a>
+          <a href="#" class="footer__link">Как это работает</a>
+          <a href="#" class="footer__link">Мы в Telegram</a>
+        </nav>
+        <div class="footer__line"></div>
+        <!-- Линия справа -->
+      </footer>
+    </main>
+
+    <!-- popup -->
+    <div class="popup popup_active">
+      <div class="popup__content">
+        <div class="popup__box">
+          <h2 class="popup__title">
+            Давайте уточним контекст для наиболее качественного перевода
+          </h2>
+          <textarea readonly class="popup__correction">
+          SEO-анализ текста от Text.ru - это уникальный сервис, не имеющий аналогов. Возможность подсветки «воды», заспамленности и ключей в тексте позволяет сделать анализ текста интерактивным и легким для восприятия.</textarea
+          >
+
+          <div class="popup__buttons">
+            <button class="popup__button popup__button--yes">
+              <span class="popup__button-text">Да</span>
+            </button>
+            <button class="popup__button popup__button--no">
+              <span class="popup__button-text">Нет</span>
+            </button>
+            <button class="popup__button popup__button--custom">
+              <span class="popup__button-text">Свой вариант</span>
+              <aside class="context__info">
+                <img
+                  class="popup__info-icon"
+                  src="./images/info.svg"
+                  alt="info icon"
+                />
+                <div class="popup__tooltip_custom">
+                  Например: “Здесь использованы медицинские термины” или “Это
+                  инструкция к вентилятору."
+                </div>
+              </aside>
+            </button>
+            <button class="popup__button popup__button--unsure">
+              <span class="popup__button-text">Не знаю</span>
+              <aside class="context__info">
+                <img
+                  class="popup__info-icon_unsure"
+                  src="./images/info.svg"
+                  alt="info icon"
+                />
+                <div class="popup__tooltip_unsure">
+                  Например: “Здесь использованы медицинские термины” или “Это
+                  инструкция к вентилятору."
+                </div>
+              </aside>
+            </button>
+          </div>
+
+          <div class="popup__input-section">
+            <div class="popup__input-wrapper">
+              <textarea maxlength="200" class="popup__input"></textarea>
+              <div class="popup__controls">
+                <div class="popup__counter">
+                  <span class="counterCurrent"></span>
+                  <span class="counterLimit">/200</span>
+                </div>
+                <button class="popup__icon-button">
+                  <img src="images/send.svg" alt="Отправить" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="./script/script.js"></script>
+  </body>
+</html>
