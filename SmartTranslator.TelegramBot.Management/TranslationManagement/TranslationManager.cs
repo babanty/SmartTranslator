@@ -8,6 +8,7 @@ using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.Management.Exceptions;
 using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
 using static System.Net.Mime.MediaTypeNames;
@@ -46,14 +47,6 @@ public class TranslationManager : ITranslationManager
     }
 
 
-    public async Task<Language?> DetermineLanguage(string text)
-    {
-        var language = await _languageManager.DetermineLanguage(text);
-
-        return language;
-    }
-
-
     public async Task FinishTranslation(string translationId)
     {
         var entity = _dbContext.TelegramTranslations.Find(translationId);
@@ -87,7 +80,7 @@ public class TranslationManager : ITranslationManager
     }
 
 
-    public async Task<(TelegramTranslationDto, string?)> DetermineContext(string translationId)
+    public async Task<TelegramTranslationDto> DetermineContext(string translationId)
     {
         var entity = _dbContext.TelegramTranslations.Find(translationId);
 
@@ -96,16 +89,15 @@ public class TranslationManager : ITranslationManager
 
         var text = entity.BaseText;
         var language = entity.LanguageTo.Value;
-        var evaluation = await _translator.EvaluateContext(text, language);
+        var contextString = GetContexts(entity);
+        var evaluation = await _translator.EvaluateContext(text, language, contextString);
 
-        string? question = null;
         if (evaluation.Percent < 0.7f)
         {
-            question = evaluation.Request.ClarifyingQuestion;
             entity.Contexts.Add(new Context
             {
-                Question = question
-            });
+                Question = evaluation.Request.ClarifyingQuestion
+        });
         }
 
         entity.UpdatedAt = DateTime.UtcNow;
@@ -114,7 +106,35 @@ public class TranslationManager : ITranslationManager
         entity = await ExecuteEntityProcessingPipeline(entity);
         await _dbContext.SaveChangesAsync();
 
-        return (_mapper.Map<TelegramTranslationDto>(entity), question);
+        return _mapper.Map<TelegramTranslationDto>(entity);
+    }
+
+
+    public Task<Context> GetLatestContext(string translationId)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        return Task.FromResult(entity.Contexts.Last());
+    }
+
+
+    public async Task<TelegramTranslationDto> AddAnswerToContextQuestion(string translationId, string answer)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        entity.Contexts.Last().Response = answer;
+        entity.UpdatedAt = DateTime.UtcNow;
+        entity.State = DetermineState(entity);
+        entity = await ExecuteEntityProcessingPipeline(entity);
+        await _dbContext.SaveChangesAsync();
+
+        return _mapper.Map<TelegramTranslationDto>(entity);
     }
 
 
@@ -128,9 +148,21 @@ public class TranslationManager : ITranslationManager
         entity.TranslationStyle = style;
         entity.UpdatedAt = DateTime.UtcNow;
         entity.State = DetermineState(entity);
+        entity = await ExecuteEntityProcessingPipeline(entity);
         await _dbContext.SaveChangesAsync();
 
         return _mapper.Map<TelegramTranslationDto>(entity);
+    }
+
+
+    public Task<string> GetLatestTranslatedText(string translationId)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        return Task.FromResult(entity.Translation);
     }
 
 
@@ -191,7 +223,7 @@ public class TranslationManager : ITranslationManager
                 return entity;
         }
 
-        if (entity.Contexts.Count == 0)
+        if (entity.Contexts.Count < 3)
         {
             entity = await AddContext(entity);
             if (entity.State == TelegramTranslationState.WaitingForContext)
@@ -205,7 +237,7 @@ public class TranslationManager : ITranslationManager
                 return entity;
         }
 
-        var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
+        var contextString = GetContexts(entity);
         var translation = await _translator.Translate(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value, entity.TranslationStyle!.Value);
         
         var correctedTranslation = await _textMistakeManager.Correct(translation);
@@ -238,18 +270,18 @@ public class TranslationManager : ITranslationManager
 
     private async Task<TelegramTranslationEntity> AddContext(TelegramTranslationEntity entity)
     {
-        var contextEvaluation = await _translator.EvaluateContext(entity.BaseText, entity.LanguageTo!.Value);
+        var contexts = GetContexts(entity);
+        var contextEvaluation = await _translator.EvaluateContext(entity.BaseText, entity.LanguageTo!.Value, contexts);
         if (contextEvaluation.Percent < 0.7f)
         {
             entity.Contexts.Add(new Context
             {
                 Question = contextEvaluation.Request.ClarifyingQuestion
             });
+            entity.UpdatedAt = DateTime.UtcNow;
             entity.State = DetermineState(entity);
             return entity;
         }
-
-        entity.UpdatedAt = DateTime.UtcNow;
 
         return entity;
     }
@@ -257,11 +289,11 @@ public class TranslationManager : ITranslationManager
 
     private async Task<TelegramTranslationEntity> AddStyle(TelegramTranslationEntity entity)
     {
-        var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
+        var contextString = GetContexts(entity);
 
         var styleProbabilities = await _translator.DefineStyle(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value);
         var style = GetMostProbableStyle(styleProbabilities);
-
+        
         if (style == null)
         {
             entity.State = DetermineState(entity);
@@ -296,5 +328,13 @@ public class TranslationManager : ITranslationManager
         var targetLanguage = baseLanguage == languagePair.Item1 ? languagePair.Item2 : languagePair.Item1;
 
         return targetLanguage;
+    }
+
+
+    private string GetContexts (TelegramTranslationEntity entity)
+    {
+        var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
+
+        return contextString;
     }
 }

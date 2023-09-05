@@ -19,7 +19,7 @@ public class FinalAnswerView : ITelegramBotView
         if (update.Message == null)
             throw new ArgumentException("FinalAnswerView got incorrect update (Message == null)");
 
-        var result = _coupleLanguageTranslatorController.GiveFinalAnswer(update.Message).Result;
+        var result = await _coupleLanguageTranslatorController.GiveFinalAnswer(update);
 
         return await Task.FromResult(new MessageView
         {

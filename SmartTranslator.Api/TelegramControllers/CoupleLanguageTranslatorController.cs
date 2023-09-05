@@ -37,15 +37,6 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<Language?> DetermineLanguage(Update update)
-    {
-        var text = update.Message.Text;
-        var language = await _translationManager.DetermineLanguage(text);
-
-        return language;
-    }
-
-
     public async Task<TelegramTranslationDto> SetLanguages(Update update,Language baseLanguage)
     {
         var entity = await GetLatest(update);
@@ -59,7 +50,7 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<(TelegramTranslationDto, string?)> EvaluateContext(Update update)
+    public async Task<TelegramTranslationDto> EvaluateContext(Update update)
     {
         var entity = await GetLatest(update);
 
@@ -72,26 +63,42 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public Task<TranslationStyle> DetermineStyle(Update update)
-    {
-        return Task.FromResult(TranslationStyle.Unknown);
-    }
-
-
-    public async Task SetStyle(Update update, TranslationStyle style)
+    public async Task<Context> GetLatestContext(Update update)
     {
         var entity = await GetLatest(update);
 
         if (entity == null)
             throw new EntityNotFoundException();
 
-        await _translationManager.SetStyle(entity.Id, style);
+        var response = await _translationManager.GetLatestContext(entity.Id);
+
+        return response;
     }
 
 
-    public async Task<string> GiveFinalAnswer(Message message)
+    public async Task<TelegramTranslationDto> SetStyle(Update update, TranslationStyle style)
     {
-        return $"Your message was: {message.Text}";
+        var entity = await GetLatest(update);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        var dto = await _translationManager.SetStyle(entity.Id, style);
+
+        return dto;
+    }
+
+
+    public async Task<string> GiveFinalAnswer(Update update)
+    {
+        var entity = await GetLatest(update);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        var response = await _translationManager.GetLatestTranslatedText(entity.Id);
+
+        return response;
     }
 
 
@@ -129,12 +136,14 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationEntity> AddAnswerToContextQuestion(Update update)
+    public async Task<TelegramTranslationDto> AddAnswerToContextQuestion(Update update)
     {
-        var context = update.Message.Text;
-        // Sends context to manager 
-        var entity = new TelegramTranslationEntity(); // Change to updated entity returned from manager
-        return entity;
+        var answer = update.Message.Text;
+        var entity = await GetLatest(update);
+
+        var dto = await _translationManager.AddAnswerToContextQuestion(entity.Id, answer);
+
+        return dto;
     }
 
     public async Task FinishLatestTranslation(Update update)

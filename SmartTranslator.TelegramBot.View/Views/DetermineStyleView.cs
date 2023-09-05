@@ -18,36 +18,17 @@ public class DetermineStyleView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        if (update.Message == null)
-            throw new ArgumentException("DetermineStyleView got incorrect update (Message == null)");
-
-        var language = await _coupleLanguageTranslatorController.DetermineLanguage(update);
-
-        if (language == Language.Unknown)
-        {
-            return await UnknownStyleView();
-        }
-
-        return await Task.FromResult(new MessageView
-        {
-            Text = "Style determined successfully"
-        });
-    }
-
-
-    private Task<MessageView> UnknownStyleView()
-    {
         var text = "Failed to determine style of request, please choose one of the options provided";
 
-        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var buttons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         buttons.Append(new KeyboardButton(TelegramBotButtons.Translate));
         var markup = new ReplyKeyboardMarkup(buttons);
 
 
-        return Task.FromResult(new MessageView
+        return new MessageView
         {
             Text = text,
             Markup = markup
-        });
+        };
     }
 }

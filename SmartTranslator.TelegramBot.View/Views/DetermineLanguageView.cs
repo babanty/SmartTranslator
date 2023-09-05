@@ -19,18 +19,23 @@ public class DetermineLanguageView : ITelegramBotView
     }
 
 
-    public async Task<MessageView> Render(Update update)
+    public Task<MessageView> Render(Update update)
     {
         if (update.Message == null)
             throw new ArgumentException("DetermineLanguageView got incorrect update (Message == null)");
 
-        var language = await _coupleLanguageTranslatorController.DetermineLanguage(update);
+        var text = "Failed to determine request language, please choose one of the options provided";
 
-        if (language == null)
-            return await UnknownLanguageView();
+        var languageButtons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
+        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } });
 
-        var dto = await _coupleLanguageTranslatorController.SetLanguages(update, language.Value);
-        return await _viewProvider.GetTranslationView(dto).Render(update);
+
+        return Task.FromResult(new MessageView
+        {
+            Text = text,
+            Markup = keyboard
+        });
     }
 
     private Task<MessageView> UnknownLanguageView()

@@ -23,13 +23,7 @@ public class ClarifyContextView : ITelegramBotView
         if (update.Message == null)
             throw new ArgumentException("ClarifyContextView got incorrect update (Message == null)");
 
-        var response = await _coupleLanguageTranslatorController.EvaluateContext(update);
-
-        var dto = response.Item1;
-        var question = response.Item2;
-
-        if (question == null)
-            return await _viewProvider.GetTranslationView(dto).Render(update);
+        var question = (await _coupleLanguageTranslatorController.GetLatestContext(update)).Question;
 
         return new MessageView
         {

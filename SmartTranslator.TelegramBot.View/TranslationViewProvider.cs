@@ -17,7 +17,7 @@ public class TranslationViewProvider
 
     public ITelegramBotView GetTranslationView(TelegramTranslationDto translation) => translation.State switch
     {
-        var state when state == TelegramTranslationState.Finished => _viewProvider.GetView<NewTranslationView>(),
+        var state when state == TelegramTranslationState.Finished => _viewProvider.GetView<FinalAnswerView>(),
         var state when state == TelegramTranslationState.WaitingForTranslation => _viewProvider.GetView<TranslateButtonView>(),
         var state when state == TelegramTranslationState.WaitingForStyle => _viewProvider.GetView<DetermineStyleView>(),
         var state when state == TelegramTranslationState.WaitingForContext => _viewProvider.GetView<ClarifyContextView>(),

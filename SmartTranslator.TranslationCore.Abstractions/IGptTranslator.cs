@@ -28,7 +28,7 @@ public interface IGptTranslator
     /// <param name="text">The text to be evaluated.</param>
     /// <param name="to">The language to which text will be translated.</param>
     /// <returns>Probability of right translation. If it is low, also returns a clarifying question.</returns>
-    Task<EvaluationResponse> EvaluateContext(string text, Language to);
+    Task<EvaluationResponse> EvaluateContext(string text, Language to, string previousContexts);
 
 
     /// <summary>

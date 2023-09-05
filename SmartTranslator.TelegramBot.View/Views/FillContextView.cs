@@ -8,25 +8,20 @@ namespace SmartTranslator.TelegramBot.View.Views;
 public class FillContextView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
+    private readonly TranslationViewProvider _translationViewProvider;
 
-    public FillContextView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public FillContextView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
+                           TranslationViewProvider translationViewProvider)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
+        _translationViewProvider = translationViewProvider;
     }
 
 
     public async Task<MessageView> Render(Update update)
     {
-        await _coupleLanguageTranslatorController.AddAnswerToContextQuestion(update);
-        var message = "Received answer to question about context";
+        var dto = await _coupleLanguageTranslatorController.AddAnswerToContextQuestion(update);
 
-        return new MessageView
-        {
-            Text = message,
-            Markup = new ReplyKeyboardMarkup(new[]
-            {
-                new KeyboardButton(TelegramBotButtons.Translate)
-            })
-        };
+        return await _translationViewProvider.GetTranslationView(dto).Render(update);
     }
 }
