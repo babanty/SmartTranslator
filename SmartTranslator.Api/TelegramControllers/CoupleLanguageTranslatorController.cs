@@ -128,11 +128,14 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task AddExtraContext(Update update)
+    public async Task<TelegramTranslationDto> AddExtraContext(Update update)
     {
         var context = update.Message.Text;
-        // Sends context to manager
-        return;
+        var entity = await GetLatest(update);
+
+        var dto = await _translationManager.AddExtraContext(entity.Id, context);
+
+        return dto;
     }
 
 

@@ -22,4 +22,5 @@ public interface ITranslationManager
     Task<Context> GetLatestContext(string translationId);
     Task<TelegramTranslationDto> AddAnswerToContextQuestion(string translationId, string answer);
     Task<string> GetLatestTranslatedText(string translationId);
+    Task<TelegramTranslationDto> AddExtraContext(string translationId, string context);
 }

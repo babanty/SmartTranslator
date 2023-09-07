@@ -166,6 +166,25 @@ public class TranslationManager : ITranslationManager
     }
 
 
+    public async Task<TelegramTranslationDto> AddExtraContext(string translationId, string context)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        entity.Contexts.Add(new Context
+        {
+            Question = "-",
+            Response = context
+        });
+        entity.UpdatedAt = DateTime.UtcNow;
+        await _dbContext.SaveChangesAsync();
+
+        return _mapper.Map<TelegramTranslationDto>(entity);
+    }
+
+
     public TelegramTranslationState DetermineState(TelegramTranslationEntity entity)
     {
         // 1. If the translation is done

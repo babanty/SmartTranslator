@@ -24,7 +24,6 @@ public class DetermineStyleView : ITelegramBotView
         buttons.Append(new KeyboardButton(TelegramBotButtons.Translate));
         var markup = new ReplyKeyboardMarkup(buttons);
 
-
         return new MessageView
         {
             Text = text,

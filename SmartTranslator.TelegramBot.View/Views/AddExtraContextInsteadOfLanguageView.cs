@@ -3,6 +3,7 @@ using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
@@ -22,16 +23,20 @@ public class AddExtraContextInsteadOfLanguageView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        await _coupleLanguageTranslatorController.AddExtraContext(update);
+        var dto = await _coupleLanguageTranslatorController.AddExtraContext(update);
 
-        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
-        var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseLanguage");
-        var markup = new ReplyKeyboardMarkup(buttons);
+        // TODO: fix template string service
+        // var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseLanguage");
+        var message = "We received the additional context you provided, now, please, choose one of the language options below";
+
+        var languageButtons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
+        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } });
 
         return new MessageView
         {
-            Text = message.Format(new List<KeyAndNewValue>()),
-            Markup = markup
+            Text = message, // .Format(new List<KeyAndNewValue>()),
+            Markup = keyboard
         };
     }
 }
