@@ -3,7 +3,6 @@ using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 

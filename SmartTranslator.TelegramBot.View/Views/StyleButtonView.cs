@@ -2,7 +2,6 @@
 using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 

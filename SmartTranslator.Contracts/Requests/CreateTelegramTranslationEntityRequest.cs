@@ -1,6 +1,4 @@
-﻿using SmartTranslator.TranslationCore.Enums;
-
-namespace SmartTranslator.Contracts.Requests;
+﻿namespace SmartTranslator.Contracts.Requests;
 
 public record CreateTelegramTranslationEntityRequest
 {

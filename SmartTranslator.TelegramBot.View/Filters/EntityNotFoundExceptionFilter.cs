@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Logging;
-using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.Management.Exceptions;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
 

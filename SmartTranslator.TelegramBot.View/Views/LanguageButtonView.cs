@@ -3,7 +3,6 @@ using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
@@ -12,7 +11,7 @@ public class LanguageButtonView : ITelegramBotView
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
     private readonly TranslationViewProvider _viewProvider;
 
-    public LanguageButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController, 
+    public LanguageButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
                               TranslationViewProvider viewProvider)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;

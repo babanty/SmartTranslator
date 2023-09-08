@@ -6,7 +6,6 @@ using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.Management;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
-using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Enums;
 using Xunit;

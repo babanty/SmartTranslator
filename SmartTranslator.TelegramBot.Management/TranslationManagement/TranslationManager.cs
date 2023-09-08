@@ -6,12 +6,9 @@ using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.Management.Exceptions;
-using SmartTranslator.TranslationCore;
 using SmartTranslator.TranslationCore.Abstractions;
-using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
@@ -23,9 +20,9 @@ public class TranslationManager : ITranslationManager
     private readonly ILanguageManager _languageManager;
     private readonly ITextMistakeManager _textMistakeManager;
 
-    public TranslationManager(TelegramTranslationDbContext dbContext, 
-                              IMapper mapper, 
-                              IGptTranslator translator, 
+    public TranslationManager(TelegramTranslationDbContext dbContext,
+                              IMapper mapper,
+                              IGptTranslator translator,
                               ILanguageManager languageManager,
                               ITextMistakeManager textMistakeManager)
     {
@@ -97,7 +94,7 @@ public class TranslationManager : ITranslationManager
             entity.Contexts.Add(new Context
             {
                 Question = evaluation.Request.ClarifyingQuestion
-        });
+            });
         }
 
         entity.UpdatedAt = DateTime.UtcNow;
@@ -258,7 +255,7 @@ public class TranslationManager : ITranslationManager
 
         var contextString = GetContexts(entity);
         var translation = await _translator.Translate(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value, entity.TranslationStyle!.Value);
-        
+
         var correctedTranslation = await _textMistakeManager.Correct(translation);
         entity.Translation = correctedTranslation;
         entity.UpdatedAt = DateTime.UtcNow;
@@ -312,7 +309,7 @@ public class TranslationManager : ITranslationManager
 
         var styleProbabilities = await _translator.DefineStyle(entity.BaseText, contextString, entity.LanguageFrom!.Value, entity.LanguageTo!.Value);
         var style = GetMostProbableStyle(styleProbabilities);
-        
+
         if (style == null)
         {
             entity.State = DetermineState(entity);
@@ -350,7 +347,7 @@ public class TranslationManager : ITranslationManager
     }
 
 
-    private string GetContexts (TelegramTranslationEntity entity)
+    private string GetContexts(TelegramTranslationEntity entity)
     {
         var contextString = string.Join(". ", entity.Contexts.Select(c => $"{c.Question} - {c.Response}"));
 

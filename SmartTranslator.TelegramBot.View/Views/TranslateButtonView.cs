@@ -1,5 +1,4 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
-using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;

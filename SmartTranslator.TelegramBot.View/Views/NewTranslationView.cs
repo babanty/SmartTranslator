@@ -34,7 +34,7 @@ public class NewTranslationView : ITelegramBotView
             })
             });
         }
-        
+
         return await _viewProvider.GetTranslationView(translation).Render(update);
     }
 }

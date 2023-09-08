@@ -37,7 +37,7 @@ public class GptTranslator : IGptTranslator
 
         var messages = new List<ChatMessage>()
         {
-            ChatMessage.FromUser($"Translate this text into {to} in this style: {translationStyle}, using this context: {shortContext}: {text}.")
+            ChatMessage.FromUser($"Translate the text in quotation marks into {to}: \"{text}\";  style: {translationStyle}, context: {shortContext}")
         };
 
         var translation = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable);

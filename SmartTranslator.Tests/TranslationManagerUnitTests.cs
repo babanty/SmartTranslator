@@ -1,17 +1,14 @@
-using Xunit;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using SmartTranslator.DataAccess;
-using SmartTranslator.TranslationCore.Abstractions.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using SmartTranslator.TelegramBot.Management.TranslationManagement;
-using SmartTranslator.TranslationCore.Abstractions;
-using Microsoft.EntityFrameworkCore.InMemory;
-using AutoMapper;
-using SmartTranslator.Contracts.Requests;
-using SmartTranslator.TranslationCore.Enums;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Models;
+using SmartTranslator.TranslationCore.Enums;
+using Xunit;
 
 namespace SmartTranslator.Tests
 {

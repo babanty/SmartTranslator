@@ -5,7 +5,6 @@ using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.TelegramBot.Management.Exceptions;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
-using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
 
@@ -37,7 +36,7 @@ public class CoupleLanguageTranslatorController
     }
 
 
-    public async Task<TelegramTranslationDto> SetLanguages(Update update,Language baseLanguage)
+    public async Task<TelegramTranslationDto> SetLanguages(Update update, Language baseLanguage)
     {
         var entity = await GetLatest(update);
 
