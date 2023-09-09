@@ -1,4 +1,6 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -7,26 +9,26 @@ namespace SmartTranslator.TelegramBot.View.Views;
 
 public class DetermineStyleView : ITelegramBotView
 {
-    private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
-    public DetermineStyleView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public DetermineStyleView(ITemplateStringServiceWithUserLanguage templateStringService)
     {
-        _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
+        _templateStringService = templateStringService;
     }
 
 
     public async Task<MessageView> Render(Update update)
     {
-        var text = "Failed to determine style of request, please choose one of the options provided";
+        var text = await _templateStringService.GetSingle("Failed to determine style of request, please choose one of the options provided");
 
-        var buttons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
-        buttons.Append(new KeyboardButton(TelegramBotButtons.Translate));
-        var markup = new ReplyKeyboardMarkup(buttons);
+        var languageButtons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
+        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } });
 
         return new MessageView
         {
-            Text = text,
-            Markup = markup
+            Text = text.Format(new List<KeyAndNewValue>()),
+            Markup = keyboard
         };
     }
 }

@@ -1,4 +1,6 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -7,49 +9,30 @@ namespace SmartTranslator.TelegramBot.View.Views;
 
 public class DetermineLanguageView : ITelegramBotView
 {
-    private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
-    private readonly TranslationViewProvider _viewProvider;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
-    public DetermineLanguageView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
-                                 TranslationViewProvider viewProvider)
+    public DetermineLanguageView(ITemplateStringServiceWithUserLanguage templateStringService)
     {
-        _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
-        _viewProvider = viewProvider;
+        _templateStringService = templateStringService;
     }
 
 
-    public Task<MessageView> Render(Update update)
+    public async Task<MessageView> Render(Update update)
     {
         if (update.Message == null)
             throw new ArgumentException("DetermineLanguageView got incorrect update (Message == null)");
 
-        var text = "Failed to determine request language, please choose one of the options provided";
+        var text = await _templateStringService.GetSingle("Failed to determine request language, please choose one of the options provided");
 
         var languageButtons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
         var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } });
 
 
-        return Task.FromResult(new MessageView
+        return new MessageView
         {
-            Text = text,
+            Text = text.Format(new List<KeyAndNewValue>()),
             Markup = keyboard
-        });
-    }
-
-    private Task<MessageView> UnknownLanguageView()
-    {
-        var text = "Failed to determine request language, please choose one of the options provided";
-
-        var languageButtons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
-        var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
-        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } });
-
-
-        return Task.FromResult(new MessageView
-        {
-            Text = text,
-            Markup = keyboard
-        });
+        };
     }
 }

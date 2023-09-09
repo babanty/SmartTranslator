@@ -1,4 +1,6 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -8,13 +10,13 @@ namespace SmartTranslator.TelegramBot.View.Views;
 public class ClarifyContextView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
-    private readonly TranslationViewProvider _viewProvider;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
     public ClarifyContextView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
-                              TranslationViewProvider viewProvider)
+                              ITemplateStringServiceWithUserLanguage templateStringService)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
-        _viewProvider = viewProvider;
+        _templateStringService = templateStringService;
     }
 
 
@@ -24,10 +26,15 @@ public class ClarifyContextView : ITelegramBotView
             throw new ArgumentException("ClarifyContextView got incorrect update (Message == null)");
 
         var question = (await _coupleLanguageTranslatorController.GetLatestContext(update)).Question;
+        var templateText = await _templateStringService.GetSingle("Not enough context provided, please, answer the following quesion");
+        var text = templateText.Format(new List<KeyAndNewValue>());
+        text += Environment.NewLine;
+        text += question;
+
 
         return new MessageView
         {
-            Text = $"Not enough context provided, please, answer the following quesion: {question}", // TODO: make multilingual
+            Text = text,
             Markup = new ReplyKeyboardMarkup(new KeyboardButton(TelegramBotButtons.Translate))
         };
     }

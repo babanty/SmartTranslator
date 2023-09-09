@@ -1,4 +1,5 @@
 ﻿using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -9,9 +10,9 @@ namespace SmartTranslator.TelegramBot.View.Views;
 /// </summary>
 public class WaitingForTranslationView : ITelegramBotView
 {
-    private readonly ITemplateStringService _templateStringService;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
-    public WaitingForTranslationView(ITemplateStringService templateStringService)
+    public WaitingForTranslationView(ITemplateStringServiceWithUserLanguage templateStringService)
     {
         _templateStringService = templateStringService;
     }

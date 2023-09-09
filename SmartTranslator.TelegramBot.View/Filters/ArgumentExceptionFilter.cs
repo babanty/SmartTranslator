@@ -1,4 +1,5 @@
 ﻿using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Filters.Infrastructure;
 
 namespace SmartTranslator.TelegramBot.View.Filters;
@@ -6,10 +7,10 @@ namespace SmartTranslator.TelegramBot.View.Filters;
 public class ArgumentExceptionFilter : DefaultFilter<ArgumentException>
 {
     private readonly FilterTools _tools;
-    private readonly ITemplateStringService _templateStringService;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
     public ArgumentExceptionFilter(FilterTools tools,
-                                   ITemplateStringService templateStringService)
+                                   ITemplateStringServiceWithUserLanguage templateStringService)
     {
         _tools = tools;
         _templateStringService = templateStringService;

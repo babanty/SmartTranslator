@@ -4,6 +4,8 @@ using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.DataAccess;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
+using SmartTranslator.Infrastructure.UserLanguages;
 using SmartTranslator.TelegramBot.Management.GptTelegramBots;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TelegramBot.View;
@@ -29,12 +31,14 @@ builder.Services.AddScoped<ITelegramBotMessageSender, TelegramBotMessageSender>(
 builder.Services.AddScoped<ITelegramBotClientProvider, TelegramBotClientProvider>();
 builder.Services.AddScoped<ILoadingAnimation, LoadingAnimation>();
 builder.Services.AddScoped<ITranslationManager, TranslationManager>();
+builder.Services.AddScoped<ITemplateStringServiceWithUserLanguage, TemplateStringServiceWithUserLanguageService>();
 builder.Services.AddScoped<CoupleLanguageTranslatorController>();
 builder.Services.AddScoped<TelegramBotRoutingResolver>();
 builder.Services.AddScoped<TelegramIncomingMessageHandler>();
 builder.Services.AddScoped<TelegramViewProvider>();
 builder.Services.AddScoped<TranslationViewProvider>();
 builder.Services.AddTemplateStringService();
+builder.Services.AddUserLanguageProvider();
 
 builder.Services.AddTranslationCore(translationCoreOptions);
 builder.Services.AddTelegramTranslatorBotView(AppDomain.CurrentDomain.GetAssemblies());
