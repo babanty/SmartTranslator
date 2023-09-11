@@ -59,6 +59,13 @@ ul {
   background-color: #0e1621;
   margin: 0;
   font-family: Roboto, Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+.page__wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
 }
 
 .header {
@@ -91,7 +98,7 @@ ul {
 
 .translator-box {
   position: relative;
-  width: 1160px;
+  width: 1161px;
   min-height: 455px;
   margin: 0 auto;
   display: grid;
@@ -126,7 +133,7 @@ ul {
   color: #f5f5f5;
   font-size: 24px;
   background-color: #26323e;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
 }
 
 .translator-box__text::placeholder {
@@ -243,7 +250,8 @@ ul {
 
 .settings {
   display: flex;
-  margin: 25px 140px 100px;
+  margin: 25px 0 100px;
+  justify-content: space-between;
 }
 .context__dropdown,
 .style__dropdown {
@@ -303,15 +311,7 @@ ul {
   background-color: #26323e;
 }
 .style {
-  margin-left: 30px;
-}
-.style__dropdown {
-}
-.style__title {
-}
-.style__info {
-}
-.style__list {
+  margin-right: 30px;
 }
 .style__item {
   color: #f5f5f5;
@@ -334,8 +334,9 @@ ul {
 .footer {
   display: flex;
   align-items: center;
-  padding: 0 53px 28px 53px;
+  padding: 0 53px;
   gap: 63px;
+  margin-bottom: 30px;
 }
 
 .footer__line {
@@ -534,4 +535,129 @@ ul {
 .noscroll {
   overflow: hidden;
   height: 100%;
+}
+@media screen and (min-width: 1441px) and (max-width: 1920px) {
+  .header {
+    height: 70px;
+  }
+  .main {
+    max-width: 1080px;
+  }
+  .title {
+    font-size: 28px;
+    margin: 40px 0;
+  }
+  .translator-box {
+    width: 1001px;
+    min-height: 390px;
+  }
+  .translator-box__text {
+    min-height: 275px;
+    font-size: 22px;
+  }
+  .translator-box__text::placeholder {
+    font-size: 22px;
+  }
+  .source__counter,
+  .context__counter {
+    font-size: 22px;
+  }
+  .lang-box__title {
+    font-size: 22px;
+  }
+  .lang-box__item {
+    font-size: 18px;
+  }
+  .context__title,
+  .style__choose-title {
+    font-size: 22px;
+  }
+  .context__field {
+    width: 490px;
+    min-height: 85px;
+    max-height: 150px;
+  }
+  .footer__link {
+    font-size: 22px;
+  }
+}
+@media screen and (min-width: 1025px) and (max-width: 1440px) {
+  .header {
+    height: 60px;
+  }
+  .header__logo {
+    width: 240px;
+    height: 55px;
+    margin-left: 25px;
+  }
+  .main {
+    max-width: 1440px;
+  }
+  .title {
+    font-size: 24px;
+    margin: 35px 0;
+  }
+  .translator-box {
+    width: 701px;
+    min-height: 270px;
+  }
+  .translator-box__text {
+    min-height: 190px;
+    font-size: 20px;
+  }
+  .translator-box__text::placeholder {
+    font-size: 20px;
+  }
+  .translator-box__switch {
+    width: 29px;
+    height: 18px;
+  }
+  .translator-box__button {
+    width: 50px;
+    height: 42px;
+  }
+  .translator-box__img-button {
+    width: 23px;
+    height: 23px;
+  }
+  .target__copy,
+  .source__copy {
+    width: 18px;
+    height: 20px;
+  }
+  .settings {
+    width: 701px;
+  }
+  .context__tooltip,
+  .popup__tooltip_custom,
+  .popup__tooltip_unsure {
+    font-size: 12px;
+    width: 170px;
+    text-align: start;
+  }
+  .context__text::placeholder {
+    font-size: 20px;
+  }
+  .source__counter,
+  .context__counter {
+    font-size: 20px;
+  }
+  .lang-box__title {
+    font-size: 20px;
+  }
+  .lang-box__item {
+    font-size: 16px;
+  }
+  .context__title,
+  .style__choose-title {
+    font-size: 20px;
+  }
+
+  .context__field {
+    width: 345px;
+    min-height: 60px;
+  }
+  .footer__link {
+    font-size: 20px;
+  }
 }

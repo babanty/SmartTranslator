@@ -35,32 +35,99 @@ textareas.forEach((textarea) => {
 
 /* 
 2. Регулировка размера шрифта для textarea.
-*/
+// */
+// function adjustFontSize(textarea) {
+//   const style = getComputedStyle(textarea);
+//   let fontSize = parseInt(style.fontSize);
+
+//   if (textarea.scrollHeight > textarea.clientHeight) {
+//     if (fontSize > 16) {
+//       fontSize -= 2;
+//       textarea.style.fontSize = fontSize + "px";
+//       adjustFontSize(textarea);
+//     } else {
+//       textarea.style.height = textarea.scrollHeight + "px";
+//     }
+//   } else if (textarea.scrollHeight <= textarea.clientHeight && fontSize < 24) {
+//     fontSize += 2;
+//     textarea.style.fontSize = fontSize + "px";
+//     if (
+//       textarea.scrollHeight <= textarea.clientHeight &&
+//       textarea.clientHeight > 320
+//     ) {
+//       textarea.style.height = "320px";
+//     }
+//   }
+// }
+// textareas.forEach((textarea) => {
+//   adjustFontSize(textarea);
+// });
+function getScreenSettings(screenWidth) {
+  if (screenWidth > 1920) {
+    return {
+      minFontSize: 20,
+      maxFontSize: 24,
+    };
+  } else if (screenWidth > 1440) {
+    return {
+      minFontSize: 18,
+      maxFontSize: 22,
+    };
+  } else if (screenWidth > 1024) {
+    return {
+      minFontSize: 16,
+      maxFontSize: 20,
+    };
+  } else if (screenWidth > 768) {
+    return {
+      minFontSize: 16,
+      maxFontSize: 20,
+    };
+  } else if (screenWidth > 480) {
+    return {
+      minFontSize: 16,
+      maxFontSize: 20,
+    };
+  } else {
+    return {
+      minFontSize: 14,
+      maxFontSize: 18,
+    };
+  }
+}
+
 function adjustFontSize(textarea) {
+  const settings = getScreenSettings(window.innerWidth);
   const style = getComputedStyle(textarea);
   let fontSize = parseInt(style.fontSize);
+  const minHeight = style.minHeight; // Здесь мы берем minHeight прямо из CSS
+
+  textarea.style.minHeight = minHeight;
 
   if (textarea.scrollHeight > textarea.clientHeight) {
-    if (fontSize > 16) {
+    if (fontSize > settings.minFontSize) {
       fontSize -= 2;
       textarea.style.fontSize = fontSize + "px";
       adjustFontSize(textarea);
     } else {
       textarea.style.height = textarea.scrollHeight + "px";
     }
-  } else if (textarea.scrollHeight <= textarea.clientHeight && fontSize < 24) {
+  } else if (
+    textarea.scrollHeight <= textarea.clientHeight &&
+    fontSize < settings.maxFontSize
+  ) {
     fontSize += 2;
     textarea.style.fontSize = fontSize + "px";
-    if (
-      textarea.scrollHeight <= textarea.clientHeight &&
-      textarea.clientHeight > 320
-    ) {
-      textarea.style.height = "320px";
+    if (textarea.scrollHeight <= textarea.clientHeight) {
+      textarea.style.height = minHeight;
     }
   }
 }
-textareas.forEach((textarea) => {
-  adjustFontSize(textarea);
+
+window.addEventListener("resize", () => {
+  textareas.forEach((textarea) => {
+    adjustFontSize(textarea);
+  });
 });
 
 /* 
@@ -207,7 +274,7 @@ document.addEventListener("DOMContentLoaded", function () {
 6. Обработка закрытия всплывающего окна.
 */
 document.addEventListener("DOMContentLoaded", function () {
-  document.body.classList.remove("no-scroll");
+  document.body.classList.remove("noscroll");
   let popup = document.querySelector(".popup");
   let closePopup = function () {
     popup.classList.remove("popup_active");
