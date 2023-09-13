@@ -35,7 +35,7 @@ public class ClarifyContextView : ITelegramBotView
         return new MessageView
         {
             Text = text,
-            Markup = new ReplyKeyboardMarkup(new KeyboardButton(TelegramBotButtons.Translate))
+            Markup = new ReplyKeyboardMarkup(new KeyboardButton(TelegramBotButtons.Translate)) { ResizeKeyboard = true }
         };
     }
 }

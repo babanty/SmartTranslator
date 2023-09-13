@@ -34,7 +34,10 @@ public class StartButtonView : ITelegramBotView
         var replyKeyboard = new ReplyKeyboardMarkup(new[]
         {
             new KeyboardButton(TelegramBotButtons.Translate)
-        });
+        })
+        {
+            ResizeKeyboard = true
+        };
 
 
         return new MessageView

@@ -29,7 +29,7 @@ public class AddExtraContextInsteadOfStyleView : ITelegramBotView
 
         var buttons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         buttons.Append(new KeyboardButton(TelegramBotButtons.Translate));
-        var markup = new ReplyKeyboardMarkup(buttons);
+        var markup = new ReplyKeyboardMarkup(buttons) { ResizeKeyboard = true };
 
         return new MessageView
         {

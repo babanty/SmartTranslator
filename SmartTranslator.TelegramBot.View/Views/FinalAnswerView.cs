@@ -28,6 +28,9 @@ public class FinalAnswerView : ITelegramBotView
             {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
+            {
+                ResizeKeyboard = true
+            }
         });
     }
 }

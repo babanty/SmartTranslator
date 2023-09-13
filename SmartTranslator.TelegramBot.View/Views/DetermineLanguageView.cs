@@ -26,7 +26,7 @@ public class DetermineLanguageView : ITelegramBotView
 
         var languageButtons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
-        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } });
+        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } }) { ResizeKeyboard = true };
 
 
         return new MessageView

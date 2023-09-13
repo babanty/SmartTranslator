@@ -35,6 +35,9 @@ public class TranslateButtonView : ITelegramBotView
             {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
+            {
+                ResizeKeyboard = true
+            }
         };
     }
 }

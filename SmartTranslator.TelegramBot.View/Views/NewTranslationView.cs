@@ -29,9 +29,12 @@ public class NewTranslationView : ITelegramBotView
             {
                 Text = translation.Translation,
                 Markup = new ReplyKeyboardMarkup(new[]
-            {
+                {
                 new KeyboardButton(TelegramBotButtons.Translate)
-            })
+                })
+                {
+                    ResizeKeyboard = true
+                }
             });
         }
 
