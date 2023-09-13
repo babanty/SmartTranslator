@@ -1,17 +1,14 @@
-using Xunit;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using SmartTranslator.DataAccess;
-using SmartTranslator.TranslationCore.Abstractions.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using SmartTranslator.TelegramBot.Management.TranslationManagement;
-using SmartTranslator.TranslationCore.Abstractions;
-using Microsoft.EntityFrameworkCore.InMemory;
-using AutoMapper;
-using SmartTranslator.Contracts.Requests;
-using SmartTranslator.TranslationCore.Enums;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management.TranslationManagement;
+using SmartTranslator.TranslationCore.Abstractions;
+using SmartTranslator.TranslationCore.Abstractions.Models;
+using SmartTranslator.TranslationCore.Enums;
+using Xunit;
 
 namespace SmartTranslator.Tests
 {
@@ -173,6 +170,52 @@ namespace SmartTranslator.Tests
 
             // Assert
             Assert.Equal(expectedTranslation, result.Translation);
+        }
+
+
+        [Fact]
+        public async Task FinishTranslation_EntityExists_UpdatesStateAndUpdatedAt()
+        {
+            // Arrange
+            var translationId = "testId";
+            var translation = new TelegramTranslationEntity
+            {
+                Id = translationId,
+                BaseText = "Some text",
+                UserName = "Test",
+                State = TelegramTranslationState.WaitingForContext,
+                CreatedAt = DateTime.UtcNow.AddDays(-2),
+                UpdatedAt = DateTime.UtcNow.AddDays(-1)
+            };
+            _dbContext.TelegramTranslations.Add(translation);
+            await _dbContext.SaveChangesAsync();
+
+            var manager = CreateManager();
+
+            // Act
+            await manager.FinishTranslation(translationId);
+
+            // Assert
+            var updatedEntity = _dbContext.TelegramTranslations.Find(translationId);
+            Assert.NotNull(updatedEntity);
+            Assert.Equal(TelegramTranslationState.Finished, updatedEntity.State);
+            Assert.True(updatedEntity.UpdatedAt > DateTime.UtcNow.AddMinutes(-1)); // Ensure the UpdatedAt is recent within the last minute.
+        }
+
+        [Fact]
+        public async Task FinishTranslation_EntityDoesNotExist_DoesNotUpdate()
+        {
+            // Arrange
+            var translationId = "nonExistingId";
+
+            var manager = CreateManager();
+
+            // Act
+            await manager.FinishTranslation(translationId);
+
+            // Assert
+            var nonExistingEntity = _dbContext.TelegramTranslations.Find(translationId);
+            Assert.Null(nonExistingEntity);
         }
 
 

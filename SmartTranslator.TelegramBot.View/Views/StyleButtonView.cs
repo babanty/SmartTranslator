@@ -2,17 +2,19 @@
 using SmartTranslator.TelegramBot.View.Controls;
 using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
 public class StyleButtonView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
+    private readonly TranslationViewProvider _viewProvider;
 
-    public StyleButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public StyleButtonView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
+                              TranslationViewProvider viewProvider)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
+        _viewProvider = viewProvider;
     }
 
 
@@ -25,16 +27,9 @@ public class StyleButtonView : ITelegramBotView
 
         var style = ButtonToStyle(update.Message.Text);
 
-        await _coupleLanguageTranslatorController.SetStyle(style);
+        var dto = await _coupleLanguageTranslatorController.SetStyle(update, style);
 
-        return await Task.FromResult(new MessageView
-        {
-            Text = $"Style set to {update.Message.Text}",
-            Markup = new ReplyKeyboardMarkup(new[]
-            {
-                new KeyboardButton(TelegramBotButtons.Translate)
-            })
-        });
+        return await _viewProvider.GetTranslationView(dto).Render(update);
     }
 
 

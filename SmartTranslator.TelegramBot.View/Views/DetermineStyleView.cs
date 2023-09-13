@@ -1,6 +1,7 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
-using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
@@ -8,45 +9,26 @@ namespace SmartTranslator.TelegramBot.View.Views;
 
 public class DetermineStyleView : ITelegramBotView
 {
-    private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
-    public DetermineStyleView(CoupleLanguageTranslatorController coupleLanguageTranslatorController)
+    public DetermineStyleView(ITemplateStringServiceWithUserLanguage templateStringService)
     {
-        _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
+        _templateStringService = templateStringService;
     }
 
 
     public async Task<MessageView> Render(Update update)
     {
-        if (update.Message == null)
-            throw new ArgumentException("DetermineStyleView got incorrect update (Message == null)");
+        var text = await _templateStringService.GetSingle("Failed to determine style of request, please choose one of the options provided");
 
-        var language = await _coupleLanguageTranslatorController.DetermineLanguage(update.Message);
+        var languageButtons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var translateButton = new KeyboardButton(TelegramBotButtons.Translate);
+        var keyboard = new ReplyKeyboardMarkup(new[] { languageButtons, new[] { translateButton } }) { ResizeKeyboard = true };
 
-        if (language == Language.Unknown)
+        return new MessageView
         {
-            return await UnknownStyleView();
-        }
-
-        return await Task.FromResult(new MessageView
-        {
-            Text = "Style determined successfully"
-        });
-    }
-
-
-    private Task<MessageView> UnknownStyleView()
-    {
-        var text = "Failed to determine style of request, please choose one of the options provided";
-
-        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
-        var markup = new ReplyKeyboardMarkup(buttons);
-
-
-        return Task.FromResult(new MessageView
-        {
-            Text = text,
-            Markup = markup
-        });
+            Text = text.Format(new List<KeyAndNewValue>()),
+            Markup = keyboard
+        };
     }
 }

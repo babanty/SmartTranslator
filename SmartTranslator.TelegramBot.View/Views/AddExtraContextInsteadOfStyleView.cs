@@ -1,5 +1,6 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.Infrastructure.TemplateStrings;
+using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -9,10 +10,10 @@ namespace SmartTranslator.TelegramBot.View.Views;
 public class AddExtraContextInsteadOfStyleView : ITelegramBotView
 {
     private readonly CoupleLanguageTranslatorController _coupleLanguageTranslatorController;
-    private readonly ITemplateStringService _templateStringService;
+    private readonly ITemplateStringServiceWithUserLanguage _templateStringService;
 
     public AddExtraContextInsteadOfStyleView(CoupleLanguageTranslatorController coupleLanguageTranslatorController,
-                               ITemplateStringService templateStringService)
+                               ITemplateStringServiceWithUserLanguage templateStringService)
     {
         _coupleLanguageTranslatorController = coupleLanguageTranslatorController;
         _templateStringService = templateStringService;
@@ -21,11 +22,14 @@ public class AddExtraContextInsteadOfStyleView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        await _coupleLanguageTranslatorController.AddExtraContext(update);
-
-        var buttons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var dto = await _coupleLanguageTranslatorController.AddExtraContext(update);
+        // TODO: fix template string service
         var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseStyle");
-        var markup = new ReplyKeyboardMarkup(buttons);
+        // var message = "We received the additional context you provided, now, please, choose one of the style options below";
+
+        var buttons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        buttons.Append(new KeyboardButton(TelegramBotButtons.Translate));
+        var markup = new ReplyKeyboardMarkup(buttons) { ResizeKeyboard = true };
 
         return new MessageView
         {

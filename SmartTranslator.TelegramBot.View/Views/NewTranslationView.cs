@@ -1,5 +1,8 @@
 using SmartTranslator.Api.TelegramControllers;
+using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace SmartTranslator.TelegramBot.View.Views;
 
@@ -19,7 +22,22 @@ public class NewTranslationView : ITelegramBotView
     public async Task<MessageView> Render(Update update)
     {
         var translation = await _coupleLanguageTranslatorController.CreateTranslation(update);
-        // Fill the properties
+
+        if (translation.State == TelegramTranslationState.Finished)
+        {
+            return await Task.FromResult(new MessageView
+            {
+                Text = translation.Translation,
+                Markup = new ReplyKeyboardMarkup(new[]
+                {
+                new KeyboardButton(TelegramBotButtons.Translate)
+                })
+                {
+                    ResizeKeyboard = true
+                }
+            });
+        }
+
         return await _viewProvider.GetTranslationView(translation).Render(update);
     }
 }
