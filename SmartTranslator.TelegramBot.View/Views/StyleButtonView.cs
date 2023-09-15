@@ -40,6 +40,7 @@ public class StyleButtonView : ITelegramBotView
             TelegramBotStyleButtons.OfficialStyle => TranslationStyle.OfficialStyle,
             TelegramBotStyleButtons.ConversationalStyle => TranslationStyle.ConversationalStyle,
             TelegramBotStyleButtons.TeenageStyle => TranslationStyle.TeenageStyle,
+            TelegramBotStyleButtons.ScientificStyle => TranslationStyle.ScientificStyle,
             _ => throw new Exception("Unknown style")
         };
     }
