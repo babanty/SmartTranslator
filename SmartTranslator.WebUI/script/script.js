@@ -62,73 +62,79 @@ textareas.forEach((textarea) => {
 // textareas.forEach((textarea) => {
 //   adjustFontSize(textarea);
 // });
+function autoResize(textarea) {
+  textarea.style.height = 'auto';
+
+  textarea.style.height = (textarea.scrollHeight) + 'px';
+}
+
+// Функция для получения настроек размера шрифта в зависимости от ширины экрана
 function getScreenSettings(screenWidth) {
   if (screenWidth > 1920) {
-    return {
-      minFontSize: 20,
-      maxFontSize: 24,
-    };
+      return {
+          minFontSize: 20,
+          maxFontSize: 24,
+      };
   } else if (screenWidth > 1440) {
-    return {
-      minFontSize: 18,
-      maxFontSize: 22,
-    };
+      return {
+          minFontSize: 18,
+          maxFontSize: 22,
+      };
   } else if (screenWidth > 1024) {
-    return {
-      minFontSize: 16,
-      maxFontSize: 20,
-    };
-  } else if (screenWidth > 768) {
-    return {
-      minFontSize: 16,
-      maxFontSize: 20,
-    };
-  } else if (screenWidth > 480) {
-    return {
-      minFontSize: 16,
-      maxFontSize: 20,
-    };
-  } else {
-    return {
-      minFontSize: 14,
-      maxFontSize: 18,
-    };
+      return {
+          minFontSize: 16,
+          maxFontSize: 20,
+      };
   }
 }
 
+// Функция для корректировки размера шрифта в зависимости от содержимого и ширины экрана
 function adjustFontSize(textarea) {
   const settings = getScreenSettings(window.innerWidth);
   const style = getComputedStyle(textarea);
   let fontSize = parseInt(style.fontSize);
-  const minHeight = style.minHeight; // Здесь мы берем minHeight прямо из CSS
+  const minHeight = style.minHeight;
 
-  textarea.style.minHeight = minHeight;
-
+  // Если содержимое превышает текущую высоту
   if (textarea.scrollHeight > textarea.clientHeight) {
-    if (fontSize > settings.minFontSize) {
-      fontSize -= 2;
+      // Если размер шрифта больше минимального значения, уменьшаем его
+      while (fontSize > settings.minFontSize && textarea.scrollHeight > textarea.clientHeight) {
+          fontSize -= 2;
+          textarea.style.fontSize = fontSize + "px";
+      }
+      // Если содержимое все еще превышает текущую высоту и достигнут минимальный размер шрифта,
+      // увеличиваем высоту `textarea`
+      if (textarea.scrollHeight > textarea.clientHeight) {
+          textarea.style.minHeight = textarea.scrollHeight + "px";
+      }
+  } 
+  // Если содержимое меньше текущей высоты и размер шрифта меньше максимального значения
+  else if (textarea.scrollHeight <= textarea.clientHeight && fontSize < settings.maxFontSize) {
+      fontSize += 2;
       textarea.style.fontSize = fontSize + "px";
-      adjustFontSize(textarea);
-    } else {
-      textarea.style.height = textarea.scrollHeight + "px";
-    }
-  } else if (
-    textarea.scrollHeight <= textarea.clientHeight &&
-    fontSize < settings.maxFontSize
-  ) {
-    fontSize += 2;
-    textarea.style.fontSize = fontSize + "px";
-    if (textarea.scrollHeight <= textarea.clientHeight) {
-      textarea.style.height = minHeight;
-    }
+      // Если после увеличения размера шрифта содержимое все еще меньше текущей высоты
+      if (textarea.scrollHeight <= textarea.clientHeight) {
+          textarea.style.minHeight = minHeight;
+      }
   }
 }
 
+
 window.addEventListener("resize", () => {
-  textareas.forEach((textarea) => {
-    adjustFontSize(textarea);
+  document.querySelectorAll('textarea').forEach((textarea) => {
+      adjustFontSize(textarea);
   });
 });
+
+document.querySelectorAll('textarea').forEach(textarea => {
+  textarea.addEventListener('input', function() {
+      autoResize(this);
+  });
+
+  // Начальное расширение textarea при загрузке страницы
+  autoResize(textarea);
+});
+
 
 /* 
 3. Обработка выпадающего меню (dropdown).
@@ -147,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
         );
       } else {
         const allLists = document.querySelectorAll(
-          ".dropdown-menut, .dropdown-menu"
+          ".dropdown-menu"
         );
         allLists.forEach((el) => {
           el.style.opacity = "0";
@@ -171,12 +177,11 @@ document.addEventListener("DOMContentLoaded", function () {
   document.addEventListener("click", function (event) {
     const isClickInside =
       event.target.closest(".dropdown-toggle") ||
-      event.target.closest(".dropdown-menut") ||
       event.target.closest(".dropdown-menu");
 
     if (!isClickInside) {
       const allLists = document.querySelectorAll(
-        ".dropdown-menut, .dropdown-menu"
+        ".dropdown-menu"
       );
       allLists.forEach((el) => {
         el.style.opacity = "0";
@@ -199,8 +204,8 @@ document.addEventListener("DOMContentLoaded", function () {
       const oldTitle = titleElement.textContent;
       titleElement.textContent = this.textContent;
       this.textContent = oldTitle;
-      this.closest(".dropdown-menut, .dropdown-menu").style.opacity = "0";
-      this.closest(".dropdown-menut, .dropdown-menu").style.maxHeight = "0";
+      this.closest(" .dropdown-menu").style.opacity = "0";
+      this.closest(" .dropdown-menu").style.maxHeight = "0";
       this.closest(".lang-box, .style")
         .querySelector(".lang-box__arrow, .style__info")
         .classList.remove("flipped");

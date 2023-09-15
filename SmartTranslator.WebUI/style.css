@@ -117,6 +117,7 @@ ul {
   background-color: #26323e;
   box-sizing: border-box;
   padding: 20px 40px 20px 20px;
+  border-top-left-radius: 13px;
 }
 .target {
   grid-column: 3;
@@ -126,6 +127,7 @@ ul {
   background-color: #26323e;
   box-sizing: border-box;
   padding: 20px 20px 20px 40px;
+  border-top-right-radius: 13px;
 }
 .translator-box__text {
   width: 100%;
@@ -323,7 +325,6 @@ ul {
 .style__item:hover {
   text-decoration: underline;
 }
-.dropdown-menut,
 .dropdown-menu {
   opacity: 0;
   max-height: 0;
@@ -429,6 +430,7 @@ ul {
 .popup__title-box {
   display: flex;
   flex-direction: column;
+  overflow: visible;
 }
 .popup__title {
   color: #c4d0ee;
@@ -436,7 +438,7 @@ ul {
   font-size: 24px;
   width: 472px;
   margin: 40px 0 23px;
-  align-self: center;
+  overflow: visible;
 }
 
 .popup__correction {
@@ -447,11 +449,14 @@ ul {
   margin-bottom: 40px;
   background-color: inherit;
   text-align: start;
+  overflow: visible;
+  min-height: 115px;
 }
 
 .popup__buttons {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .popup__button {
@@ -512,7 +517,10 @@ ul {
   cursor: pointer;
   margin-bottom: 6px;
 }
-
+.popup__info-icon, .popup__info-icon_unsure{
+  cursor: pointer;
+    position: relative;
+}
 .popup__counter {
   font-size: 14px;
   color: #717982;
@@ -554,6 +562,9 @@ ul {
   .translator-box__text {
     min-height: 275px;
     font-size: 22px;
+  }
+  .translator-box__text{
+    height: 365px;
   }
   .translator-box__text::placeholder {
     font-size: 22px;
@@ -659,5 +670,43 @@ ul {
   }
   .footer__link {
     font-size: 20px;
+  }
+  .popup__box{
+    width: 700px;
+  }
+  .popup__title{
+    font-size: 24px;
+    width: 500px;
+  }
+  .popup__correction{
+    width: 600px;
+    font-size: 20px;
+  }
+  .popup__buttons{
+    gap: 6px;
+    align-items: center;
+    height: 36px;
+  }
+  .popup__button{
+    font-size: 20px;
+    padding: 7px 14px;
+  }
+  .popup__button-text{
+  }
+  .popup__input-section{
+width: 463px;
+  }
+  .popup__input{
+    font-size: 20px;
+  }
+  .popup__info-icon, .popup__info-icon_unsure{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: relative;
+
+  }
+  .popup__info{
+    align-self: center;
   }
 }
