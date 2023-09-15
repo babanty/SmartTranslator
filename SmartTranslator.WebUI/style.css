@@ -117,6 +117,7 @@ ul {
   background-color: #26323e;
   box-sizing: border-box;
   padding: 20px 40px 20px 20px;
+  border-top-left-radius: 13px;
 }
 .target {
   grid-column: 3;
@@ -126,6 +127,7 @@ ul {
   background-color: #26323e;
   box-sizing: border-box;
   padding: 20px 20px 20px 40px;
+  border-top-right-radius: 13px;
 }
 .translator-box__text {
   width: 100%;
@@ -323,7 +325,6 @@ ul {
 .style__item:hover {
   text-decoration: underline;
 }
-.dropdown-menut,
 .dropdown-menu {
   opacity: 0;
   max-height: 0;
@@ -380,19 +381,43 @@ ul {
   opacity: 1;
   visibility: visible;
 }
-
 .popup__content {
   width: 100%;
-  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   position: relative;
+  padding-top: 100px;
+  padding-bottom: 50px;
+  z-index: 999;
+}
+
+/* Стилизация для Webkit (Chrome, Safari и др.) */
+.popup__box::-webkit-scrollbar {
+  width: 10px;
+}
+
+.popup__box::-webkit-scrollbar-thumb {
+  background-color: #c4d0ee; /* цвет ползунка */
+  border-radius: 5px;
+  border: 2px solid #17212b; /* цвет заднего фона попапа */
+}
+
+.popup__box::-webkit-scrollbar-track {
+  background-color: #1f2833; /* цвет заднего фона попапа */
+}
+
+/* Стилизация для Firefox */
+.popup__box {
+  scrollbar-width: thin; /* "auto" или "thin" */
+  scrollbar-color: #c4d0ee #17212b; /* ползунок и трек */
 }
 
 .popup__box {
+  max-height: calc(90vh - 150px);
+  overflow-y: auto;
+  overflow-x: hidden;
   width: 700px;
-  height: auto;
   background: #17212b;
   border-radius: 10px;
   position: relative;
@@ -402,13 +427,18 @@ ul {
   align-items: center;
   padding-bottom: 40px;
 }
-
+.popup__title-box {
+  display: flex;
+  flex-direction: column;
+  overflow: visible;
+}
 .popup__title {
   color: #c4d0ee;
   text-align: center;
   font-size: 24px;
   width: 472px;
   margin: 40px 0 23px;
+  overflow: visible;
 }
 
 .popup__correction {
@@ -419,11 +449,14 @@ ul {
   margin-bottom: 40px;
   background-color: inherit;
   text-align: start;
+  overflow: visible;
+  min-height: 115px;
 }
 
 .popup__buttons {
   display: flex;
   gap: 8px;
+  align-items: center;
 }
 
 .popup__button {
@@ -484,7 +517,10 @@ ul {
   cursor: pointer;
   margin-bottom: 6px;
 }
-
+.popup__info-icon, .popup__info-icon_unsure{
+  cursor: pointer;
+    position: relative;
+}
 .popup__counter {
   font-size: 14px;
   color: #717982;
@@ -526,6 +562,9 @@ ul {
   .translator-box__text {
     min-height: 275px;
     font-size: 22px;
+  }
+  .translator-box__text{
+    height: 365px;
   }
   .translator-box__text::placeholder {
     font-size: 22px;
@@ -631,5 +670,43 @@ ul {
   }
   .footer__link {
     font-size: 20px;
+  }
+  .popup__box{
+    width: 700px;
+  }
+  .popup__title{
+    font-size: 24px;
+    width: 500px;
+  }
+  .popup__correction{
+    width: 600px;
+    font-size: 20px;
+  }
+  .popup__buttons{
+    gap: 6px;
+    align-items: center;
+    height: 36px;
+  }
+  .popup__button{
+    font-size: 20px;
+    padding: 7px 14px;
+  }
+  .popup__button-text{
+  }
+  .popup__input-section{
+width: 463px;
+  }
+  .popup__input{
+    font-size: 20px;
+  }
+  .popup__info-icon, .popup__info-icon_unsure{
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    position: relative;
+
+  }
+  .popup__info{
+    align-self: center;
   }
 }
