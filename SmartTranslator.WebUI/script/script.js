@@ -8,7 +8,7 @@ textareas.forEach((textarea) => {
       this.closest(".context") ||
       this.closest(".source") ||
       this.closest(".popup__input-section") ||
-      this.closest(".popup__box");
+      this.closest(".popup__title-box");
 
     if (parent) {
       const counterCurrent = parent.querySelector(".counterCurrent");
@@ -28,7 +28,9 @@ textareas.forEach((textarea) => {
     adjustFontSize(this);
   });
 
-  textarea.style.overflow = "hidden";
+  if (!textarea.closest(".popup__title-box")) {
+    textarea.style.overflow = "hidden";
+  }
 });
 
 /* 
