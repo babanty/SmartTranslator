@@ -1,0 +1,18 @@
+{
+    "short_name": "Translator",
+    "name": "Translator",
+    "icons": [{
+      "src": "./images/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },{
+      "src": "./images/icon.svg",
+      "sizes": "72x72 96x96 128x128 256x256",
+      "type": "image/x-icon"
+    }],
+    "start_url": "/index.html",
+    "background_color": "#0e1621",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#0e1621"
+  }
