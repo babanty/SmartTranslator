@@ -63,10 +63,18 @@ textareas.forEach((textarea) => {
 //   adjustFontSize(textarea);
 // });
 function autoResize(textarea) {
+  // Установка минимальной высоты
+  const minHeight = parseInt(getComputedStyle(textarea).minHeight);
+
   textarea.style.height = 'auto';
 
-  textarea.style.height = (textarea.scrollHeight) + 'px';
+  if (textarea.scrollHeight > minHeight) {
+      textarea.style.height = (textarea.scrollHeight) + 'px';
+  } else {
+      textarea.style.height = minHeight + 'px';
+  }
 }
+
 
 // Функция для получения настроек размера шрифта в зависимости от ширины экрана
 function getScreenSettings(screenWidth) {
@@ -95,29 +103,23 @@ function adjustFontSize(textarea) {
   let fontSize = parseInt(style.fontSize);
   const minHeight = style.minHeight;
 
-  // Если содержимое превышает текущую высоту
   if (textarea.scrollHeight > textarea.clientHeight) {
-      // Если размер шрифта больше минимального значения, уменьшаем его
       while (fontSize > settings.minFontSize && textarea.scrollHeight > textarea.clientHeight) {
           fontSize -= 2;
           textarea.style.fontSize = fontSize + "px";
       }
-      // Если содержимое все еще превышает текущую высоту и достигнут минимальный размер шрифта,
-      // увеличиваем высоту `textarea`
       if (textarea.scrollHeight > textarea.clientHeight) {
-          textarea.style.minHeight = textarea.scrollHeight + "px";
+          autoResize(textarea); // Используем функцию autoResize для корректировки высоты
       }
-  } 
-  // Если содержимое меньше текущей высоты и размер шрифта меньше максимального значения
-  else if (textarea.scrollHeight <= textarea.clientHeight && fontSize < settings.maxFontSize) {
+  } else if (textarea.scrollHeight <= textarea.clientHeight && fontSize < settings.maxFontSize) {
       fontSize += 2;
       textarea.style.fontSize = fontSize + "px";
-      // Если после увеличения размера шрифта содержимое все еще меньше текущей высоты
       if (textarea.scrollHeight <= textarea.clientHeight) {
           textarea.style.minHeight = minHeight;
       }
   }
 }
+
 
 
 window.addEventListener("resize", () => {
