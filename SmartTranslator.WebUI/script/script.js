@@ -168,7 +168,7 @@ document.addEventListener("DOMContentLoaded", function () {
         allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
 
         list.style.opacity = "1";
-        list.style.maxHeight = "70px";
+        list.style.maxHeight = "max-content";
         this.querySelector(".lang-box__arrow, .style__info").classList.add(
           "flipped"
         );
