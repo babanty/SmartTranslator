@@ -64,7 +64,7 @@ public class GptTranslator : IGptTranslator
 ""clarifyingQuestion"": """"
 }}
 }}
-where clarifyingQuestion is the field where you need to enter a clarifying question.";
+where clarifyingQuestion is the field where you need to enter a clarifying question. The claryfiing question should be in Russian."; // TODO: add other languages handelling
 
         var messages = new List<ChatMessage>()
         {

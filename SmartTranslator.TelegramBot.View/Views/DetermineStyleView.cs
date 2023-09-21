@@ -21,12 +21,13 @@ public class DetermineStyleView : ITelegramBotView
     {
         var text = await _templateStringService.GetSingle("Failed to determine style of request, please choose one of the options provided");
 
-        var styleButtons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
+        var styleButtons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button))
+                                                                  .ToArray();
         
         int halfCount = (styleButtons.Length + 1) / 2; // If number of buttons is odd, there will be more buttons in the first row
         
-        var firstRowButtons = styleButtons.Take(halfCount).Select(button => button).ToArray();
-        var secondRowButtons = styleButtons.Skip(halfCount).Select(button => button).ToArray();
+        var firstRowButtons = styleButtons.Take(halfCount).ToArray();
+        var secondRowButtons = styleButtons.Skip(halfCount).ToArray();
         var translateButtonRow = new[] { new KeyboardButton(TelegramBotButtons.Translate) };
 
         var keyboard = new ReplyKeyboardMarkup(new[] { firstRowButtons, secondRowButtons, translateButtonRow }) { ResizeKeyboard = true };
