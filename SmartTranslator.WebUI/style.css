@@ -103,6 +103,7 @@ ul {
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
+  grid-template-columns: 1fr 1px 1fr;
   grid-template-rows: auto auto;
   gap: 0;
   background-color: #26323e;
