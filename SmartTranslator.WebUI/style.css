@@ -269,7 +269,8 @@ ul {
 }
 
 .context__info,
-.style__info, .popup__info {
+.style__info,
+.popup__info {
   cursor: pointer;
   position: relative;
 }
@@ -311,11 +312,13 @@ ul {
   font-size: 24px;
   flex: 1;
   background-color: #26323e;
+  box-sizing: border-box;
 }
 .style {
   margin-right: 30px;
 }
-.style__title, .style__choose-title{
+.style__title,
+.style__choose-title {
   cursor: pointer;
 }
 .style__item {
@@ -451,12 +454,11 @@ ul {
   width: 585px;
   color: #f5f5f5;
   font-size: 24px;
-  height: auto;
   margin-bottom: 40px;
   background-color: inherit;
   text-align: start;
   overflow: visible;
-  min-height: 115px;
+  min-height: auto;
 }
 
 .popup__buttons {
@@ -524,11 +526,12 @@ ul {
   cursor: pointer;
   margin-bottom: 6px;
 }
-.popup__info-icon_custom, .popup__info-icon_unsure{
+.popup__info-icon_custom,
+.popup__info-icon_unsure {
   cursor: pointer;
-    position: relative;
+  position: relative;
 }
-.popup__info-icon_unsure{
+.popup__info-icon_unsure {
   cursor: pointer;
   position: relative;
 }
@@ -548,10 +551,10 @@ ul {
   display: flex;
   gap: 9px;
 }
-.popup__tooltip_custom{
-font-size: 16px;
-left: -24px;
-top: -85px;
+.popup__tooltip_custom {
+  font-size: 16px;
+  left: -24px;
+  top: -85px;
 }
 .popup__button--custom.active {
   border-bottom-left-radius: 0;
@@ -560,7 +563,7 @@ top: -85px;
   border-bottom: none;
   z-index: 3;
 }
-.popup__tooltip_unsure{
+.popup__tooltip_unsure {
   font-size: 16px;
   left: -230px;
   top: -85px;
@@ -570,54 +573,7 @@ top: -85px;
   overflow: hidden;
   height: 100%;
 }
-@media screen and (min-width: 1441px) and (max-width: 1920px) {
-  .header {
-    height: 70px;
-  }
-  .main {
-    max-width: 1080px;
-  }
-  .title {
-    font-size: 28px;
-    margin: 40px 0;
-  }
-  .translator-box {
-    width: 1001px;
-    min-height: 390px;
-  }
-  .translator-box__text {
-    min-height: 275px;
-    font-size: 22px;
-  }
-  .translator-box__text{
-    height: 365px;
-  }
-  .translator-box__text::placeholder {
-    font-size: 22px;
-  }
-  .source__counter,
-  .context__counter {
-    font-size: 22px;
-  }
-  .lang-box__title {
-    font-size: 22px;
-  }
-  .lang-box__item {
-    font-size: 18px;
-  }
-  .context__title,
-  .style__choose-title {
-    font-size: 22px;
-  }
-  .context__field {
-    width: 490px;
-    min-height: 85px;
-    max-height: 150px;
-  }
-  .footer__link {
-    font-size: 22px;
-  }
-}
+
 @media screen and (min-width: 1025px) and (max-width: 1440px) {
   .header {
     height: 60px;
@@ -628,7 +584,7 @@ top: -85px;
     margin-left: 25px;
   }
   .main {
-    max-width: 1440px;
+    max-width: 1300px;
   }
   .title {
     font-size: 24px;
@@ -697,43 +653,109 @@ top: -85px;
   .footer__link {
     font-size: 20px;
   }
-  .popup__box{
+  .popup__box {
     width: 700px;
   }
-  .popup__title{
+  .popup__title {
     font-size: 24px;
     width: 500px;
   }
-  .popup__correction{
+  .popup__correction {
     width: 600px;
     font-size: 20px;
   }
-  .popup__buttons{
+  .popup__buttons {
     gap: 6px;
     align-items: center;
     height: 36px;
   }
-  .popup__button{
+  .popup__button {
     font-size: 20px;
     padding: 7px 14px;
     height: 37px;
   }
-  .popup__button-text{
+  .popup__input-section {
+    width: 463px;
   }
-  .popup__input-section{
-width: 463px;
-  }
-  .popup__input{
+  .popup__input {
     font-size: 20px;
   }
-  .popup__info-icon_custom, .popup__info-icon_unsure{
+  .popup__info-icon_custom,
+  .popup__info-icon_unsure {
     width: 20px;
     height: 20px;
     cursor: pointer;
     position: relative;
-
   }
-  .popup__info{
+  .popup__info {
     align-self: center;
+  }
+}
+@media screen and (min-width: 1301px) and (max-width: 1440px) {
+  .main {
+    max-width: 1440px;
+  }
+  .translator-box {
+    width: 890px;
+    min-height: 342px;
+  }
+  .translator-box__text {
+    min-height: 240px;
+    font-size: 20px;
+  }
+  .settings {
+    width: 890px;
+  }
+  .context__field {
+    width: 437px;
+    min-height: 76px;
+  }
+}
+@media screen and (min-width: 1441px) and (max-width: 1800px) {
+  .header {
+    height: 70px;
+  }
+  .main {
+    max-width: 1080px;
+  }
+  .title {
+    font-size: 28px;
+    margin: 40px 0;
+  }
+  .translator-box {
+    width: 1001px;
+    min-height: 390px;
+  }
+  .translator-box__text {
+    min-height: 275px;
+    font-size: 22px;
+  }
+  .translator-box__text {
+    height: 365px;
+  }
+  .translator-box__text::placeholder {
+    font-size: 22px;
+  }
+  .source__counter,
+  .context__counter {
+    font-size: 22px;
+  }
+  .lang-box__title {
+    font-size: 22px;
+  }
+  .lang-box__item {
+    font-size: 18px;
+  }
+  .context__title,
+  .style__choose-title {
+    font-size: 22px;
+  }
+  .context__field {
+    width: 490px;
+    min-height: 85px;
+    max-height: 150px;
+  }
+  .footer__link {
+    font-size: 22px;
   }
 }
