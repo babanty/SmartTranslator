@@ -40,37 +40,58 @@ document.addEventListener("DOMContentLoaded", function () {
   const textareas = document.querySelectorAll("textarea");
 
   textareas.forEach((textarea) => {
-    const initialFontSize = parseInt(window.getComputedStyle(textarea).fontSize);
+    const initialFontSize = parseInt(
+      window.getComputedStyle(textarea).fontSize
+    );
     const initialHeight = textarea.clientHeight;
-    const heightThreshold = 0.7 * initialHeight;
     let currentDecrements = 0;
+    let previousTextLength = textarea.value.length;
 
     if (textarea.hasAttribute("readonly")) {
-      adjustContent();
-    } else {
-      textarea.addEventListener("input", adjustContent);
-    }
-
-    function adjustContent() {
       adjustFontSize();
-      
-      if (currentDecrements >= 3 && textarea.scrollHeight > textarea.clientHeight) {
-        adjustHeight();
-      }
+    } else {
+      textarea.addEventListener("input", adjustFontSize);
     }
 
     function adjustFontSize() {
-      let currentFontSize = parseInt(window.getComputedStyle(textarea).fontSize);
+      let currentFontSize = parseInt(
+        window.getComputedStyle(textarea).fontSize
+      );
+      const isTextBeingRemoved = textarea.value.length < previousTextLength;
 
-      while (textarea.scrollHeight > heightThreshold && currentDecrements < 3 && textarea.scrollHeight > textarea.clientHeight) {
-        currentFontSize -= 2;
-        textarea.style.fontSize = currentFontSize + "px";
-        currentDecrements++;
+      if (!isTextBeingRemoved) {
+        while (
+          textarea.scrollHeight > textarea.clientHeight &&
+          currentDecrements < 3
+        ) {
+          textarea.style.fontSize = currentFontSize - 2 + "px";
+          currentFontSize -= 2;
+          currentDecrements++;
+        }
+
+        // Если размер шрифта достиг своего минимального значения, применяем autosize
+        if (currentDecrements >= 3) {
+          autosize(textarea);
+        }
+      } else {
+        if (textarea.clientHeight <= initialHeight) {
+          while (
+            textarea.scrollHeight <= textarea.clientHeight &&
+            currentFontSize < initialFontSize
+          ) {
+            textarea.style.fontSize = currentFontSize + 2 + "px";
+            currentFontSize += 2;
+            currentDecrements--;
+          }
+        }
+
+        // Если текст был удален и размер шрифта достиг максимума, применяем autosize
+        if (currentFontSize == initialFontSize) {
+          autosize(textarea);
+        }
       }
-    }
 
-    function adjustHeight() {
-      textarea.style.height = textarea.scrollHeight + "px";
+      previousTextLength = textarea.value.length;
     }
   });
 });
