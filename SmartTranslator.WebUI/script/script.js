@@ -36,58 +36,41 @@ textareas.forEach((textarea) => {
 /* 
 2. Регулировка размера шрифта для textarea.
 // */
-
 document.addEventListener("DOMContentLoaded", function () {
   const textareas = document.querySelectorAll("textarea");
 
   textareas.forEach((textarea) => {
-    const initialFontSize = parseInt(
-      window.getComputedStyle(textarea).fontSize
-    );
+    const initialFontSize = parseInt(window.getComputedStyle(textarea).fontSize);
     const initialHeight = textarea.clientHeight;
+    const heightThreshold = 0.7 * initialHeight;
     let currentDecrements = 0;
 
-    // для полей 'readonly'
     if (textarea.hasAttribute("readonly")) {
-      adjustFontSize();
-      adjustHeight();
+      adjustContent();
     } else {
-      textarea.addEventListener("input", function () {
-        adjustFontSize();
+      textarea.addEventListener("input", adjustContent);
+    }
+
+    function adjustContent() {
+      adjustFontSize();
+      
+      if (currentDecrements >= 3 && textarea.scrollHeight > textarea.clientHeight) {
         adjustHeight();
-      });
+      }
     }
 
     function adjustFontSize() {
-      let currentFontSize = parseInt(
-        window.getComputedStyle(textarea).fontSize
-      );
+      let currentFontSize = parseInt(window.getComputedStyle(textarea).fontSize);
 
-      while (
-        textarea.scrollHeight > textarea.clientHeight &&
-        currentDecrements < 3
-      ) {
-        textarea.style.fontSize = currentFontSize - 2 + "px";
+      while (textarea.scrollHeight > heightThreshold && currentDecrements < 3 && textarea.scrollHeight > textarea.clientHeight) {
         currentFontSize -= 2;
+        textarea.style.fontSize = currentFontSize + "px";
         currentDecrements++;
-      }
-
-      while (
-        textarea.scrollHeight <= textarea.clientHeight &&
-        currentFontSize < initialFontSize
-      ) {
-        textarea.style.fontSize = currentFontSize + 2 + "px";
-        currentFontSize += 2;
-        currentDecrements--;
       }
     }
 
     function adjustHeight() {
-      if (textarea.scrollHeight > initialHeight) {
-        textarea.style.height = textarea.scrollHeight + "px";
-      } else {
-        textarea.style.height = initialHeight + "px";
-      }
+      textarea.style.height = textarea.scrollHeight + "px";
     }
   });
 });
