@@ -14,25 +14,20 @@ namespace SmartTranslator.Api.TelegramControllers;
 public class CoupleLanguageTranslatorController
 {
     private readonly ITranslationManager _translationManager;
-    private readonly IMapper _mapper;
 
-    public CoupleLanguageTranslatorController(ITranslationManager translationManager,
-                                              IMapper mapper)
+    public CoupleLanguageTranslatorController(ITranslationManager translationManager)
     {
         _translationManager = translationManager;
-        _mapper = mapper;
     }
 
 
-    public async Task NewUser(ChatMemberUpdated chatMemberUpdated)
+    public async Task NewUser(Update update)
     {
-        return;
-    }
+        var username = update.MyChatMember?.From?.Username;
+        if (username is null)
+            return;
 
-
-    public Task<string> Translate(Message message)
-    {
-        return Task.FromResult("I don't know how to translate yet");
+        await _translationManager.Activate(username);
     }
 
 
@@ -153,5 +148,14 @@ public class CoupleLanguageTranslatorController
         var entity = await GetLatest(update);
         if (entity != null)
             await _translationManager.FinishTranslation(entity.Id);
+    }
+
+    public async Task Block(Update update)
+    {
+        var username = update.MyChatMember?.From?.Username;
+        if (username is null)
+            return;
+
+        await _translationManager.Block(username);
     }
 }

@@ -23,9 +23,8 @@ public class AddExtraContextInsteadOfStyleView : ITelegramBotView
     public async Task<MessageView> Render(Update update)
     {
         var dto = await _coupleLanguageTranslatorController.AddExtraContext(update);
-        // TODO: fix template string service
+
         var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseStyle");
-        // var message = "We received the additional context you provided, now, please, choose one of the style options below";
 
         var buttons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         buttons.Append(new KeyboardButton(TelegramBotButtons.Translate));

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
@@ -6,6 +7,7 @@ using SmartTranslator.DataAccess;
 using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.Management.Exceptions;
+using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
@@ -19,18 +21,21 @@ public class TranslationManager : ITranslationManager
     private readonly IGptTranslator _translator;
     private readonly ILanguageManager _languageManager;
     private readonly ITextMistakeManager _textMistakeManager;
+    private readonly IPublisher _domainEventDistributor;
 
     public TranslationManager(TelegramTranslationDbContext dbContext,
                               IMapper mapper,
                               IGptTranslator translator,
                               ILanguageManager languageManager,
-                              ITextMistakeManager textMistakeManager)
+                              ITextMistakeManager textMistakeManager,
+                              IPublisher domainEventDistributor)
     {
         _dbContext = dbContext;
         _mapper = mapper;
         _translator = translator;
         _languageManager = languageManager;
         _textMistakeManager = textMistakeManager;
+        _domainEventDistributor = domainEventDistributor;
     }
 
     public async Task<TelegramTranslationDto?> GetLatest(string username, long chatId)
@@ -261,7 +266,21 @@ public class TranslationManager : ITranslationManager
         entity.UpdatedAt = DateTime.UtcNow;
         entity.State = TelegramTranslationState.Finished;
 
+        await _domainEventDistributor.Publish(new TextWasTranslatedEvent(entity));
+
         return entity;
+    }
+
+
+    public async Task Block(string username)
+    {
+        await _domainEventDistributor.Publish(new UserHasBlockedBotEvent(username));
+    }
+
+
+    public async Task Activate(string username)
+    {
+        await _domainEventDistributor.Publish(new UserHasActivatedBotEvent(username));
     }
 
 

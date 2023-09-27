@@ -22,7 +22,7 @@ public class StartButtonView : ITelegramBotView
 
     public async Task<MessageView> Render(Update update)
     {
-        await _coupleLanguageTranslatorController.NewUser(update.MyChatMember!);
+        await _coupleLanguageTranslatorController.NewUser(update);
 
         return await GreetingLetterView(update);
     }

@@ -46,6 +46,9 @@ builder.Services.AddTelegramTranslatorBotView(AppDomain.CurrentDomain.GetAssembl
 builder.Services.AddTransient<EntityNotFoundExceptionFilter>();
 
 // databases
+builder.Services.AddDbContext<StatisticsDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("StatisticsDbConnection")
+                        ?? throw new ArgumentNullException("Database config not found")));
 builder.Services.AddDbContext<TelegramTranslationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("TelegramTranslationDbConnection")
                         ?? throw new ArgumentNullException("Database config not found")));
