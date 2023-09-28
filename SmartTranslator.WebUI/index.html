@@ -7,209 +7,211 @@
     <title>Translator</title>
     <link rel="stylesheet" href="style.css" />
   </head>
-  <body class="page noscroll">
-    <div class="page__wrapper">
-      <header class="header">
-        <img src="./images/logo.svg" alt="logo" class="header__logo" />
-      </header>
+  <body class="noscroll">
+    <div class="page">
+      <div class="page__wrapper">
+        <header class="header">
+          <img src="./images/logo.svg" alt="logo" class="header__logo" />
+        </header>
 
-      <main class="main">
-        <h1 class="title">Переводчик, который вас понимает</h1>
-        <!-- поле -->
-        <section class="translator-box">
-          <div class="source">
-            <textarea
-              placeholder="Введите текст для перевода."
-              class="translator-box__text"
-              maxlength="3000"
-            ></textarea>
-            <div class="source__copyCounter">
-              <div class="source__counter">
-                <span class="counterCurrent">0</span>
-                <span class="counterLimit">/3000</span>
+        <main class="main">
+          <h1 class="title">Переводчик, который вас понимает</h1>
+          <!-- поле -->
+          <section class="translator-box">
+            <div class="source">
+              <textarea
+                placeholder="Введите текст для перевода."
+                class="translator-box__text"
+                maxlength="3000"
+              ></textarea>
+              <div class="source__copyCounter">
+                <div class="source__counter">
+                  <span class="counterCurrent">0</span>
+                  <span class="counterLimit">/3000</span>
+                </div>
+                <img
+                  src="./images/copy.svg"
+                  alt="копировать текст"
+                  class="source__copy"
+                />
               </div>
+            </div>
+            <div class="translator-box__divider"></div>
+            <div class="target">
+              <textarea readonly class="translator-box__text"></textarea>
               <img
                 src="./images/copy.svg"
                 alt="копировать текст"
-                class="source__copy"
+                class="target__copy"
               />
             </div>
-          </div>
-          <div class="translator-box__divider"></div>
-          <div class="target">
-            <textarea readonly class="translator-box__text"></textarea>
-            <img
-              src="./images/copy.svg"
-              alt="копировать текст"
-              class="target__copy"
-            />
-          </div>
-          <div class="translator-box__lang-box">
-            <div class="lang-box lang-box--source">
-              <div class="lang-box__dropdown dropdown-toggle">
-                <p class="lang-box__title">Определить язык</p>
-                <img
-                  src="./images/arrow.svg"
-                  alt="Arrow icon"
-                  class="lang-box__arrow"
-                />
-              </div>
-              <ul class="lang-box__list dropdown-menu">
-                <li class="lang-box__item">Английский</li>
-                <li class="lang-box__item">Русский</li>
-              </ul>
-            </div>
-
-            <div class="lang-box lang-box--target">
-              <div class="lang-box__dropdown dropdown-toggle">
-                <p class="lang-box__title">Английский</p>
-                <img
-                  src="./images/arrow.svg"
-                  alt="Arrow icon"
-                  class="lang-box__arrow"
-                />
-              </div>
-              <ul class="lang-box__list dropdown-menu">
-                <li class="lang-box__item">Английский</li>
-                <li class="lang-box__item">Русский</li>
-              </ul>
-            </div>
-          </div>
-          <button class="translator-box__button">
-            <img
-              src="./images/translate.svg"
-              alt="Описание изображения"
-              class="translator-box__img-button"
-            />
-          </button>
-          <img
-            src="./images/switch.svg"
-            alt="Switch icon"
-            class="translator-box__switch"
-          />
-        </section>
-
-        <section class="settings">
-          <div class="context">
-            <div class="context__dropdown">
-              <h2 class="context__title">Дополнительный контекст</h2>
-
-              <aside class="context__info">
-                <img
-                  class="context__info-icon"
-                  src="./images/info.svg"
-                  alt="info icon"
-                />
-                <p class="context__tooltip">
-                  Например: “Здесь использованы медицинские термины” или “Это
-                  инструкция к вентилятору."
-                </p>
-              </aside>
-            </div>
-            <div class="context__field">
-              <textarea
-                placeholder="Введите дополнительный контекст."
-                maxlength="200"
-                class="context__text"
-              ></textarea>
-              <div class="context__counter">
-                <span class="counterCurrent">0</span>
-                <span class="counterLimit">/200</span>
-              </div>
-            </div>
-          </div>
-          <div class="style">
-            <div class="style__dropdown dropdown-toggle">
-              <h2 class="style__choose-title">
-                Выбранный стиль:
-                <span class="style__title">Тинейджерский</span>
-                <img
-                  class="style__info"
-                  src="./images/arrow.svg"
-                  alt="info icon"
-                />
-              </h2>
-            </div>
-            <ul class="style__list dropdown-menu">
-              <li class="style__item">Официальный</li>
-              <li class="style__item">Повседневный</li>
-              <li class="style__item">Научный</li>
-            </ul>
-          </div>
-        </section>
-      </main>
-      <footer class="footer">
-        <div class="footer__line"></div>
-        <!-- Линия слева -->
-        <nav class="footer__navigation">
-          <a href="#" class="footer__link">О нас</a>
-          <a href="#" class="footer__link">Как это работает</a>
-          <a href="#" class="footer__link">Мы в Telegram</a>
-        </nav>
-        <div class="footer__line"></div>
-        <!-- Линия справа -->
-      </footer>
-    </div>
-    </div>
-    <!-- popup -->
-    <div class="popup popup_active">
-      <div class="popup__content">
-        <div class="popup__box">
-          <h2 class="popup__title">
-            Давайте уточним контекст для наиболее качественного перевода
-          </h2>
-          <div class="popup__title-box">
-            <textarea readonly class="popup__correction"></textarea>
-          </div>
-
-          <div class="popup__buttons">
-            <button class="popup__button popup__button--yes">
-              <span class="popup__button-text">Да</span>
-            </button>
-            <button class="popup__button popup__button--no">
-              <span class="popup__button-text">Нет</span>
-            </button>
-            <button class="popup__button popup__button--custom">
-              <span class="popup__button-text">Свой вариант</span>
-              <aside class="context__info">
-                <img
-                  class="popup__info-icon_custom"
-                  src="./images/info.svg"
-                  alt="info icon"
-                />
-                <div class="popup__tooltip_custom">
-                  Например: “Здесь использованы медицинские термины” или “Это
-                  инструкция к вентилятору."
+            <div class="translator-box__lang-box">
+              <div class="lang-box lang-box--source">
+                <div class="lang-box__dropdown dropdown-toggle">
+                  <p class="lang-box__title">Определить язык</p>
+                  <img
+                    src="./images/arrow.svg"
+                    alt="Arrow icon"
+                    class="lang-box__arrow"
+                  />
                 </div>
-              </aside>
-            </button>
-            <button class="popup__button popup__button--unsure">
-              <span class="popup__button-text">Не знаю</span>
-              <aside class="popup__info">
-                <img
-                  class="popup__info-icon_unsure"
-                  src="./images/info.svg"
-                  alt="info icon"
-                />
-                <div class="popup__tooltip_unsure">
-                  Например: “Здесь использованы медицинские термины” или “Это
-                  инструкция к вентилятору."
-                </div>
-              </aside>
-            </button>
-          </div>
+                <ul class="lang-box__list dropdown-menu">
+                  <li class="lang-box__item">Английский</li>
+                  <li class="lang-box__item">Русский</li>
+                </ul>
+              </div>
 
-          <div class="popup__input-section">
-            <div class="popup__input-wrapper">
-              <textarea maxlength="200" class="popup__input"></textarea>
-              <div class="popup__controls">
-                <div class="popup__counter">
-                  <span class="counterCurrent"></span>
+              <div class="lang-box lang-box--target">
+                <div class="lang-box__dropdown dropdown-toggle">
+                  <p class="lang-box__title">Английский</p>
+                  <img
+                    src="./images/arrow.svg"
+                    alt="Arrow icon"
+                    class="lang-box__arrow"
+                  />
+                </div>
+                <ul class="lang-box__list dropdown-menu">
+                  <li class="lang-box__item">Английский</li>
+                  <li class="lang-box__item">Русский</li>
+                </ul>
+              </div>
+            </div>
+            <button class="translator-box__button">
+              <img
+                src="./images/translate.svg"
+                alt="Описание изображения"
+                class="translator-box__img-button"
+              />
+            </button>
+            <img
+              src="./images/switch.svg"
+              alt="Switch icon"
+              class="translator-box__switch"
+            />
+          </section>
+
+          <section class="settings">
+            <div class="context">
+              <div class="context__dropdown">
+                <h2 class="context__title">Дополнительный контекст</h2>
+
+                <aside class="context__info">
+                  <img
+                    class="context__info-icon"
+                    src="./images/info.svg"
+                    alt="info icon"
+                  />
+                  <p class="context__tooltip">
+                    Например: “Здесь использованы медицинские термины” или “Это
+                    инструкция к вентилятору."
+                  </p>
+                </aside>
+              </div>
+              <div class="context__field">
+                <textarea
+                  placeholder="Введите дополнительный контекст."
+                  maxlength="200"
+                  class="context__text"
+                ></textarea>
+                <div class="context__counter">
+                  <span class="counterCurrent">0</span>
                   <span class="counterLimit">/200</span>
                 </div>
-                <button class="popup__icon-button">
-                  <img src="images/send.svg" alt="Отправить" />
-                </button>
+              </div>
+            </div>
+            <div class="style">
+              <div class="style__dropdown dropdown-toggle">
+                <h2 class="style__choose-title">
+                  Выбранный стиль:
+                  <span class="style__title">Тинейджерский</span>
+                  <img
+                    class="style__info"
+                    src="./images/arrow.svg"
+                    alt="info icon"
+                  />
+                </h2>
+              </div>
+              <ul class="style__list dropdown-menu">
+                <li class="style__item">Официальный</li>
+                <li class="style__item">Повседневный</li>
+                <li class="style__item">Научный</li>
+              </ul>
+            </div>
+          </section>
+        </main>
+        <footer class="footer">
+          <div class="footer__line"></div>
+          <!-- Линия слева -->
+          <nav class="footer__navigation">
+            <a href="#" class="footer__link">О нас</a>
+            <a href="#" class="footer__link">Как это работает</a>
+            <a href="#" class="footer__link">Мы в Telegram</a>
+          </nav>
+          <div class="footer__line"></div>
+          <!-- Линия справа -->
+        </footer>
+      </div>
+
+      <!-- popup -->
+      <div class="popup popup_active">
+        <div class="popup__content">
+          <div class="popup__box">
+            <h2 class="popup__title">
+              Давайте уточним контекст для наиболее качественного перевода
+            </h2>
+            <div class="popup__title-box">
+              <textarea readonly class="popup__correction"></textarea>
+            </div>
+
+            <div class="popup__buttons">
+              <button class="popup__button popup__button--yes">
+                <span class="popup__button-text">Да</span>
+              </button>
+              <button class="popup__button popup__button--no">
+                <span class="popup__button-text">Нет</span>
+              </button>
+              <button class="popup__button popup__button--custom">
+                <span class="popup__button-text">Свой вариант</span>
+                <aside class="context__info">
+                  <img
+                    class="popup__info-icon_custom"
+                    src="./images/info.svg"
+                    alt="info icon"
+                  />
+                  <div class="popup__tooltip_custom">
+                    Например: “Здесь использованы медицинские термины” или “Это
+                    инструкция к вентилятору."
+                  </div>
+                </aside>
+              </button>
+              <button class="popup__button popup__button--unsure">
+                <span class="popup__button-text">Не знаю</span>
+                <aside class="popup__info">
+                  <img
+                    class="popup__info-icon_unsure"
+                    src="./images/info.svg"
+                    alt="info icon"
+                  />
+                  <div class="popup__tooltip_unsure">
+                    Например: “Здесь использованы медицинские термины” или “Это
+                    инструкция к вентилятору."
+                  </div>
+                </aside>
+              </button>
+            </div>
+
+            <div class="popup__input-section">
+              <div class="popup__input-wrapper">
+                <textarea maxlength="200" class="popup__input"></textarea>
+                <div class="popup__controls">
+                  <div class="popup__counter">
+                    <span class="counterCurrent"></span>
+                    <span class="counterLimit">/200</span>
+                  </div>
+                  <button class="popup__icon-button">
+                    <img src="images/send.svg" alt="Отправить" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -217,6 +219,278 @@
       </div>
     </div>
 
+    <div class="page_mobile">
+      <div class="page_mobile">
+        <header class="header_mobile">
+          <h1 class="header__title_mobile">Переводчик, который вас понимает</h1>
+        </header>
+
+        <main class="main_mobile">
+          <section class="translator-box_mobile">
+            <div class="source_mobile">
+              <textarea
+                maxlength="3000"
+                placeholder="Введите текст для перевода."
+                class="translator-box__text_mobile"
+              ></textarea>
+              <div class="source__copyCounter_mobile">
+                <div class="source__counter_mobile">
+                  <span class="counterCurrent_mobile">0</span>
+                  <span class="counterLimit_mobile">/3000</span>
+                </div>
+                <img
+                  src="./images/copy.svg"
+                  alt="копировать текст"
+                  class="source__copy_mobile"
+                />
+              </div>
+              <button class="source__button_mobile">
+                <img
+                  src="./images/translate.svg"
+                  alt="Перевести!"
+                  class="source__button-img_mobile"
+                />
+              </button>
+            </div>
+            <div class="target_mobile">
+              <div class="translator-box__divider_mobile"></div>
+              <textarea readonly class="translator-box__text_mobile"></textarea>
+              <img
+                src="./images/copy.svg"
+                alt="копировать текст"
+                class="target__copy_mobile"
+              />
+            </div>
+          </section>
+
+          <section class="context_mobile">
+            <div class="context__title-box_mobile">
+              <textarea readonly class="context__correction_mobile">
+Текст (от лат. textus — ткань; сплетение, сочетание) — зафиксированная на каком-либо материальном носителе человеческая мысль; в общем плане связная и полная последовательность символов.
+
+                Существуют две основные трактовки понятия «текст»: имманентная (расширенная, философски нагруженная) и репрезентативная (более частная). Имманентный подход подразумевает отношение к тексту как к автономной реальности, нацеленность на выявление его внутренней структуры. Репрезентативный — рассмотрение текста как особой формы представления информации о внешней тексту действительности.
+                
+                В лингвистике термин «текст» используется в широком значении, включая и образцы устной речи. Восприятие текста изучается в рамках лингвистики текста и психолингвистики. Так, например, И. Р. Гальперин определяет текст следующим образом: «Это письменное сообщение, объективированное в виде письменного документа, состоящее из ряда высказываний, объединённых разными типами лексической, грамматической и логической связи, имеющее определённый модальный характер, прагматическую установку и соответственно литературно обработанное»[1].</textarea
+              >
+              <aside class="context__info_mobile">
+                <img
+                  class="context__info-icon_mobile"
+                  src="./images/info.svg"
+                  alt="info icon"
+                />
+                <p class="context__tooltip_mobile">
+                  Например: “Здесь использованы медицинские термины” или “Это
+                  инструкция к вентилятору."
+                </p>
+              </aside>
+            </div>
+
+            <div class="context__buttons_mobile">
+              <button
+                class="context__button_mobile context__button--yes_mobile"
+              >
+                <span class="context__button-text_mobile">Да</span>
+              </button>
+              <button class="context__button_mobile context__button--no_mobile">
+                <span class="context__button-text_mobile">Нет</span>
+              </button>
+              <div class="wrapper-info_mobile">
+                <button
+                  class="context__button_mobile context__button--unsure_mobile"
+                >
+                  <span class="context__button-text_mobile">Не знаю</span>
+                </button>
+                <aside class="context__info_mobile">
+                  <img
+                    class="context__info-icon_mobile context__info-icon_unsure_mobile"
+                    src="./images/info.svg"
+                    alt="info icon"
+                  />
+                  <div
+                    class="context__tooltip_unsure_mobile context__tooltip_mobile"
+                  >
+                    Например: “Здесь использованы медицинские термины” или “Это
+                    инструкция к вентилятору."
+                  </div>
+                </aside>
+              </div>
+            </div>
+            <div class="context__input-section_mobile">
+              <div class="wrapper-info_mobile">
+                <button
+                  class="context__button_mobile context__button--custom_mobile"
+                >
+                  <span class="context__button-text_mobile">Свой вариант</span>
+                </button>
+                <aside class="context__info_mobile">
+                  <img
+                    class="context__info-icon_mobile context__info-icon_unsure_mobile"
+                    src="./images/info.svg"
+                    alt="info icon"
+                  />
+                  <div
+                    class="context__tooltip_unsure_mobile context__tooltip_mobile"
+                  >
+                    Например: “Здесь использованы медицинские термины” или “Это
+                    инструкция к вентилятору."
+                  </div>
+                </aside>
+              </div>
+              <div class="context__input-wrapper_mobile">
+                <textarea
+                  maxlength="200"
+                  class="context__input_mobile"
+                ></textarea>
+                <div class="context__controls_mobile">
+                  <div class="context__counter_mobile">
+                    <span class="counterCurrent_mobile"></span>
+                    <span class="counterLimit_mobile">/200</span>
+                  </div>
+                  <button>
+                    <img
+                      class="context__icon-button_mobile"
+                      src="./images/send.svg"
+                      alt="Отправить"
+                    />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="settings_mobile">
+            <div class="setting__title-box_mobile">
+              <h2 class="settings__title_mobile">
+                Показать дополнительные настройки
+              </h2>
+              <button class="arrow_mobile">
+                <img
+                  src="./images/arrow.svg"
+                  alt="Пказать"
+                  class="settings__title-button_mobile"
+                />
+              </button>
+            </div>
+            <div class="setting__content_mobile">
+              <div class="lang-box_mobile">
+                <div class="lang-box_mobile lang-box--source_mobile">
+                  <div class="lang-box__dropdown_mobile dropdown-toggle_mobile">
+                    <p class="lang-box__title_mobile">Определить язык</p>
+                    <img
+                      src="./images/arrow.svg"
+                      alt="Arrow icon"
+                      class="lang-box__arrow_mobile"
+                    />
+                  </div>
+                  <ul class="lang-box__list_mobile dropdown-menu_mobile">
+                    <li class="lang-box__item_mobile">Английский</li>
+                    <li class="lang-box__item_mobile">Русский</li>
+                  </ul>
+                </div>
+
+                <button class="lang-box__button_mobile">
+                  <img
+                    src="./images/switch.svg"
+                    alt="Switch icon"
+                    class="lang-box__switch_mobile"
+                  />
+                </button>
+
+                <div class="lang-box_mobile lang-box--target_mobile">
+                  <div class="lang-box__dropdown_mobile dropdown-toggle_mobile">
+                    <p class="lang-box__title_mobile">Английский</p>
+                    <img
+                      src="./images/arrow.svg"
+                      alt="Arrow icon"
+                      class="lang-box__arrow_mobile"
+                    />
+                  </div>
+                  <ul class="lang-box__list_mobile dropdown-menu_mobile">
+                    <li class="lang-box__item_mobile">Английский</li>
+                    <li class="lang-box__item_mobile">Русский</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="style_mobile">
+                <div class="style__dropdown_mobile dropdown-toggle_mobile">
+                  <h2 class="style__choose-title_mobile">
+                    Выбранный стиль:
+                    <span class="style__title_mobile">Тинейджерский</span>
+                    <img
+                      class="style__info_mobile"
+                      src="./images/arrow.svg"
+                      alt="info icon"
+                    />
+                  </h2>
+                </div>
+                <ul class="style__list_mobile dropdown-menu_mobile">
+                  <li class="style__item_mobile">Официальный</li>
+                  <li class="style__item_mobile">Повседневный</li>
+                </ul>
+              </div>
+
+              <div class="setting-context_mobile">
+                <div class="setting-context__dropdown_mobile">
+                  <h2 class="setting-context__title_mobile">
+                    Дополнительный контекст
+                  </h2>
+
+                  <aside class="setting-context__info_mobile">
+                    <img
+                      class="setting-context__info-icon_mobile"
+                      src="./images/info.svg"
+                      alt="info icon"
+                    />
+                    <p class="setting-context__tooltip_mobile">
+                      Например: “Здесь использованы медицинские термины” или
+                      “Это инструкция к вентилятору."
+                    </p>
+                  </aside>
+                </div>
+                <div class="setting-context__field_mobile">
+                  <textarea
+                    placeholder="Введите дополнительный контекст."
+                    maxlength="200"
+                    class="setting-context__text_mobile"
+                  ></textarea>
+                  <div class="setting-context__counter_mobile">
+                    <span class="counterCurrent_mobile">0</span>
+                    <span class="counterLimit_mobile">/200</span>
+                  </div>
+                </div>
+              </div>
+              <div class="setting__divider_mobile"></div>
+            </div>
+          </section>
+        </main>
+        <footer class="footer_mobile">
+          <a href="#" class="footer__link_mobile">Наш бот в Telegram</a>
+          <a href="#" class="footer__link_mobile">Задонатить</a>
+          <a href="#" class="footer__link_mobile">Как это работает?</a>
+        </footer>
+
+        <section class="popup_mobile popup_active_mobile">
+          <div class="popup__background_mobile">
+            <div class="popup__box_mobile">
+              <h3 class="popup__title_mobile">
+                Вы уверены, что хотите начать новый перевод?
+              </h3>
+              <div class="popup__buttons_mobile">
+                <button class="popup__button_mobile button-yes_mobile">
+                  Да
+                </button>
+                <button class="popup__button_mobile button-no_mobile">
+                  Нет
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <script src="./script/script.js"></script>
+      </div>
+    </div>
     <script src="./script/script.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/autosize.js/4.0.2/autosize.min.js"></script>
   </body>

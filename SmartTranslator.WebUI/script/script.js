@@ -1,44 +1,48 @@
-/* 
-1. Обработка текстовых областей (textarea) и их счетчиков.
-*/
 const textareas = document.querySelectorAll("textarea");
-textareas.forEach((textarea) => {
-  textarea.addEventListener("input", function () {
-    const parent =
-      this.closest(".context") ||
-      this.closest(".source") ||
-      this.closest(".popup__input-section") ||
-      this.closest(".popup__title-box");
 
-    if (parent) {
-      const counterCurrent = parent.querySelector(".counterCurrent");
-      const counterLimit = parent.querySelector(".counterLimit");
+document.addEventListener("DOMContentLoaded", function () {
+  textareas.forEach((textarea) => {
+    textarea.addEventListener("input", function () {
+      const parent =
+        this.closest(".context") ||
+        this.closest(".source") ||
+        this.closest(".popup__input-section") ||
+        this.closest(".popup__title-box") ||
+        this.closest(".setting-context__field_mobile") ||
+        this.closest(".context__input-wrapper_mobile") ||
+        this.closest(".source_mobile");
 
-      if (counterCurrent) {
-        const currentLength = this.value.length;
-        const maxLength = parseInt(counterLimit.textContent.split("/")[1]);
+      if (parent) {
+        let counterCurrent =
+          parent.querySelector(".counterCurrent") ||
+          parent.querySelector(".counterCurrent_mobile");
+        let counterLimit =
+          parent.querySelector(".counterLimit") ||
+          parent.querySelector(".counterLimit_mobile");
 
-        if (currentLength > maxLength) {
-          this.value = this.value.substring(0, maxLength);
+        if (counterCurrent && counterLimit) {
+          const currentLength = this.value.length;
+          const maxLength = parseInt(counterLimit.textContent.split("/")[1]);
+
+          if (currentLength > maxLength) {
+            this.value = this.value.substring(0, maxLength);
+          }
+
+          counterCurrent.textContent = this.value.length;
         }
-
-        counterCurrent.textContent = this.value.length;
       }
-    }
-    // adjustFontSize(this);
-  });
+    });
 
-  if (!textarea.closest(".popup__title-box")) {
-    textarea.style.overflow = "hidden";
-  }
+    if (!textarea.closest(".popup__title-box")) {
+      textarea.style.overflow = "hidden";
+    }
+  });
 });
 
 /* 
 2. Регулировка размера шрифта для textarea.
 // */
 document.addEventListener("DOMContentLoaded", function () {
-  const textareas = document.querySelectorAll("textarea");
-
   textareas.forEach((textarea) => {
     const initialFontSize = parseInt(
       window.getComputedStyle(textarea).fontSize
@@ -100,80 +104,165 @@ document.addEventListener("DOMContentLoaded", function () {
 3. Обработка выпадающего меню (dropdown).
 */
 document.addEventListener("DOMContentLoaded", function () {
-  const toggles = document.querySelectorAll(".dropdown-toggle");
-  toggles.forEach((toggle) => {
-    toggle.addEventListener("click", function () {
-      const list = this.nextElementSibling;
+  function dropdownFunctionality(
+    toggleClass,
+    arrowClass,
+    menuClass,
+    itemClass
+  ) {
+    const toggles = document.querySelectorAll(toggleClass);
 
-      if (parseFloat(getComputedStyle(list).opacity) === 1) {
-        list.style.opacity = "0";
-        list.style.maxHeight = "0";
-        this.querySelector(".lang-box__arrow, .style__info").classList.remove(
-          "flipped"
-        );
-      } else {
-        const allLists = document.querySelectorAll(".dropdown-menu");
+    toggles.forEach((toggle) => {
+      toggle.addEventListener("click", function () {
+        const list = this.nextElementSibling;
+
+        if (parseFloat(getComputedStyle(list).opacity) === 1) {
+          list.style.opacity = "0";
+          list.style.maxHeight = "0";
+          this.querySelector(arrowClass).classList.remove("flipped");
+        } else {
+          const allLists = document.querySelectorAll(menuClass);
+          allLists.forEach((el) => {
+            el.style.opacity = "0";
+            el.style.maxHeight = "0";
+          });
+
+          const allArrows = document.querySelectorAll(arrowClass);
+          allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+
+          list.style.opacity = "1";
+          list.style.maxHeight = "max-content";
+          this.querySelector(arrowClass).classList.add("flipped");
+        }
+      });
+    });
+
+    document.addEventListener("click", function (event) {
+      const isClickInside =
+        event.target.closest(toggleClass) || event.target.closest(menuClass);
+
+      if (!isClickInside) {
+        const allLists = document.querySelectorAll(menuClass);
         allLists.forEach((el) => {
           el.style.opacity = "0";
           el.style.maxHeight = "0";
         });
 
-        const allArrows = document.querySelectorAll(
-          ".lang-box__arrow, .style__info"
-        );
+        const allArrows = document.querySelectorAll(arrowClass);
         allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
-
-        list.style.opacity = "1";
-        list.style.maxHeight = "max-content";
-        this.querySelector(".lang-box__arrow, .style__info").classList.add(
-          "flipped"
-        );
       }
     });
-  });
 
-  document.addEventListener("click", function (event) {
-    const isClickInside =
-      event.target.closest(".dropdown-toggle") ||
-      event.target.closest(".dropdown-menu");
-
-    if (!isClickInside) {
-      const allLists = document.querySelectorAll(".dropdown-menu");
-      allLists.forEach((el) => {
-        el.style.opacity = "0";
-        el.style.maxHeight = "0";
+    const listItems = document.querySelectorAll(itemClass);
+    listItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        const titleElement =
+          this.closest(toggleClass).querySelector(arrowClass);
+        const oldTitle = titleElement.textContent;
+        titleElement.textContent = this.textContent;
+        this.textContent = oldTitle;
+        this.closest(menuClass).style.opacity = "0";
+        this.closest(menuClass).style.maxHeight = "0";
+        this.closest(toggleClass)
+          .querySelector(arrowClass)
+          .classList.remove("flipped");
       });
-
-      const allArrows = document.querySelectorAll(
-        ".lang-box__arrow, .style__info"
-      );
-      allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
-    }
-  });
-
-  const listItems = document.querySelectorAll(".lang-box__item, .style__item");
-  listItems.forEach((item) => {
-    item.addEventListener("click", function () {
-      const titleElement = this.closest(".lang-box, .style").querySelector(
-        ".lang-box__title, .style__title"
-      );
-      const oldTitle = titleElement.textContent;
-      titleElement.textContent = this.textContent;
-      this.textContent = oldTitle;
-      this.closest(" .dropdown-menu").style.opacity = "0";
-      this.closest(" .dropdown-menu").style.maxHeight = "0";
-      this.closest(".lang-box, .style")
-        .querySelector(".lang-box__arrow, .style__info")
-        .classList.remove("flipped");
     });
-  });
+  }
+
+  dropdownFunctionality(
+    ".dropdown-toggle_mobile",
+    ".lang-box__arrow_mobile, .style__info_mobile",
+    ".dropdown-menu_mobile",
+    ".lang-box__item_mobile, .style__item_mobile"
+  );
+
+  dropdownFunctionality(
+    ".dropdown-toggle",
+    ".lang-box__arrow, .style__info",
+    ".dropdown-menu",
+    ".lang-box__item, .style__item"
+  );
 });
+
+// document.addEventListener("DOMContentLoaded", function () {
+//   const toggles = document.querySelectorAll(".dropdown-toggle");
+//   toggles.forEach((toggle) => {
+//     toggle.addEventListener("click", function () {
+//       const list = this.nextElementSibling;
+
+//       if (parseFloat(getComputedStyle(list).opacity) === 1) {
+//         list.style.opacity = "0";
+//         list.style.maxHeight = "0";
+//         this.querySelector(".lang-box__arrow, .style__info").classList.remove(
+//           "flipped"
+//         );
+//       } else {
+//         const allLists = document.querySelectorAll(".dropdown-menu");
+//         allLists.forEach((el) => {
+//           el.style.opacity = "0";
+//           el.style.maxHeight = "0";
+//         });
+
+//         const allArrows = document.querySelectorAll(
+//           ".lang-box__arrow, .style__info"
+//         );
+//         allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+
+//         list.style.opacity = "1";
+//         list.style.maxHeight = "max-content";
+//         this.querySelector(".lang-box__arrow, .style__info").classList.add(
+//           "flipped"
+//         );
+//       }
+//     });
+//   });
+
+//   document.addEventListener("click", function (event) {
+//     const isClickInside =
+//       event.target.closest(".dropdown-toggle") ||
+//       event.target.closest(".dropdown-menu");
+
+//     if (!isClickInside) {
+//       const allLists = document.querySelectorAll(".dropdown-menu");
+//       allLists.forEach((el) => {
+//         el.style.opacity = "0";
+//         el.style.maxHeight = "0";
+//       });
+
+//       const allArrows = document.querySelectorAll(
+//         ".lang-box__arrow, .style__info"
+//       );
+//       allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+//     }
+//   });
+
+//   const listItems = document.querySelectorAll(".lang-box__item, .style__item");
+//   listItems.forEach((item) => {
+//     item.addEventListener("click", function () {
+//       const titleElement = this.closest(".lang-box, .style").querySelector(
+//         ".lang-box__title, .style__title"
+//       );
+//       const oldTitle = titleElement.textContent;
+//       titleElement.textContent = this.textContent;
+//       this.textContent = oldTitle;
+//       this.closest(" .dropdown-menu").style.opacity = "0";
+//       this.closest(" .dropdown-menu").style.maxHeight = "0";
+//       this.closest(".lang-box, .style")
+//         .querySelector(".lang-box__arrow, .style__info")
+//         .classList.remove("flipped");
+//     });
+//   });
+// });
 
 /* 
 4. Обработка кнопок копирования текста.
 */
 document.addEventListener("DOMContentLoaded", function () {
-  const copyButtons = document.querySelectorAll(".source__copy, .target__copy");
+  // Обновим селекторы для кнопок копирования на обоих версиях
+  const copyButtons = document.querySelectorAll(
+    ".source__copy, .target__copy, .source__copy_mobile, .target__copy_mobile"
+  );
 
   copyButtons.forEach((button) => {
     button.addEventListener("click", function (e) {
@@ -185,23 +274,40 @@ document.addEventListener("DOMContentLoaded", function () {
         textarea = button
           .closest(".source")
           .querySelector(".translator-box__text");
-      } else {
+      } else if (button.classList.contains("target__copy")) {
         textarea = button
           .closest(".target")
           .querySelector(".translator-box__text");
+      } else if (button.classList.contains("source__copy_mobile")) {
+        textarea = button
+          .closest(".source_mobile")
+          .querySelector(".translator-box__text_mobile");
+      } else {
+        textarea = button
+          .closest(".target_mobile")
+          .querySelector(".translator-box__text_mobile");
       }
 
       if (textarea) {
-        textarea.select();
-        document.execCommand("copy");
+        navigator.clipboard
+          .writeText(textarea.value || textarea.textContent)
+          .then(function () {
+            console.log("Text successfully copied to clipboard!");
+          })
+          .catch(function (err) {
+            console.error("Could not copy text: ", err);
+          });
 
-        textarea.blur();
-        window.getSelection().removeAllRanges();
-
-        button.classList.add("pulse-animation");
-        button.addEventListener("animationend", function () {
-          button.classList.remove("pulse-animation");
-        });
+        // Добавим анимацию для мобильной версии
+        if (
+          button.classList.contains("source__copy_mobile") ||
+          button.classList.contains("target__copy_mobile")
+        ) {
+          button.classList.add("pulse-animation_mobile");
+          button.addEventListener("animationend", function () {
+            button.classList.remove("pulse-animation_mobile");
+          });
+        }
       }
     });
   });
@@ -236,20 +342,101 @@ document.addEventListener("DOMContentLoaded", function () {
 */
 document.addEventListener("DOMContentLoaded", function () {
   document.body.classList.remove("noscroll");
-  let popup = document.querySelector(".popup");
-  let closePopup = function () {
-    popup.classList.remove("popup_active");
+
+  let closePopupFunction = function (popupElement) {
+    if (popupElement) {
+      popupElement.classList.remove("popup_active");
+    }
   };
+
+  let closeMobilePopupFunction = function (popupElement) {
+    if (popupElement) {
+      popupElement.classList.remove("popup_active_mobile");
+    }
+  };
+
   let buttons = [
     ".popup__button--yes",
     ".popup__button--no",
     ".popup__button--unsure",
     ".popup__icon-button",
+    ".button-yes_mobile",
+    ".button-no_mobile",
   ];
+
   buttons.forEach((selector) => {
     let button = document.querySelector(selector);
     if (button) {
-      button.addEventListener("click", closePopup);
+      if (selector.includes("_mobile")) {
+        button.addEventListener("click", () =>
+          closeMobilePopupFunction(document.querySelector(".popup_mobile"))
+        );
+      } else {
+        button.addEventListener("click", () =>
+          closePopupFunction(document.querySelector(".popup"))
+        );
+      }
     }
   });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  let textarea = document.querySelector(".context__correction_mobile");
+
+  if (textarea) {
+    adjustTextareaHeight(textarea);
+    textarea.addEventListener("input", function () {
+      adjustTextareaHeight(this);
+    });
+  }
+});
+// mobile
+document.addEventListener("DOMContentLoaded", function () {
+  let textarea = document.querySelector(".context__correction_mobile");
+
+  if (textarea) {
+    adjustTextareaHeight(textarea);
+    textarea.addEventListener("input", function () {
+      adjustTextareaHeight(this);
+    });
+  }
+});
+
+function adjustTextareaHeight(textarea) {
+  textarea.style.height = "auto";
+  textarea.style.height = textarea.scrollHeight + "px";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const customButton = document.querySelector(
+    ".context__button--custom_mobile"
+  );
+  const inputWrapper = document.querySelector(".context__input-wrapper_mobile");
+
+  customButton.addEventListener("click", function () {
+    // Переключение класса "active_mobile" для появления или скрытия inputWrapper
+    inputWrapper.classList.toggle("active_mobile");
+    this.classList.toggle("active_mobile");
+  });
+});
+// настройки
+document.addEventListener("DOMContentLoaded", function () {
+  const titleBox = document.querySelector(".setting__title-box_mobile");
+  const content = document.querySelector(".setting__content_mobile");
+  const arrow = document.querySelector(".settings__title-button_mobile");
+  const translateButton = document.querySelector(".source__button_mobile");
+  const target = document.querySelector(".target_mobile");
+
+  if (titleBox && content && arrow) {
+    titleBox.addEventListener("click", function () {
+      content.classList.toggle("active_mobile");
+      arrow.classList.toggle("rotated_mobile");
+    });
+  }
+
+  if (translateButton && target) {
+    translateButton.addEventListener("click", function () {
+      target.classList.add("active_mobile");
+    });
+  }
 });
