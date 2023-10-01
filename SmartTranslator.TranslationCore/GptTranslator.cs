@@ -64,7 +64,7 @@ public class GptTranslator : IGptTranslator
 ""clarifyingQuestion"": """"
 }}
 }}
-where clarifyingQuestion is the field where you need to enter a clarifying question.";
+where clarifyingQuestion is the field where you need to enter a clarifying question. The claryfiing question should be in Russian."; // TODO: add other languages handelling
 
         var messages = new List<ChatMessage>()
         {
@@ -110,7 +110,7 @@ Determine which one the sentence '{text}' corresponds to in the format JSON:
     }}
   ]
 }} , where percent can be from 0 to 1, where 0 is absolutely not matching, and 1 is a complete match.
-Give probabilities of all said styles.";
+Give probabilities of all said styles. Your answer should only be the said json, no additional text.";
 
         var messages = new List<ChatMessage>()
         {
