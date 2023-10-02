@@ -3,6 +3,7 @@ using SmartTranslator.Api.Exceptions;
 using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.Management.Exceptions;
 using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Enums;
@@ -108,6 +109,15 @@ public class CoupleLanguageTranslatorController
     }
 
 
+    public async Task<TelegramTranslationDto?> GetLatestByQuery(Update update)
+    {
+        var userName = update.CallbackQuery.From.Username;
+        var chatId = update.CallbackQuery.Message.Chat.Id;
+
+        return await _translationManager.GetLatest(userName, chatId);
+    }
+
+
     public async Task<TelegramTranslationDto> CreateTranslation(Update update)
     {
         var request = new CreateTelegramTranslationEntityRequest
@@ -157,5 +167,13 @@ public class CoupleLanguageTranslatorController
             return;
 
         await _translationManager.Block(username);
+    }
+
+    public async Task AddFeedback(Update update, TranslationFeedback feedback)
+    {
+        var entity = await GetLatestByQuery(update);
+
+        if (entity != null)
+            await _translationManager.AddFeedback(entity.Id, feedback);
     }
 }

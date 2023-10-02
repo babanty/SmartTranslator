@@ -23,21 +23,6 @@ public class NewTranslationView : ITelegramBotView
     {
         var translation = await _coupleLanguageTranslatorController.CreateTranslation(update);
 
-        if (translation.State == TelegramTranslationState.Finished)
-        {
-            return await Task.FromResult(new MessageView
-            {
-                Text = translation.Translation,
-                Markup = new ReplyKeyboardMarkup(new[]
-                {
-                new KeyboardButton(TelegramBotButtons.Translate)
-                })
-                {
-                    ResizeKeyboard = true
-                }
-            });
-        }
-
         return await _viewProvider.GetTranslationView(translation).Render(update);
     }
 }
