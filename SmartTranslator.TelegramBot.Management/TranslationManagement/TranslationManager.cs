@@ -296,6 +296,39 @@ public class TranslationManager : ITranslationManager
     }
 
 
+    public TimeSpan GetTimeUntilNextPossibleTranslation(string username)
+    {
+        var oneMinuteAgo = DateTime.UtcNow.AddMinutes(-1);
+        var oneDayAgo = DateTime.UtcNow.AddDays(-1);
+
+        var translationsLastMinute = _dbContext.TelegramTranslations
+            .Where(t => t.UserName == username && t.CreatedAt > oneMinuteAgo)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToList();
+
+        var translationsLastDay = _dbContext.TelegramTranslations
+            .Where(t => t.UserName == username && t.CreatedAt > oneDayAgo)
+            .OrderByDescending(t => t.CreatedAt)
+            .ToList();
+
+        // Check last minute limit
+        if (translationsLastMinute.Count >= 3)
+        {
+            var nextPossibleTimeForMinute = translationsLastMinute[2].CreatedAt.AddMinutes(1);
+            return nextPossibleTimeForMinute - DateTime.UtcNow;
+        }
+
+        // Check daily limit
+        if (translationsLastDay.Count >= 30)
+        {
+            var nextPossibleTimeForDay = translationsLastDay[29].CreatedAt.AddDays(1);
+            return nextPossibleTimeForDay - DateTime.UtcNow;
+        }
+
+        return TimeSpan.Zero;
+    }
+    
+
     private async Task<TelegramTranslationEntity> AddLanguage(TelegramTranslationEntity entity)
     {
         var text = entity.BaseText;

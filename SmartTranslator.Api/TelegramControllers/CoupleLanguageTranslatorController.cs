@@ -175,4 +175,12 @@ public class CoupleLanguageTranslatorController
         if (entity != null)
             await _translationManager.AddFeedback(entity.Id, feedback);
     }
+
+    public TimeSpan GetTimeUntilNextPossibleTranslation(Update update)
+    {
+        var username = update.Message.From.Username;
+        var timeout = _translationManager.GetTimeUntilNextPossibleTranslation(username);
+
+        return timeout;
+    }
 }
