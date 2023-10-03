@@ -25,9 +25,7 @@ public class AddExtraContextInsteadOfLanguageView : ITelegramBotView
     {
         var dto = await _coupleLanguageTranslatorController.AddExtraContext(update);
 
-        // TODO: fix template string service
         var message = await _templateStringService.GetSingle("ReceivedAdditionalContextNowPleaseChooseLanguage");
-        // var message = "We received the additional context you provided, now, please, choose one of the language options below";
 
         var languageButtons = (new TelegramBotLanguageButtons()).Buttons.Select(button => new KeyboardButton(button)).ToArray();
         var translateButton = new KeyboardButton(TelegramBotButtons.Translate);

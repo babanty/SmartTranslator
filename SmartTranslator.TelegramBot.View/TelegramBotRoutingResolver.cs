@@ -50,7 +50,7 @@ public class TelegramBotRoutingResolver
         {
             if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Kicked)
             {
-                // return await GetView<BlockButtonView>().Render(update);
+                return _viewProvider.GetView<BlockButtonView>();
             }
 
             if (update?.MyChatMember?.NewChatMember?.Status == ChatMemberStatus.Member)

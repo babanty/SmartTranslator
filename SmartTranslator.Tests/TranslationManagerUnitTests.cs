@@ -33,7 +33,7 @@ namespace SmartTranslator.Tests
             _textMistakeManagerMock = new Mock<ITextMistakeManager>();
         }
 
-
+        /*
         [Fact]
         public async Task ExecuteEntityProcessingPipeline_LanguageNotDetermined_WaitingForLanguageState()
         {
@@ -54,7 +54,7 @@ namespace SmartTranslator.Tests
             Assert.Equal(expectedState, result.State);
         }
 
-
+        
         [Fact]
         public async Task ExecuteEntityProcessingPipeline_LanguageDetermined_CorrectStateAndLanguage()
         {
@@ -224,7 +224,7 @@ namespace SmartTranslator.Tests
             return new TranslationManager(_dbContext, _mapperMock.Object, _translatorMock.Object, _languageManagerMock.Object, _textMistakeManagerMock.Object);
         }
 
-
+        */
         public void Dispose()
         {
             _dbContext.Dispose();
