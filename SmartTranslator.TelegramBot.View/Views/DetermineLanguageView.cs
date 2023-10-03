@@ -1,5 +1,4 @@
-﻿using SmartTranslator.Api.TelegramControllers;
-using SmartTranslator.Infrastructure.TemplateStrings;
+﻿using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;

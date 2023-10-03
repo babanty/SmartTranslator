@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using SmartTranslator.Api.Exceptions;
+﻿using SmartTranslator.Api.Exceptions;
 using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;

@@ -118,7 +118,7 @@ Moreover, there are other language pairs as well.
         new TemplateString(Guid.NewGuid(), "Failed to determine style of request, please choose one of the options provided", $"Не удалось определить стиль запроса, пожалуйста, выберите один из предложенных вариантов. {Environment.NewLine}Failed to determine style of request, please choose one of the options provided", "", TemplateLanguage.Rus_Eng, EnvironmentType.Any),
 
         new TemplateString(Guid.NewGuid(), "Failed to determine request language, please choose one of the options provided", $"Не удалось определить язык запроса, пожалуйста, выберите один из предложенных вариантов. {Environment.NewLine}Failed to determine request language, please choose one of the options provided", "", TemplateLanguage.Rus_Eng, EnvironmentType.Any),
-        
+
         new TemplateString(Guid.NewGuid(), "Not enough context provided, please, answer the following quesion", $"Получено недостаточно контекста, пожалуйста, ответьте на следующий вопрос. {Environment.NewLine}Not enough context provided, please, answer the following quesion", "", TemplateLanguage.Rus_Eng, EnvironmentType.Any),
     };
 

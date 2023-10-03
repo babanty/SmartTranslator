@@ -41,7 +41,7 @@ public class GptTranslationIntegrationTest
         Assert.Equal("\"Привет, мир!\"", result);
     }
 
-    
+
     [Fact]
     public async Task EvaluateContext_UnequivocalInput_AnswerOK()
     {
@@ -95,7 +95,7 @@ public class GptTranslationIntegrationTest
         Assert.Equal(0f, result.Percent);
         Assert.NotNull(result.Request);
     }
-    
+
 
     [Fact]
     public async Task DefineStyle_ValidInput_AnswerOK()

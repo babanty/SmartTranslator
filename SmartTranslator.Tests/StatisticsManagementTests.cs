@@ -1,21 +1,17 @@
-﻿using System;
-using Xunit;
+﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using MediatR;
 using Moq;
-using System.Threading;
-using System.Threading.Tasks;
-using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
-using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.DataAccess;
-using SmartTranslator.TelegramBot.Management.Exceptions;
-using SmartTranslator.TelegramBot.Management;
-using SmartTranslator.TranslationCore.Enums;
-using SmartTranslator.TranslationCore;
 using SmartTranslator.DataAccess.Entities;
-using static SmartTranslator.TranslationCore.GptTranslationOptions;
 using SmartTranslator.Enums;
+using SmartTranslator.TelegramBot.Management;
+using SmartTranslator.TelegramBot.Management.Exceptions;
+using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
+using SmartTranslator.TranslationCore;
+using SmartTranslator.TranslationCore.Enums;
 using Telegram.Bot.Types;
+using Xunit;
+using static SmartTranslator.TranslationCore.GptTranslationOptions;
 
 namespace SmartTranslator.Tests;
 
@@ -26,8 +22,8 @@ public class StatisticsManagementTests : IDisposable
     private readonly StatisticsManagement _statisticsManagement;
     private readonly GptTranslationOptions _testGptTranslationOptions = new GptTranslationOptions
     {
-        CoupleLanguage = new CoupleLanguageHolder 
-        { 
+        CoupleLanguage = new CoupleLanguageHolder
+        {
             Item1 = Language.Russian,
             Item2 = Language.English
         }
@@ -80,7 +76,7 @@ public class StatisticsManagementTests : IDisposable
         var exception = new EntityNotFoundException();
         var update = new Update
         {
-            
+
             Message = new Message
             {
                 From = new User
@@ -103,7 +99,7 @@ public class StatisticsManagementTests : IDisposable
         var storedEntity = await _testDbContext.HandleMessageFailedStatistics.FirstOrDefaultAsync(e => e.ExceptionName == nameof(EntityNotFoundException));
 
         Assert.NotNull(storedEntity);
-        Assert.Equal(username ,storedEntity.UserName);
+        Assert.Equal(username, storedEntity.UserName);
     }
 
 

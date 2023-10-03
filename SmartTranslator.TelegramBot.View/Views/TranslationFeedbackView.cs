@@ -1,7 +1,6 @@
 ﻿using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.Enums;
 using SmartTranslator.TelegramBot.View.Controls;
-using System.Transactions;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
