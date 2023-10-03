@@ -11,7 +11,7 @@ using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 
 namespace SmartTranslator.TelegramBot.Management;
 
-public class StatisticsManagement : INotificationHandler<TextWasTranslatedEvent>, 
+public class StatisticsManagement : INotificationHandler<TextWasTranslatedEvent>,
                                     INotificationHandler<HandleMessageFailedEvent>,
                                     INotificationHandler<UserHasBlockedBotEvent>,
                                     INotificationHandler<UserHasActivatedBotEvent>
@@ -19,7 +19,7 @@ public class StatisticsManagement : INotificationHandler<TextWasTranslatedEvent>
     private readonly StatisticsDbContext _context;
     private readonly GptTranslationOptions _gptTranslationOptions;
 
-    public StatisticsManagement(StatisticsDbContext context, 
+    public StatisticsManagement(StatisticsDbContext context,
                                 GptTranslationOptions gptTranslationOptions)
     {
         _context = context;

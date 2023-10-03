@@ -1,5 +1,4 @@
-﻿using SmartTranslator.Api.TelegramControllers;
-using SmartTranslator.Infrastructure.TemplateStrings;
+﻿using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
 using SmartTranslator.TelegramBot.View.Controls;
 using Telegram.Bot.Types;
@@ -23,9 +22,9 @@ public class DetermineStyleView : ITelegramBotView
 
         var styleButtons = (new TelegramBotStyleButtons()).Buttons.Select(button => new KeyboardButton(button))
                                                                   .ToArray();
-        
+
         int halfCount = (styleButtons.Length + 1) / 2; // If number of buttons is odd, there will be more buttons in the first row
-        
+
         var firstRowButtons = styleButtons.Take(halfCount).ToArray();
         var secondRowButtons = styleButtons.Skip(halfCount).ToArray();
         var translateButtonRow = new[] { new KeyboardButton(TelegramBotButtons.Translate) };

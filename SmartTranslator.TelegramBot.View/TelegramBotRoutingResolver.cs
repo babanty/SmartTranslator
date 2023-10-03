@@ -83,6 +83,10 @@ public class TelegramBotRoutingResolver
             };
         }
 
+        // inline buttons
+        if (update.Type == UpdateType.CallbackQuery)
+            return _viewProvider.GetView<TranslationFeedbackView>();
+
         throw new UnknownMessageTypeException();
     }
 

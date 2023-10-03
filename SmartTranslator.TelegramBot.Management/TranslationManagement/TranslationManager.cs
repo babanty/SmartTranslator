@@ -284,6 +284,18 @@ public class TranslationManager : ITranslationManager
     }
 
 
+    public async Task AddFeedback(string translationId, TranslationFeedback feedback)
+    {
+        var entity = _dbContext.TelegramTranslations.Find(translationId);
+
+        if (entity == null)
+            throw new EntityNotFoundException();
+
+        entity.Feedback = feedback;
+        await _dbContext.SaveChangesAsync();
+    }
+
+
     private async Task<TelegramTranslationEntity> AddLanguage(TelegramTranslationEntity entity)
     {
         var text = entity.BaseText;

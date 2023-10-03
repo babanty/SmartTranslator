@@ -7,4 +7,5 @@ public class MessageView
     public string Text { get; set; } = default!;
 
     public ReplyKeyboardMarkup? Markup = default!;
+    public InlineKeyboardMarkup? InlineMarkup = default!;
 }

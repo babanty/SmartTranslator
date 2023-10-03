@@ -1,6 +1,7 @@
 ﻿using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess.Entities;
+using SmartTranslator.Enums;
 using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
@@ -25,4 +26,5 @@ public interface ITranslationManager
     Task<TelegramTranslationDto> AddExtraContext(string translationId, string context);
     Task Block(string username);
     Task Activate(string username);
+    Task AddFeedback(string translationId, TranslationFeedback feedback);
 }

@@ -41,4 +41,7 @@ public record TelegramTranslationEntity
 
     /// <summary> State of the translation </summary>
     public TelegramTranslationState State { get; set; } = default!;
+
+    /// <summary> Feedback about the tranlsation from the user </summary>
+    public TranslationFeedback Feedback { get; set; } = default!;
 }

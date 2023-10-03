@@ -21,16 +21,24 @@ public class FinalAnswerView : ITelegramBotView
 
         var result = await _coupleLanguageTranslatorController.GiveFinalAnswer(update);
 
-        return await Task.FromResult(new MessageView
-        {
-            Text = result,
-            Markup = new ReplyKeyboardMarkup(new[]
+        var markup = new ReplyKeyboardMarkup(new[]
             {
                 new KeyboardButton(TelegramBotButtons.Translate)
             })
-            {
-                ResizeKeyboard = true
-            }
-        });
+        {
+            ResizeKeyboard = true
+        };
+        var inlineButtons = (new TelegramBotInlineButtons()).Buttons.Select(button => new InlineKeyboardButton(button)
+        {
+            CallbackData = button
+        }).ToArray();
+        var inlineKeyboard = new InlineKeyboardMarkup(inlineButtons);
+
+        return new MessageView
+        {
+            Text = result,
+            Markup = markup,
+            InlineMarkup = inlineKeyboard
+        };
     }
 }

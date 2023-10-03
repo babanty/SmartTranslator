@@ -67,10 +67,14 @@ public class TelegramIncomingMessageHandler
     {
         var text = messageView.Text;
         var markup = messageView.Markup;
+        var inlineMarkup = messageView.InlineMarkup;
 
         var markupedHandlingResult = $"`{text}`"; // So that all the text can be copied, ignoring such problems, like unescaped dots
 
-        await telegramBotMessageSender.Send(markupedHandlingResult, chatId, markup, ct);
+        if (inlineMarkup != null)
+            await telegramBotMessageSender.Send(markupedHandlingResult, chatId, inlineMarkup, ct);
+        else
+            await telegramBotMessageSender.Send(markupedHandlingResult, chatId, markup, ct);
     }
 
 

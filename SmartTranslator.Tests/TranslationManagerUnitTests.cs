@@ -1,4 +1,5 @@
 using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using SmartTranslator.DataAccess;
@@ -19,6 +20,7 @@ namespace SmartTranslator.Tests
         private readonly Mock<IGptTranslator> _translatorMock;
         private readonly Mock<ILanguageManager> _languageManagerMock;
         private readonly Mock<ITextMistakeManager> _textMistakeManagerMock;
+        private readonly Mock<IPublisher> _publisherMock;
 
         public TranslationManagerUnitTests()
         {
@@ -31,9 +33,10 @@ namespace SmartTranslator.Tests
             _translatorMock = new Mock<IGptTranslator>();
             _languageManagerMock = new Mock<ILanguageManager>();
             _textMistakeManagerMock = new Mock<ITextMistakeManager>();
+            _publisherMock = new Mock<IPublisher>();
         }
 
-        /*
+
         [Fact]
         public async Task ExecuteEntityProcessingPipeline_LanguageNotDetermined_WaitingForLanguageState()
         {
@@ -54,7 +57,7 @@ namespace SmartTranslator.Tests
             Assert.Equal(expectedState, result.State);
         }
 
-        
+
         [Fact]
         public async Task ExecuteEntityProcessingPipeline_LanguageDetermined_CorrectStateAndLanguage()
         {
@@ -71,7 +74,7 @@ namespace SmartTranslator.Tests
 
             _languageManagerMock.Setup(l => l.DetermineLanguage(It.IsAny<string>())).Returns(Task.FromResult((Language?)determinedBaseLanguage));
             _languageManagerMock.Setup(l => l.GetLanguagePair()).Returns((Language.Russian, Language.English));
-            _translatorMock.Setup(l => l.EvaluateContext(It.IsAny<string>(), It.IsAny<Language>())).Returns(Task.FromResult(evaluationResult));
+            _translatorMock.Setup(l => l.EvaluateContext(It.IsAny<string>(), It.IsAny<Language>(), It.IsAny<string>())).Returns(Task.FromResult(evaluationResult));
 
             var expectedTargetLanguage = Language.Russian;
             var expectedState = TelegramTranslationState.WaitingForContext;
@@ -112,7 +115,7 @@ namespace SmartTranslator.Tests
             _languageManagerMock.Setup(l => l.DetermineLanguage(It.IsAny<string>())).Returns(Task.FromResult((Language?)determinedBaseLanguage));
             _languageManagerMock.Setup(l => l.GetLanguagePair()).Returns((Language.Russian, Language.English));
             _translatorMock.Setup(t => t.DefineStyle(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Language>(), It.IsAny<Language>())).Returns(Task.FromResult(styleEvaluationResult));
-            _translatorMock.Setup(l => l.EvaluateContext(It.IsAny<string>(), It.IsAny<Language>())).Returns(Task.FromResult(evaluationResult));
+            _translatorMock.Setup(l => l.EvaluateContext(It.IsAny<string>(), It.IsAny<Language>(), It.IsAny<string>())).Returns(Task.FromResult(evaluationResult));
 
             var manager = CreateManager();
             var entity = new TelegramTranslationEntity
@@ -154,7 +157,7 @@ namespace SmartTranslator.Tests
             _languageManagerMock.Setup(l => l.DetermineLanguage(It.IsAny<string>())).Returns(Task.FromResult((Language?)determinedBaseLanguage));
             _languageManagerMock.Setup(l => l.GetLanguagePair()).Returns((Language.Russian, Language.English));
             _translatorMock.Setup(t => t.DefineStyle(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<Language>(), It.IsAny<Language>())).Returns(Task.FromResult(styleEvaluationResult));
-            _translatorMock.Setup(l => l.EvaluateContext(It.IsAny<string>(), It.IsAny<Language>())).Returns(Task.FromResult(evaluationResult));
+            _translatorMock.Setup(l => l.EvaluateContext(It.IsAny<string>(), It.IsAny<Language>(), It.IsAny<string>())).Returns(Task.FromResult(evaluationResult));
             // New ones
             _translatorMock.Setup(t => t.Translate(It.IsAny<string>(), contextString, It.IsAny<Language>(), It.IsAny<Language>(), style)).Returns(Task.FromResult(expectedTranslation));
             _textMistakeManagerMock.Setup(t => t.Correct(It.IsAny<string>())).Returns(Task.FromResult(expectedTranslation)); // Assuming the corrected text is same as the initial translation
@@ -221,10 +224,10 @@ namespace SmartTranslator.Tests
 
         private TranslationManager CreateManager()
         {
-            return new TranslationManager(_dbContext, _mapperMock.Object, _translatorMock.Object, _languageManagerMock.Object, _textMistakeManagerMock.Object);
+            return new TranslationManager(_dbContext, _mapperMock.Object, _translatorMock.Object, _languageManagerMock.Object, _textMistakeManagerMock.Object, _publisherMock.Object);
         }
 
-        */
+
         public void Dispose()
         {
             _dbContext.Dispose();
