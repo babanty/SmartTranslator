@@ -9,6 +9,7 @@ using SmartTranslator.TelegramBot.Management.TranslationManagement;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Enums;
 using Xunit;
+using MediatR;
 
 namespace SmartTranslator.Tests;
 
@@ -18,7 +19,7 @@ public class TranslationManagerTests : IDisposable
     private readonly TranslationManager _translationManager;
     private readonly MapperConfiguration _mapperConfiguration;
     private readonly Mapper _mapper;
-    /*
+    
     public TranslationManagerTests()
     {
         var options = new DbContextOptionsBuilder<TelegramTranslationDbContext>()
@@ -38,8 +39,9 @@ public class TranslationManagerTests : IDisposable
         var mockGptTranslator = new Mock<IGptTranslator>();
         var mockLanguageManager = new Mock<ILanguageManager>();
         var mockTextMistakeManager = new Mock<ITextMistakeManager>();
+        var publisherMock = new Mock<IPublisher>();
 
-        _translationManager = new TranslationManager(_dbContext, _mapper, mockGptTranslator.Object, mockLanguageManager.Object, mockTextMistakeManager.Object);
+        _translationManager = new TranslationManager(_dbContext, _mapper, mockGptTranslator.Object, mockLanguageManager.Object, mockTextMistakeManager.Object, publisherMock.Object);
     }
 
     [Fact]
@@ -298,7 +300,7 @@ public class TranslationManagerTests : IDisposable
         // Assert
         Assert.Equal(expected, result);
     }
-        */
+        
     public void Dispose()
     {
         _dbContext.Database.CloseConnection();
