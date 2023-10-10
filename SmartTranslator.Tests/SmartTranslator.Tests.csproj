@@ -10,6 +10,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="SmartTranslator.App\appsettings.Development.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="SmartTranslator.App\appsettings.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.21" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.21" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.5.0" />

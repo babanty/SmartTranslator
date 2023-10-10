@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess;
@@ -11,6 +12,7 @@ using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
+using System.Net.Http.Json;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
@@ -295,39 +297,46 @@ public class TranslationManager : ITranslationManager
         await _dbContext.SaveChangesAsync();
     }
 
-
     public TimeSpan GetTimeUntilNextPossibleTranslation(string username)
     {
-        var oneMinuteAgo = DateTime.UtcNow.AddMinutes(-1);
-        var oneDayAgo = DateTime.UtcNow.AddDays(-1);
+        string relativePath = @"..\SmartTranslator.App\appsettings.Development.json";
+        string currentDirectory = Directory.GetCurrentDirectory();
+        string fullPath = Path.Combine(currentDirectory, relativePath);
+        var json = File.ReadAllText(fullPath);
 
-        var translationsLastMinute = _dbContext.TelegramTranslations
-            .Where(t => t.UserName == username && t.CreatedAt > oneMinuteAgo)
-            .OrderByDescending(t => t.CreatedAt)
-            .ToList();
+        var jObject = JObject.Parse(json);
+        var rateLimitsList = jObject["TranslationCoreOptions"]["RateLimits"].ToObject<List<RateLimit>>();
+        var timeout = CountTimeout(rateLimitsList, username);
 
-        var translationsLastDay = _dbContext.TelegramTranslations
-            .Where(t => t.UserName == username && t.CreatedAt > oneDayAgo)
-            .OrderByDescending(t => t.CreatedAt)
-            .ToList();
-
-        // Check last minute limit
-        if (translationsLastMinute.Count >= 3)
-        {
-            var nextPossibleTimeForMinute = translationsLastMinute[2].CreatedAt.AddMinutes(1);
-            return nextPossibleTimeForMinute - DateTime.UtcNow;
-        }
-
-        // Check daily limit
-        if (translationsLastDay.Count >= 30)
-        {
-            var nextPossibleTimeForDay = translationsLastDay[29].CreatedAt.AddDays(1);
-            return nextPossibleTimeForDay - DateTime.UtcNow;
-        }
-
-        return TimeSpan.Zero;
+        return timeout;
     }
     
+
+    private TimeSpan CountTimeout(IEnumerable<RateLimit> rateLimits, string username)
+    {
+        var timeouts = new List<TimeSpan>();
+
+        foreach(var limit in rateLimits)
+        {
+            var allowedTranslations = limit.AllowedTranslations;
+            var timeSpanInSeconds = limit.TimeSpanInSeconds;
+
+            var countdownStart = DateTime.UtcNow.AddSeconds(-timeSpanInSeconds);
+            var translationsSinceCountdownStart = _dbContext.TelegramTranslations
+    .                                    Where(t => t.UserName == username && t.CreatedAt > countdownStart)
+    .                                    OrderByDescending(t => t.CreatedAt)
+    .                                    ToList();
+
+            if (translationsSinceCountdownStart.Count > allowedTranslations - 1)
+            {
+                var nextPossibleTime = translationsSinceCountdownStart[allowedTranslations - 1].CreatedAt.AddSeconds(timeSpanInSeconds);
+                timeouts.Add(nextPossibleTime - DateTime.UtcNow);
+            }
+        }
+
+        return timeouts.Count == 0 ? TimeSpan.Zero : timeouts.Max();
+    }
+
 
     private async Task<TelegramTranslationEntity> AddLanguage(TelegramTranslationEntity entity)
     {
