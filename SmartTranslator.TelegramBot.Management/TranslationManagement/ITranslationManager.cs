@@ -27,4 +27,5 @@ public interface ITranslationManager
     Task Block(string username);
     Task Activate(string username);
     Task AddFeedback(string translationId, TranslationFeedback feedback);
+    TimeSpan CountTimeout(string username);
 }

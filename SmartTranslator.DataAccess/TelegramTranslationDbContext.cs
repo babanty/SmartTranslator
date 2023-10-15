@@ -18,5 +18,7 @@ public class TelegramTranslationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<TelegramTranslationEntity>().OwnsMany(p => p.Contexts);
+
+        modelBuilder.Entity<TelegramTranslationEntity>().HasIndex(e => e.CreatedAt);
     }
 }
