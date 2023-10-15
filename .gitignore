@@ -271,3 +271,5 @@ CRM.*Domain*/
 # Secrets
 SmartTranslator.TranslationCore.Tests/optionsConfig.json
 /SmartTranslator.TranslationCore/optionsConfig.json
+
+appsettings.Prod.json
