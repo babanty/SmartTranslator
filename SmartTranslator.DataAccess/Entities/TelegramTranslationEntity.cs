@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SmartTranslator.Enums;
+﻿using SmartTranslator.Enums;
 using SmartTranslator.TranslationCore.Enums;
 
 namespace SmartTranslator.DataAccess.Entities;

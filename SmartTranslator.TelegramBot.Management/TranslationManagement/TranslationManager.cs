@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using SmartTranslator.Contracts.Dto;
 using SmartTranslator.Contracts.Requests;
 using SmartTranslator.DataAccess;
@@ -12,7 +11,6 @@ using SmartTranslator.TelegramBot.Management.GptTelegramBots.Events;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
 using SmartTranslator.TranslationCore.Enums;
-using System.Net.Http.Json;
 
 namespace SmartTranslator.TelegramBot.Management.TranslationManagement;
 
@@ -299,23 +297,23 @@ public class TranslationManager : ITranslationManager
         entity.Feedback = feedback;
         await _dbContext.SaveChangesAsync();
     }
-    
+
 
     public TimeSpan CountTimeout(string username)
     {
         var rateLimits = _rateLimitOptions.RateLimits;
         var timeouts = new List<TimeSpan>();
 
-        foreach(var limit in rateLimits)
+        foreach (var limit in rateLimits)
         {
             var allowedTranslations = limit.AllowedTranslations;
             var timeSpanInSeconds = limit.TimeSpanInSeconds;
 
             var countdownStart = DateTime.UtcNow.AddSeconds(-timeSpanInSeconds);
             var translationsSinceCountdownStart = _dbContext.TelegramTranslations
-    .                                    Where(t => t.UserName == username && t.CreatedAt > countdownStart)
-    .                                    OrderByDescending(t => t.CreatedAt)
-    .                                    ToList();
+    .Where(t => t.UserName == username && t.CreatedAt > countdownStart)
+    .OrderByDescending(t => t.CreatedAt)
+    .ToList();
 
             if (translationsSinceCountdownStart.Count > allowedTranslations - 1)
             {

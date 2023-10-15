@@ -90,11 +90,11 @@ public class TranslationManagerCountTimeoutTests
         {
             UserName = userName,
             CreatedAt = createdAt,
-            UpdatedAt = createdAt, 
+            UpdatedAt = createdAt,
             ChatId = 12345,
             BaseText = "Test Base Text",
-            State = TelegramTranslationState.Finished, 
-            Feedback = TranslationFeedback.Liked 
+            State = TelegramTranslationState.Finished,
+            Feedback = TranslationFeedback.Liked
         };
     }
 

@@ -54,7 +54,7 @@ public class NewTranslationView : ITelegramBotView
                 }
             };
         }
-    
+
         var translation = await _coupleLanguageTranslatorController.CreateTranslation(update);
 
         return await _viewProvider.GetTranslationView(translation).Render(update);

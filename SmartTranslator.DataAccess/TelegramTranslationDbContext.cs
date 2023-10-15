@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SmartTranslator.DataAccess.Entities;
-using System.Xml;
 
 namespace SmartTranslator.DataAccess;
 
