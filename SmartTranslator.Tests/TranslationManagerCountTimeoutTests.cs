@@ -11,12 +11,12 @@ using Xunit;
 
 namespace SmartTranslator.Tests;
 
-public class TranslationManagerGetTimeUntilNextPossibleTranslationTests
+public class TranslationManagerCountTimeoutTests
 {
     private TranslationManager _translationManager;
     private TelegramTranslationDbContext _dbContext;
 
-    public TranslationManagerGetTimeUntilNextPossibleTranslationTests()
+    public TranslationManagerCountTimeoutTests()
     {
         var options = new DbContextOptionsBuilder<TelegramTranslationDbContext>()
                       .UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()) // unique name to ensure isolation
@@ -29,14 +29,30 @@ public class TranslationManagerGetTimeUntilNextPossibleTranslationTests
         var languageManager = new Mock<ILanguageManager>();
         var textMistakeManager = new Mock<ITextMistakeManager>();
         var domainEventDistributor = new Mock<IPublisher>();
+        var rateLimitOptions = new RateLimitOptions
+        {
+            RateLimits = new RateLimit[]
+            {
+                new RateLimit
+                {
+                    AllowedTranslations = 3,
+                    TimeSpanInSeconds = 60
+                },
+                new RateLimit
+                {
+                    AllowedTranslations = 30,
+                    TimeSpanInSeconds = 86400
+                }
+            }
+        };
 
-        _translationManager = new TranslationManager(_dbContext, mapper.Object, translator.Object, languageManager.Object, textMistakeManager.Object, domainEventDistributor.Object);
+        _translationManager = new TranslationManager(_dbContext, mapper.Object, translator.Object, languageManager.Object, textMistakeManager.Object, domainEventDistributor.Object, rateLimitOptions);
     }
 
     [Fact]
     public void GivenNoTranslations_WhenGetTimeUntilNextPossibleTranslation_ShouldReturnZero()
     {
-        var result = _translationManager.GetTimeUntilNextPossibleTranslation("test");
+        var result = _translationManager.CountTimeout("test");
         Assert.Equal(TimeSpan.Zero, result);
     }
 
@@ -49,7 +65,7 @@ public class TranslationManagerGetTimeUntilNextPossibleTranslationTests
         }
         _dbContext.SaveChanges();
 
-        var result = _translationManager.GetTimeUntilNextPossibleTranslation("test");
+        var result = _translationManager.CountTimeout("test");
 
         Assert.InRange(result, TimeSpan.FromSeconds(50), TimeSpan.FromSeconds(60));
     }
@@ -63,7 +79,7 @@ public class TranslationManagerGetTimeUntilNextPossibleTranslationTests
         }
         _dbContext.SaveChanges();
 
-        var result = _translationManager.GetTimeUntilNextPossibleTranslation("test");
+        var result = _translationManager.CountTimeout("test");
 
         Assert.InRange(result, TimeSpan.FromSeconds(86050), TimeSpan.FromSeconds(86150));
     }
@@ -74,12 +90,11 @@ public class TranslationManagerGetTimeUntilNextPossibleTranslationTests
         {
             UserName = userName,
             CreatedAt = createdAt,
-            UpdatedAt = createdAt, // Or you can use DateTime.UtcNow for this
-            ChatId = 12345, // Example chat ID, use a meaningful value if necessary
+            UpdatedAt = createdAt, 
+            ChatId = 12345,
             BaseText = "Test Base Text",
-            State = TelegramTranslationState.Finished, // Use a default or meaningful state if necessary
-            Feedback = TranslationFeedback.Liked // Use a default or meaningful feedback if necessary
-                                                               // Fill other fields as necessary for your tests.
+            State = TelegramTranslationState.Finished, 
+            Feedback = TranslationFeedback.Liked 
         };
     }
 

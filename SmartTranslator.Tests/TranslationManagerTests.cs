@@ -40,8 +40,24 @@ public class TranslationManagerTests : IDisposable
         var mockLanguageManager = new Mock<ILanguageManager>();
         var mockTextMistakeManager = new Mock<ITextMistakeManager>();
         var publisherMock = new Mock<IPublisher>();
+        var rateLimitOptions = new RateLimitOptions
+        {
+            RateLimits = new RateLimit[]
+            {
+                new RateLimit
+                {
+                    AllowedTranslations = 3,
+                    TimeSpanInSeconds = 60
+                },
+                new RateLimit
+                {
+                    AllowedTranslations = 30,
+                    TimeSpanInSeconds = 86400
+                }
+            }
+        };
 
-        _translationManager = new TranslationManager(_dbContext, _mapper, mockGptTranslator.Object, mockLanguageManager.Object, mockTextMistakeManager.Object, publisherMock.Object);
+        _translationManager = new TranslationManager(_dbContext, _mapper, mockGptTranslator.Object, mockLanguageManager.Object, mockTextMistakeManager.Object, publisherMock.Object, rateLimitOptions);
     }
 
     [Fact]

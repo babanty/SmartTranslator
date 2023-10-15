@@ -131,9 +131,9 @@ public class GptTranslationIntegrationTest
 
         Assert.NotNull(result);
 
-        Assert.InRange(officialProb, 0.6f, 0.8f); // TODO: change to more appropriate values once GPT-4 is accessible
-        Assert.InRange(conversationalProb, 0.5f, 0.7f); // TODO: change to more appropriate values once GPT-4 is accessible
-        Assert.InRange(teenageProb, 0.2f, 0.4f); // TODO: change to more appropriate values once GPT-4 is accessible
+        Assert.InRange(officialProb, 0.6f, 0.8f);
+        Assert.InRange(conversationalProb, 0.5f, 0.7f);
+        Assert.InRange(teenageProb, 0.2f, 0.4f);
     }
 
     /*

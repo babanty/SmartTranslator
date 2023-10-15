@@ -21,6 +21,7 @@ namespace SmartTranslator.Tests
         private readonly Mock<ILanguageManager> _languageManagerMock;
         private readonly Mock<ITextMistakeManager> _textMistakeManagerMock;
         private readonly Mock<IPublisher> _publisherMock;
+        private readonly RateLimitOptions _rateLimitOptions;
 
         public TranslationManagerUnitTests()
         {
@@ -34,6 +35,22 @@ namespace SmartTranslator.Tests
             _languageManagerMock = new Mock<ILanguageManager>();
             _textMistakeManagerMock = new Mock<ITextMistakeManager>();
             _publisherMock = new Mock<IPublisher>();
+            _rateLimitOptions = new RateLimitOptions
+            {
+                RateLimits = new RateLimit[]
+                {
+                    new RateLimit
+                    {
+                        AllowedTranslations = 3,
+                        TimeSpanInSeconds = 60
+                    },
+                    new RateLimit
+                    {
+                        AllowedTranslations = 30,
+                        TimeSpanInSeconds = 86400
+                    }
+                }
+            };
         }
 
 
@@ -224,7 +241,7 @@ namespace SmartTranslator.Tests
 
         private TranslationManager CreateManager()
         {
-            return new TranslationManager(_dbContext, _mapperMock.Object, _translatorMock.Object, _languageManagerMock.Object, _textMistakeManagerMock.Object, _publisherMock.Object);
+            return new TranslationManager(_dbContext, _mapperMock.Object, _translatorMock.Object, _languageManagerMock.Object, _textMistakeManagerMock.Object, _publisherMock.Object, _rateLimitOptions);
         }
 
 

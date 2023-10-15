@@ -179,7 +179,7 @@ public class CoupleLanguageTranslatorController
     public TimeSpan GetTimeUntilNextPossibleTranslation(Update update)
     {
         var username = update.Message.From.Username;
-        var timeout = _translationManager.GetTimeUntilNextPossibleTranslation(username);
+        var timeout = _translationManager.CountTimeout(username);
 
         return timeout;
     }

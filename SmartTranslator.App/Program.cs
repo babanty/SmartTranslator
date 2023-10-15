@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SmartTranslator.Api.TelegramControllers;
 using SmartTranslator.DataAccess;
+using SmartTranslator.DataAccess.Entities;
 using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.Infrastructure.TemplateStrings;
 using SmartTranslator.Infrastructure.TemplateStringServiceWithUserLanguage;
@@ -18,6 +19,7 @@ var builder = WebApplication.CreateBuilder(args);
 var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
 var translationCoreOptions = builder.Services.AddConfig<TranslationCoreOptions>(builder.Configuration, "TranslationCoreOptions");
+builder.Services.AddConfig<RateLimitOptions>(builder.Configuration, "RateLimitOptions");
 builder.Services.AddConfig<GptTelegramBotOptions>(builder.Configuration, "GptTelegramBotOptions");
 
 builder.Services.AddAutoMapper((config) => { config.AllowNullCollections = true; }, assemblies);

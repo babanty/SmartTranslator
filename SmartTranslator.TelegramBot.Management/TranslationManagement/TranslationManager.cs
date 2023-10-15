@@ -24,13 +24,15 @@ public class TranslationManager : ITranslationManager
     private readonly ILanguageManager _languageManager;
     private readonly ITextMistakeManager _textMistakeManager;
     private readonly IPublisher _domainEventDistributor;
+    private readonly RateLimitOptions _rateLimitOptions;
 
     public TranslationManager(TelegramTranslationDbContext dbContext,
                               IMapper mapper,
                               IGptTranslator translator,
                               ILanguageManager languageManager,
                               ITextMistakeManager textMistakeManager,
-                              IPublisher domainEventDistributor)
+                              IPublisher domainEventDistributor,
+                              RateLimitOptions rateLimitOptions)
     {
         _dbContext = dbContext;
         _mapper = mapper;
@@ -38,6 +40,7 @@ public class TranslationManager : ITranslationManager
         _languageManager = languageManager;
         _textMistakeManager = textMistakeManager;
         _domainEventDistributor = domainEventDistributor;
+        _rateLimitOptions = rateLimitOptions;
     }
 
     public async Task<TelegramTranslationDto?> GetLatest(string username, long chatId)
@@ -296,24 +299,11 @@ public class TranslationManager : ITranslationManager
         entity.Feedback = feedback;
         await _dbContext.SaveChangesAsync();
     }
-
-    public TimeSpan GetTimeUntilNextPossibleTranslation(string username)
-    {
-        string relativePath = @"..\SmartTranslator.App\appsettings.Development.json";
-        string currentDirectory = Directory.GetCurrentDirectory();
-        string fullPath = Path.Combine(currentDirectory, relativePath);
-        var json = File.ReadAllText(fullPath);
-
-        var jObject = JObject.Parse(json);
-        var rateLimitsList = jObject["TranslationCoreOptions"]["RateLimits"].ToObject<List<RateLimit>>();
-        var timeout = CountTimeout(rateLimitsList, username);
-
-        return timeout;
-    }
     
 
-    private TimeSpan CountTimeout(IEnumerable<RateLimit> rateLimits, string username)
+    public TimeSpan CountTimeout(string username)
     {
+        var rateLimits = _rateLimitOptions.RateLimits;
         var timeouts = new List<TimeSpan>();
 
         foreach(var limit in rateLimits)
