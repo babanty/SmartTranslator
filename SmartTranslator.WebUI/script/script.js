@@ -1,3 +1,63 @@
+let translationEntity; // Глобальная переменная для хранения Id
+let languageFrom = ''; // Глобальная переменная для исходного языка
+let languageTo = '';   // Глобальная переменная для целевого языка
+window.onload = function() {
+    fetch('http://localhost:3000/api/translation')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Ошибка запроса");
+            }
+            return response.json();
+        })
+        .then(data => {
+            translationEntity = data;
+            console.log("Полученный Id:", translationEntity);
+        })
+        .catch(error => {
+            console.error("Произошла ошибка:", error);
+        });
+};
+document.addEventListener("DOMContentLoaded", function(){
+
+  window.sendText = function() {
+  // Собираем информацию из полей
+  const defaultId = "defaultId";
+  const translationText = document.querySelector('.source_text').value;
+
+  const context = document.querySelector('.context_text').value;
+  const textData = {
+    id:defaultId,
+      BaseText: translationText,
+      LanguageFrom: languageFrom,
+      LanguageTo: languageTo,
+      Context:context
+  };
+  // console.log("translationText:", translationText);
+  // console.log("languageFrom:", languageFrom);
+  // console.log("languageTo:", languageTo);
+  // console.log("context:", context);
+  fetch('http://localhost:3000/api/translation', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(textData)
+  })
+  .then(response => {
+      if (!response.ok) {
+          throw new Error("Ошибка запроса: " + response.statusText);
+      }
+      return response.json();
+  })
+  .then(data => {
+      console.log("Ответ сервера:", data);
+  })
+  .catch(error => {
+      console.error("Произошла ошибка:", error);
+  });
+}
+});
+
 const textareas = document.querySelectorAll("textarea");
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -103,87 +163,115 @@ document.addEventListener("DOMContentLoaded", function () {
 /* 
 3. Обработка выпадающего меню (dropdown).
 */
-document.addEventListener("DOMContentLoaded", function () {
-  function dropdownFunctionality(
-    toggleClass,
-    arrowClass,
-    menuClass,
-    itemClass
-  ) {
-    const toggles = document.querySelectorAll(toggleClass);
 
-    toggles.forEach((toggle) => {
-      toggle.addEventListener("click", function () {
-        const list = this.nextElementSibling;
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Инициализация languageFrom и languageTo на основе текущих значений заголовков
+    const fromTitleElement = document.querySelector('.language_from .lang-box__title');
+    const toTitleElement = document.querySelector('.language_to .lang-box__title');
 
-        if (parseFloat(getComputedStyle(list).opacity) === 1) {
-          list.style.opacity = "0";
-          list.style.maxHeight = "0";
-          this.querySelector(arrowClass).classList.remove("flipped");
-        } else {
-          const allLists = document.querySelectorAll(menuClass);
-          allLists.forEach((el) => {
-            el.style.opacity = "0";
-            el.style.maxHeight = "0";
-          });
+    if (fromTitleElement) {
+        languageFrom = fromTitleElement.textContent;
+    }
 
-          const allArrows = document.querySelectorAll(arrowClass);
-          allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+    if (toTitleElement) {
+        languageTo = toTitleElement.textContent;
+    }
 
-          list.style.opacity = "1";
-          list.style.maxHeight = "max-content";
-          this.querySelector(arrowClass).classList.add("flipped");
-        }
-      });
-    });
+    // 2. Функция для управления поведением выпадающего списка
+    function dropdownFunctionality(toggleClass, arrowClass, menuClass, itemClass, titleClass) {
+        const toggles = document.querySelectorAll(toggleClass);
 
-    document.addEventListener("click", function (event) {
-      const isClickInside =
-        event.target.closest(toggleClass) || event.target.closest(menuClass);
+        toggles.forEach((toggle) => {
+            toggle.addEventListener("click", function () {
+                const list = this.nextElementSibling;
+                if (parseFloat(getComputedStyle(list).opacity) === 1) {
+                    list.style.opacity = "0";
+                    list.style.maxHeight = "0";
+                    this.querySelector(arrowClass).classList.remove("flipped");
+                } else {
+                    const allLists = document.querySelectorAll(menuClass);
+                    allLists.forEach((el) => {
+                        el.style.opacity = "0";
+                        el.style.maxHeight = "0";
+                    });
 
-      if (!isClickInside) {
-        const allLists = document.querySelectorAll(menuClass);
-        allLists.forEach((el) => {
-          el.style.opacity = "0";
-          el.style.maxHeight = "0";
+                    const allArrows = document.querySelectorAll(arrowClass);
+                    allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+
+                    list.style.opacity = "1";
+                    list.style.maxHeight = "max-content";
+                    this.querySelector(arrowClass).classList.add("flipped");
+                }
+            });
         });
 
-        const allArrows = document.querySelectorAll(arrowClass);
-        allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
-      }
-    });
+        document.addEventListener("click", function (event) {
+            const isClickInside = event.target.closest(toggleClass) || event.target.closest(menuClass);
 
-    const listItems = document.querySelectorAll(itemClass);
-    listItems.forEach((item) => {
-      item.addEventListener("click", function () {
-        const titleElement =
-          this.closest(toggleClass).querySelector(arrowClass);
-        const oldTitle = titleElement.textContent;
-        titleElement.textContent = this.textContent;
-        this.textContent = oldTitle;
-        this.closest(menuClass).style.opacity = "0";
-        this.closest(menuClass).style.maxHeight = "0";
-        this.closest(toggleClass)
-          .querySelector(arrowClass)
-          .classList.remove("flipped");
-      });
-    });
-  }
+            if (!isClickInside) {
+                const allLists = document.querySelectorAll(menuClass);
+                allLists.forEach((el) => {
+                    el.style.opacity = "0";
+                    el.style.maxHeight = "0";
+                });
 
-  dropdownFunctionality(
-    ".dropdown-toggle_mobile",
-    ".lang-box__arrow_mobile, .style__info_mobile",
-    ".dropdown-menu_mobile",
-    ".lang-box__item_mobile, .style__item_mobile"
-  );
+                const allArrows = document.querySelectorAll(arrowClass);
+                allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+            }
+        });
 
-  dropdownFunctionality(
-    ".dropdown-toggle",
-    ".lang-box__arrow, .style__info",
-    ".dropdown-menu",
-    ".lang-box__item, .style__item"
-  );
+        const listItems = document.querySelectorAll(itemClass);
+        listItems.forEach((item) => {
+            item.addEventListener("click", function () {
+                const parentMenu = this.closest(menuClass);
+                const parentToggle = parentMenu ? parentMenu.previousElementSibling : null;
+
+                if (parentToggle) {
+                    const titleElement = parentToggle.querySelector(titleClass);
+                    if (titleElement) {
+                        const oldTitle = titleElement.textContent;
+                        titleElement.textContent = this.textContent;
+                        this.textContent = oldTitle;
+
+                        if (parentToggle.classList.contains('language_from')) {
+                            languageFrom = titleElement.textContent;
+                        } else if (parentToggle.classList.contains('language_to')) {
+                            languageTo = titleElement.textContent;
+                        }
+                    }
+
+                    this.closest(menuClass).style.opacity = "0";
+                    this.closest(menuClass).style.maxHeight = "0";
+                    const arrowElement = parentToggle.querySelector(arrowClass);
+                    if (!arrowElement) {
+                        // Только здесь оставлю ошибку, т.к. это может быть важным
+                        console.error('Arrow element not found for', parentToggle);
+                    } else {
+                        arrowElement.classList.remove("flipped");
+                    }
+                }
+            });
+        });
+    }
+
+    dropdownFunctionality(
+        ".dropdown-toggle",
+        ".style__info, .lang-box__arrow",
+        ".dropdown-menu",
+        ".style__item, .lang-box__item",
+        ".style__title, .lang-box__title"
+    );
+
+    dropdownFunctionality(
+        ".dropdown-toggle_mobile",
+        ".style__info_mobile, .lang-box__arrow_mobile",
+        ".dropdown-menu_mobile",
+        ".style__item_mobile, .lang-box__item_mobile",
+        ".style__title_mobile, .lang-box__title_mobile"
+    );
 });
+
+
 
 // document.addEventListener("DOMContentLoaded", function () {
 //   const toggles = document.querySelectorAll(".dropdown-toggle");
