@@ -1,61 +1,60 @@
 let translationEntity; // Глобальная переменная для хранения Id
-let languageFrom = ''; // Глобальная переменная для исходного языка
-let languageTo = '';   // Глобальная переменная для целевого языка
-window.onload = function() {
-    fetch('http://localhost:3000/api/translation')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Ошибка запроса");
-            }
-            return response.json();
-        })
-        .then(data => {
-            translationEntity = data;
-            console.log("Полученный Id:", translationEntity);
-        })
-        .catch(error => {
-            console.error("Произошла ошибка:", error);
-        });
+let languageFrom = ""; // Глобальная переменная для исходного языка
+let languageTo = ""; // Глобальная переменная для целевого языка
+let TranslationStyle = "";
+
+window.onload = function () {
+  fetch("http://localhost:3000/api/translation")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Ошибка запроса");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      translationEntity = data;
+      console.log("Полученный Id:", translationEntity);
+    })
+    .catch((error) => {
+      console.error("Произошла ошибка:", error);
+    });
 };
-document.addEventListener("DOMContentLoaded", function(){
+document.addEventListener("DOMContentLoaded", function () {
+  window.sendText = function () {
+    // Собираем информацию из полей
+    const defaultId = "defaultId";
+    const translationText = document.querySelector(".source_text").value;
 
-  window.sendText = function() {
-  // Собираем информацию из полей
-  const defaultId = "defaultId";
-  const translationText = document.querySelector('.source_text').value;
-
-  const context = document.querySelector('.context_text').value;
-  const textData = {
-    id:defaultId,
+    const context = document.querySelector(".context_text").value;
+    const textData = {
+      id: defaultId,
       BaseText: translationText,
       LanguageFrom: languageFrom,
       LanguageTo: languageTo,
-      Context:context
-  };
-  // console.log("translationText:", translationText);
-  // console.log("languageFrom:", languageFrom);
-  // console.log("languageTo:", languageTo);
-  // console.log("context:", context);
-  fetch('http://localhost:3000/api/translation', {
-      method: 'POST',
+      Context: context,
+      TranslationStyle: TranslationStyle,
+    };
+
+    fetch("http://localhost:3000/api/translation", {
+      method: "POST",
       headers: {
-          'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(textData)
-  })
-  .then(response => {
-      if (!response.ok) {
+      body: JSON.stringify(textData),
+    })
+      .then((response) => {
+        if (!response.ok) {
           throw new Error("Ошибка запроса: " + response.statusText);
-      }
-      return response.json();
-  })
-  .then(data => {
-      console.log("Ответ сервера:", data);
-  })
-  .catch(error => {
-      console.error("Произошла ошибка:", error);
-  });
-}
+        }
+        return response.json();
+      })
+      .then((data) => {
+        console.log("Ответ сервера:", data);
+      })
+      .catch((error) => {
+        console.error("Произошла ошибка:", error);
+      });
+  };
 });
 
 const textareas = document.querySelectorAll("textarea");
@@ -164,184 +163,120 @@ document.addEventListener("DOMContentLoaded", function () {
 3. Обработка выпадающего меню (dropdown).
 */
 
-document.addEventListener("DOMContentLoaded", function() {
-    // 1. Инициализация languageFrom и languageTo на основе текущих значений заголовков
-    const fromTitleElement = document.querySelector('.language_from .lang-box__title');
-    const toTitleElement = document.querySelector('.language_to .lang-box__title');
+document.addEventListener("DOMContentLoaded", function () {
+  let languageFrom, languageTo;
 
-    if (fromTitleElement) {
-        languageFrom = fromTitleElement.textContent;
-    }
+  // 1. Инициализация languageFrom и languageTo на основе текущих значений заголовков
+  const fromTitleElement = document.querySelector(
+    ".language_from .lang-box__title"
+  );
+  const toTitleElement = document.querySelector(
+    ".language_to .lang-box__title"
+  );
 
-    if (toTitleElement) {
-        languageTo = toTitleElement.textContent;
-    }
+  if (fromTitleElement) {
+    languageFrom = fromTitleElement.textContent;
+  }
 
-    // 2. Функция для управления поведением выпадающего списка
-    function dropdownFunctionality(toggleClass, arrowClass, menuClass, itemClass, titleClass) {
-        const toggles = document.querySelectorAll(toggleClass);
+  if (toTitleElement) {
+    languageTo = toTitleElement.textContent;
+  }
 
-        toggles.forEach((toggle) => {
-            toggle.addEventListener("click", function () {
-                const list = this.nextElementSibling;
-                if (parseFloat(getComputedStyle(list).opacity) === 1) {
-                    list.style.opacity = "0";
-                    list.style.maxHeight = "0";
-                    this.querySelector(arrowClass).classList.remove("flipped");
-                } else {
-                    const allLists = document.querySelectorAll(menuClass);
-                    allLists.forEach((el) => {
-                        el.style.opacity = "0";
-                        el.style.maxHeight = "0";
-                    });
+  // 2. Функция для управления поведением выпадающего списка
+  function dropdownFunctionality(
+    toggleClass,
+    arrowClass,
+    menuClass,
+    itemClass,
+    titleClass
+  ) {
+    const toggles = document.querySelectorAll(toggleClass);
 
-                    const allArrows = document.querySelectorAll(arrowClass);
-                    allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+    toggles.forEach((toggle) => {
+      toggle.addEventListener("click", function () {
+        const list = this.nextElementSibling;
+        const arrowElement = this.querySelector(arrowClass);
+        if (arrowElement) {
+          arrowElement.classList.toggle("flipped");
+        }
 
-                    list.style.opacity = "1";
-                    list.style.maxHeight = "max-content";
-                    this.querySelector(arrowClass).classList.add("flipped");
-                }
-            });
+        if (parseFloat(getComputedStyle(list).opacity) === 1) {
+          list.style.opacity = "0";
+          list.style.maxHeight = "0";
+        } else {
+          list.style.opacity = "1";
+          list.style.maxHeight = "max-content";
+        }
+      });
+    });
+
+    // Закрытие dropdown при клике вне его области
+    document.addEventListener("click", function (event) {
+      const isClickInside =
+        event.target.closest(toggleClass) || event.target.closest(menuClass);
+      if (!isClickInside) {
+        const allLists = document.querySelectorAll(menuClass);
+        allLists.forEach((el) => {
+          el.style.opacity = "0";
+          el.style.maxHeight = "0";
         });
 
-        document.addEventListener("click", function (event) {
-            const isClickInside = event.target.closest(toggleClass) || event.target.closest(menuClass);
+        const allArrows = document.querySelectorAll(arrowClass);
+        allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+      }
+    });
 
-            if (!isClickInside) {
-                const allLists = document.querySelectorAll(menuClass);
-                allLists.forEach((el) => {
-                    el.style.opacity = "0";
-                    el.style.maxHeight = "0";
-                });
+    // Обновление заголовка dropdown и переменных languageFrom и languageTo
+    const listItems = document.querySelectorAll(itemClass);
+    listItems.forEach((item) => {
+      item.addEventListener("click", function () {
+        const parentMenu = this.closest(menuClass);
+        const parentToggle = parentMenu
+          ? parentMenu.previousElementSibling
+          : null;
 
-                const allArrows = document.querySelectorAll(arrowClass);
-                allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
+        if (parentToggle) {
+          const titleElement = parentToggle.querySelector(titleClass);
+          if (titleElement) {
+            const oldTitle = titleElement.textContent;
+            titleElement.textContent = this.textContent;
+            this.textContent = oldTitle;
+
+            if (parentToggle.classList.contains("language_from")) {
+              languageFrom = titleElement.textContent;
+            } else if (parentToggle.classList.contains("language_to")) {
+              languageTo = titleElement.textContent;
             }
-        });
+          }
 
-        const listItems = document.querySelectorAll(itemClass);
-        listItems.forEach((item) => {
-            item.addEventListener("click", function () {
-                const parentMenu = this.closest(menuClass);
-                const parentToggle = parentMenu ? parentMenu.previousElementSibling : null;
+          this.closest(menuClass).style.opacity = "0";
+          this.closest(menuClass).style.maxHeight = "0";
+          const arrowElement = parentToggle.querySelector(arrowClass);
+          if (arrowElement) {
+            arrowElement.classList.remove("flipped");
+          }
+        }
+      });
+    });
+  }
 
-                if (parentToggle) {
-                    const titleElement = parentToggle.querySelector(titleClass);
-                    if (titleElement) {
-                        const oldTitle = titleElement.textContent;
-                        titleElement.textContent = this.textContent;
-                        this.textContent = oldTitle;
+  // Вызов функции dropdownFunctionality с нужными селекторами
+  dropdownFunctionality(
+    ".dropdown-toggle",
+    ".style__info, .lang-box__arrow",
+    ".dropdown-menu",
+    ".style__item, .lang-box__item",
+    ".style__title, .lang-box__title"
+  );
 
-                        if (parentToggle.classList.contains('language_from')) {
-                            languageFrom = titleElement.textContent;
-                        } else if (parentToggle.classList.contains('language_to')) {
-                            languageTo = titleElement.textContent;
-                        }
-                    }
-
-                    this.closest(menuClass).style.opacity = "0";
-                    this.closest(menuClass).style.maxHeight = "0";
-                    const arrowElement = parentToggle.querySelector(arrowClass);
-                    if (!arrowElement) {
-                        // Только здесь оставлю ошибку, т.к. это может быть важным
-                        console.error('Arrow element not found for', parentToggle);
-                    } else {
-                        arrowElement.classList.remove("flipped");
-                    }
-                }
-            });
-        });
-    }
-
-    dropdownFunctionality(
-        ".dropdown-toggle",
-        ".style__info, .lang-box__arrow",
-        ".dropdown-menu",
-        ".style__item, .lang-box__item",
-        ".style__title, .lang-box__title"
-    );
-
-    dropdownFunctionality(
-        ".dropdown-toggle_mobile",
-        ".style__info_mobile, .lang-box__arrow_mobile",
-        ".dropdown-menu_mobile",
-        ".style__item_mobile, .lang-box__item_mobile",
-        ".style__title_mobile, .lang-box__title_mobile"
-    );
+  dropdownFunctionality(
+    ".dropdown-toggle_mobile",
+    ".style__info_mobile, .lang-box__arrow_mobile",
+    ".dropdown-menu_mobile",
+    ".style__item_mobile, .lang-box__item_mobile",
+    ".style__title_mobile, .lang-box__title_mobile"
+  );
 });
-
-
-
-// document.addEventListener("DOMContentLoaded", function () {
-//   const toggles = document.querySelectorAll(".dropdown-toggle");
-//   toggles.forEach((toggle) => {
-//     toggle.addEventListener("click", function () {
-//       const list = this.nextElementSibling;
-
-//       if (parseFloat(getComputedStyle(list).opacity) === 1) {
-//         list.style.opacity = "0";
-//         list.style.maxHeight = "0";
-//         this.querySelector(".lang-box__arrow, .style__info").classList.remove(
-//           "flipped"
-//         );
-//       } else {
-//         const allLists = document.querySelectorAll(".dropdown-menu");
-//         allLists.forEach((el) => {
-//           el.style.opacity = "0";
-//           el.style.maxHeight = "0";
-//         });
-
-//         const allArrows = document.querySelectorAll(
-//           ".lang-box__arrow, .style__info"
-//         );
-//         allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
-
-//         list.style.opacity = "1";
-//         list.style.maxHeight = "max-content";
-//         this.querySelector(".lang-box__arrow, .style__info").classList.add(
-//           "flipped"
-//         );
-//       }
-//     });
-//   });
-
-//   document.addEventListener("click", function (event) {
-//     const isClickInside =
-//       event.target.closest(".dropdown-toggle") ||
-//       event.target.closest(".dropdown-menu");
-
-//     if (!isClickInside) {
-//       const allLists = document.querySelectorAll(".dropdown-menu");
-//       allLists.forEach((el) => {
-//         el.style.opacity = "0";
-//         el.style.maxHeight = "0";
-//       });
-
-//       const allArrows = document.querySelectorAll(
-//         ".lang-box__arrow, .style__info"
-//       );
-//       allArrows.forEach((arrow) => arrow.classList.remove("flipped"));
-//     }
-//   });
-
-//   const listItems = document.querySelectorAll(".lang-box__item, .style__item");
-//   listItems.forEach((item) => {
-//     item.addEventListener("click", function () {
-//       const titleElement = this.closest(".lang-box, .style").querySelector(
-//         ".lang-box__title, .style__title"
-//       );
-//       const oldTitle = titleElement.textContent;
-//       titleElement.textContent = this.textContent;
-//       this.textContent = oldTitle;
-//       this.closest(" .dropdown-menu").style.opacity = "0";
-//       this.closest(" .dropdown-menu").style.maxHeight = "0";
-//       this.closest(".lang-box, .style")
-//         .querySelector(".lang-box__arrow, .style__info")
-//         .classList.remove("flipped");
-//     });
-//   });
-// });
 
 /* 
 4. Обработка кнопок копирования текста.
@@ -425,9 +360,54 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-/* 
-6. Обработка закрытия всплывающего окна.
-*/
+document.addEventListener("DOMContentLoaded", function () {
+  const customButton = document.querySelector(
+    ".context__button--custom_mobile"
+  );
+  const inputWrapper = document.querySelector(".context__input-wrapper_mobile");
+
+  customButton.addEventListener("click", function () {
+    // Переключение класса "active_mobile" для появления или скрытия inputWrapper
+    inputWrapper.classList.toggle("active_mobile");
+    this.classList.toggle("active_mobile");
+  });
+});
+// настройки
+document.addEventListener("DOMContentLoaded", function () {
+  const titleBox = document.querySelector(".setting__title-box_mobile");
+  const content = document.querySelector(".setting__content_mobile");
+  const arrow = document.querySelector(".settings__title-button_mobile");
+  const translateButton = document.querySelector(".source__button_mobile");
+  const target = document.querySelector(".target_mobile");
+
+  if (titleBox && content && arrow) {
+    titleBox.addEventListener("click", function () {
+      content.classList.toggle("active_mobile");
+      arrow.classList.toggle("rotated_mobile");
+    });
+  }
+
+  if (translateButton && target) {
+    translateButton.addEventListener("click", function () {
+      target.classList.add("active_mobile");
+    });
+  }
+});
+
+function openPopup(data) {
+  // Заполнение текстовой области данными, если это необходимо
+  const question = data.Contexts[0].Question;
+
+  // Заполнение текстовой области данными
+  document.querySelector(".popup__correction").value = question;
+  document.querySelector(".context__correction_mobile").value = question;
+  // Отображение поп-ап окна
+  document.querySelector(".popup").classList.add("popup_active");
+  document
+    .querySelector(".context_mobile")
+    .classList.add("context_mobile_active");
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   document.body.classList.remove("noscroll");
 
@@ -468,63 +448,29 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-  let textarea = document.querySelector(".context__correction_mobile");
-
-  if (textarea) {
-    adjustTextareaHeight(textarea);
-    textarea.addEventListener("input", function () {
-      adjustTextareaHeight(this);
+function fetchData() {
+  fetch("http://localhost:3000/api/translation", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      // ваш запрос
+    }),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data); // выводим полученные данные в консоль для отладки
+      if (
+        data.State === "WaitingForContext" &&
+        data.Contexts[0].Response === null
+      ) {
+        openPopup(data); // открытие поп-ап окна, если состояние WaitingForContext
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
     });
-  }
-});
-// mobile
-document.addEventListener("DOMContentLoaded", function () {
-  let textarea = document.querySelector(".context__correction_mobile");
-
-  if (textarea) {
-    adjustTextareaHeight(textarea);
-    textarea.addEventListener("input", function () {
-      adjustTextareaHeight(this);
-    });
-  }
-});
-
-function adjustTextareaHeight(textarea) {
-  textarea.style.height = "auto";
-  textarea.style.height = textarea.scrollHeight + "px";
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  const customButton = document.querySelector(
-    ".context__button--custom_mobile"
-  );
-  const inputWrapper = document.querySelector(".context__input-wrapper_mobile");
-
-  customButton.addEventListener("click", function () {
-    // Переключение класса "active_mobile" для появления или скрытия inputWrapper
-    inputWrapper.classList.toggle("active_mobile");
-    this.classList.toggle("active_mobile");
-  });
-});
-// настройки
-document.addEventListener("DOMContentLoaded", function () {
-  const titleBox = document.querySelector(".setting__title-box_mobile");
-  const content = document.querySelector(".setting__content_mobile");
-  const arrow = document.querySelector(".settings__title-button_mobile");
-  const translateButton = document.querySelector(".source__button_mobile");
-  const target = document.querySelector(".target_mobile");
-
-  if (titleBox && content && arrow) {
-    titleBox.addEventListener("click", function () {
-      content.classList.toggle("active_mobile");
-      arrow.classList.toggle("rotated_mobile");
-    });
-  }
-
-  if (translateButton && target) {
-    translateButton.addEventListener("click", function () {
-      target.classList.add("active_mobile");
-    });
-  }
-});
+fetchData();

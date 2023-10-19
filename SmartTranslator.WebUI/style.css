@@ -457,7 +457,7 @@ ul {
   font-size: 24px;
   margin-bottom: 40px;
   background-color: inherit;
-  text-align: start;
+  text-align: center;
   overflow: visible;
   min-height: auto;
 }
@@ -866,9 +866,11 @@ ul {
 }
 .context_mobile {
   margin-top: 18px;
-  display: flex;
   flex-direction: column;
-  /* display: none; */
+  display: none;
+}
+.context_mobile_active {
+  display: flex;
 }
 .context__title-box_mobile {
   display: flex;
