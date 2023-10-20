@@ -446,6 +446,10 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   });
+
+  // Добавление обработчиков событий для кнопок, чтобы вызывать fetchData при клике
+  document.querySelector(".translator-box__button").addEventListener("click", fetchData);
+  document.querySelector(".source__button_mobile").addEventListener("click", fetchData);
 });
 
 function fetchData() {
@@ -473,4 +477,3 @@ function fetchData() {
     });
 }
 
-fetchData();
