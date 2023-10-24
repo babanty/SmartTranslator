@@ -1,9 +1,10 @@
 let translationEntity;
 let languageFrom = "";
 let languageTo = "";
-let TranslationStyle = "";
-let BaseTextGlobal;
-let TranslationGlobal;
+let translationStyle = "";
+let baseTextGlobal;
+let translationGlobal;
+let contextField;
 
 const styleMapping = {
   OfficialStyle: "style_official",
@@ -25,35 +26,26 @@ window.onload = function () {
       return response.json();
     })
     .then((data) => {
-      BaseTextGlobal = data.BaseText;
-      TranslationGlobal = data.Translation;
+      baseTextGlobal = data.BaseText;
+      translationGlobal = data.Translation;
       languageFrom = data.LanguageFrom;
       languageTo = data.LanguageTo;
-      TranslationStyle = data.TranslationStyle;
+      translationStyle = data.TranslationStyle;
+      contextField = data.Context;
 
 
       const sourceTextFields = document.querySelectorAll(".source_text");
 
       sourceTextFields.forEach((field) => {
-        field.value = BaseTextGlobal;
+        field.value = baseTextGlobal;
       });
 
-      const questions = document.querySelectorAll(".correction_question");
-      const responses = document.querySelectorAll(".correction_response");
+      const contextFields = document.querySelectorAll(".context_text");
 
-      questions.forEach((questionElement, index) => {
-        const questionData = data.Contexts[index]?.Question;
-        if (questionData) {
-          questionElement.innerText = questionData;
-        }
+      contextFields.forEach((field) => {
+        field.value = contextField;
       });
 
-      responses.forEach((responseElement, index) => {
-        const responseData = data.Contexts[index]?.Response;
-        if (responseData) {
-          responseElement.innerText = responseData;
-        }
-      });
       // Обновление языка
       const languageFromElement = document.querySelector(
         `.${langMapping[data.LanguageFrom]}`
@@ -76,7 +68,7 @@ window.onload = function () {
       }
 
       // Обновление стиля перевода
-      const styleClass = styleMapping[TranslationStyle];
+      const styleClass = styleMapping[translationStyle];
       const selectedStyleElement = document.querySelector(`.${styleClass}`);
       if (selectedStyleElement) {
         document.querySelector(".style__title").innerText =
@@ -103,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
       LanguageFrom: languageFrom,
       LanguageTo: languageTo,
       Context: context,
-      TranslationStyle: TranslationStyle,
+      TranslationStyle: translationStyle,
     };
 
     fetch("http://localhost:3000/api/translation", {
@@ -119,12 +111,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         return response.json();
       })
-      .then((data) => {
-        console.log("Ответ сервера:", data);
-      })
-      .catch((error) => {
-        console.error("Произошла ошибка:", error);
-      });
   };
 });
 
@@ -520,7 +506,7 @@ document.addEventListener("DOMContentLoaded", function () {
       button.addEventListener("click", () => {
         const targetTextFields = document.querySelectorAll(".target_text");
         targetTextFields.forEach((field) => {
-          field.value = TranslationGlobal;
+          field.value = translationGlobal;
         });
 
         closePopupFunction(document.querySelector(".popup"));
@@ -557,6 +543,7 @@ function fetchData() {
         data.Contexts[0].Response === null
       ) {
         openPopup(data); 
+        
       }
     })
     .catch((error) => {

@@ -16,13 +16,7 @@ app.get("/api/translation", (req, res) => {
     LanguageFrom: "EnglishLang",
     LanguageTo: "RussianLang",
     TranslationStyle: "ConversationalStyle",
-    Contexts: [
-      {
-        Id: 1,
-        Question: "Sample question?",
-        Response: "Sample response",
-      },
-    ],
+    Context: "Sample text",
     State: "finished",
   };
 
