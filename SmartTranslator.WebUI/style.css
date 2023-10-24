@@ -127,7 +127,7 @@ ul {
   width: 100%;
   background-color: #26323e;
   box-sizing: border-box;
-  padding: 20px 20px 20px 40px;
+  padding: 20px 20px 20px 30px;
   border-top-right-radius: 13px;
 }
 .translator-box__text {
@@ -201,7 +201,9 @@ ul {
   margin-top: 7px;
   transition: all 0.3s ease-in-out;
 }
-
+.lang-box--target {
+  display: none;
+}
 .lang-box__item:hover {
   text-decoration: underline;
 }
@@ -1083,7 +1085,9 @@ ul {
   opacity: 1;
   max-height: 200px; /* предположительное максимальное значение; его можно настроить */
 }
-
+.lang-box--target_mobile {
+  display: none;
+}
 .lang-box__button_mobile {
   align-self: start;
   cursor: pointer;
@@ -1154,7 +1158,7 @@ ul {
   transition: opacity 0.3s ease;
 }
 
-.popup_active_mobile {
+.popup_mobile_active {
   opacity: 1;
   visibility: visible;
 }
@@ -1246,7 +1250,8 @@ ul {
   .header__title_mobile {
     padding: 20px 0;
   }
-  .source_mobile {
+  .source_mobile,
+  .target_mobile {
     margin: 0 20px;
   }
   .context_mobile {

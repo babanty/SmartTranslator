@@ -13,8 +13,8 @@ app.get("/api/translation", (req, res) => {
     Id: id,
     BaseText: "Sample base text",
     Translation: "Переведено",
-    LanguageFrom: "English",
-    LanguageTo: "Russian",
+    LanguageFrom: "EnglishLang",
+    LanguageTo: "RussianLang",
     TranslationStyle: "ConversationalStyle",
     Contexts: [
       {
@@ -58,8 +58,7 @@ app.post("/api/translation", (req, res) => {
     Contexts: [
       {
         Id: 1,
-        Question:
-          "вопрос про контекст",
+        Question: "вопрос про контекст",
         Response: null,
       },
     ],

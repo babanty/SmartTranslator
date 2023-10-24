@@ -1,8 +1,21 @@
-let translationEntity; // Глобальная переменная для хранения Id
-let languageFrom = ""; // Глобальная переменная для исходного языка
-let languageTo = ""; // Глобальная переменная для целевого языка
+let translationEntity;
+let languageFrom = "";
+let languageTo = "";
 let TranslationStyle = "";
+let BaseTextGlobal;
+let TranslationGlobal;
 
+const styleMapping = {
+  OfficialStyle: "style_official",
+  ConversationalStyle: "style_conversation",
+  ScientificStyle: "style_science",
+};
+
+const langMapping = {
+  EnglishLang: "lang_en",
+  RussianLang: "lang_ru",
+  DetectLang: "detect_lang",
+};
 window.onload = function () {
   fetch("http://localhost:3000/api/translation")
     .then((response) => {
@@ -12,13 +25,71 @@ window.onload = function () {
       return response.json();
     })
     .then((data) => {
-      translationEntity = data;
-      console.log("Полученный Id:", translationEntity);
+      BaseTextGlobal = data.BaseText;
+      TranslationGlobal = data.Translation;
+      languageFrom = data.LanguageFrom;
+      languageTo = data.LanguageTo;
+      TranslationStyle = data.TranslationStyle;
+
+
+      const sourceTextFields = document.querySelectorAll(".source_text");
+
+      sourceTextFields.forEach((field) => {
+        field.value = BaseTextGlobal;
+      });
+
+      const questions = document.querySelectorAll(".correction_question");
+      const responses = document.querySelectorAll(".correction_response");
+
+      questions.forEach((questionElement, index) => {
+        const questionData = data.Contexts[index]?.Question;
+        if (questionData) {
+          questionElement.innerText = questionData;
+        }
+      });
+
+      responses.forEach((responseElement, index) => {
+        const responseData = data.Contexts[index]?.Response;
+        if (responseData) {
+          responseElement.innerText = responseData;
+        }
+      });
+      // Обновление языка
+      const languageFromElement = document.querySelector(
+        `.${langMapping[data.LanguageFrom]}`
+      );
+      const languageToElement = document.querySelector(
+        `.${langMapping[data.LanguageTo]}`
+      );
+
+      if (languageFromElement && languageToElement) {
+        const languageFromBoxes = document.querySelectorAll(".language_from");
+        const languageToBoxes = document.querySelectorAll(".language_to");
+
+        languageFromBoxes.forEach((box) => {
+          box.innerText = languageFromElement.textContent;
+        });
+
+        languageToBoxes.forEach((box) => {
+          box.innerText = languageToElement.textContent;
+        });
+      }
+
+      // Обновление стиля перевода
+      const styleClass = styleMapping[TranslationStyle];
+      const selectedStyleElement = document.querySelector(`.${styleClass}`);
+      if (selectedStyleElement) {
+        document.querySelector(".style__title").innerText =
+          selectedStyleElement.textContent;
+        document.querySelector(".style__title_mobile").innerText =
+          selectedStyleElement.textContent;
+      }
     })
     .catch((error) => {
       console.error("Произошла ошибка:", error);
     });
 };
+
 document.addEventListener("DOMContentLoaded", function () {
   window.sendText = function () {
     // Собираем информацию из полей
@@ -282,7 +353,6 @@ document.addEventListener("DOMContentLoaded", function () {
 4. Обработка кнопок копирования текста.
 */
 document.addEventListener("DOMContentLoaded", function () {
-  // Обновим селекторы для кнопок копирования на обоих версиях
   const copyButtons = document.querySelectorAll(
     ".source__copy, .target__copy, .source__copy_mobile, .target__copy_mobile"
   );
@@ -401,7 +471,7 @@ function openPopup(data) {
   // Заполнение текстовой области данными
   document.querySelector(".popup__correction").value = question;
   document.querySelector(".context__correction_mobile").value = question;
-  // Отображение поп-ап окна
+
   document.querySelector(".popup").classList.add("popup_active");
   document
     .querySelector(".context_mobile")
@@ -419,37 +489,55 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let closeMobilePopupFunction = function (popupElement) {
     if (popupElement) {
-      popupElement.classList.remove("popup_active_mobile");
+      popupElement.classList.remove("popup_mobile_active");
     }
   };
+
+  document.querySelector(".button-yes_mobile").addEventListener("click", () => {
+    closeMobilePopupFunction(document.querySelector(".popup_mobile"));
+
+    window.onload();
+  });
+
+  document.querySelector(".button-no_mobile").addEventListener("click", () => {
+    closeMobilePopupFunction(document.querySelector(".popup_mobile"));
+  });
 
   let buttons = [
     ".popup__button--yes",
     ".popup__button--no",
     ".popup__button--unsure",
     ".popup__icon-button",
-    ".button-yes_mobile",
-    ".button-no_mobile",
+    ".context__button--yes_mobile",
+    ".context__button--no_mobile",
+    ".context__button--unsure_mobile",
+    ".context__icon-button_mobile",
   ];
 
   buttons.forEach((selector) => {
     let button = document.querySelector(selector);
     if (button) {
-      if (selector.includes("_mobile")) {
-        button.addEventListener("click", () =>
-          closeMobilePopupFunction(document.querySelector(".popup_mobile"))
-        );
-      } else {
-        button.addEventListener("click", () =>
-          closePopupFunction(document.querySelector(".popup"))
-        );
-      }
+      button.addEventListener("click", () => {
+        const targetTextFields = document.querySelectorAll(".target_text");
+        targetTextFields.forEach((field) => {
+          field.value = TranslationGlobal;
+        });
+
+        closePopupFunction(document.querySelector(".popup"));
+        document
+          .querySelector(".context_mobile")
+          .classList.remove("context_mobile_active");
+      });
     }
   });
 
   // Добавление обработчиков событий для кнопок, чтобы вызывать fetchData при клике
-  document.querySelector(".translator-box__button").addEventListener("click", fetchData);
-  document.querySelector(".source__button_mobile").addEventListener("click", fetchData);
+  document
+    .querySelector(".translator-box__button")
+    .addEventListener("click", fetchData);
+  document
+    .querySelector(".source__button_mobile")
+    .addEventListener("click", fetchData);
 });
 
 function fetchData() {
@@ -464,16 +552,14 @@ function fetchData() {
   })
     .then((response) => response.json())
     .then((data) => {
-      console.log(data); // выводим полученные данные в консоль для отладки
       if (
         data.State === "WaitingForContext" &&
         data.Contexts[0].Response === null
       ) {
-        openPopup(data); // открытие поп-ап окна, если состояние WaitingForContext
+        openPopup(data); 
       }
     })
     .catch((error) => {
       console.error("Error:", error);
     });
 }
-

@@ -38,7 +38,10 @@
             </div>
             <div class="translator-box__divider"></div>
             <div class="target">
-              <textarea readonly class="translator-box__text"></textarea>
+              <textarea
+                readonly
+                class="translator-box__text target_text"
+              ></textarea>
               <img
                 src="./images/copy.svg"
                 alt="копировать текст"
@@ -47,8 +50,8 @@
             </div>
             <div class="translator-box__lang-box">
               <div class="lang-box lang-box--source">
-                <div class="lang-box__dropdown language_from dropdown-toggle">
-                  <p class="lang-box__title">Определить язык</p>
+                <div class="lang-box__dropdown dropdown-toggle">
+                  <p class="lang-box__title language_from"></p>
                   <img
                     src="./images/arrow.svg"
                     alt="Arrow icon"
@@ -56,24 +59,26 @@
                   />
                 </div>
                 <ul class="lang-box__list dropdown-menu">
-                  <li class="lang-box__item" data-lang="en">Английский</li>
-                  <li class="lang-box__item" data-lang="ru">Русский</li>
+                  <li class="lang-box__item detect_lang">Определить язык</li>
+                  <li class="lang-box__item lang_en">Английский</li>
+                  <li class="lang-box__item lang_ru">Русский</li>
                 </ul>
               </div>
 
               <div class="lang-box lang-box--target">
-                <div class="lang-box__dropdown language_to dropdown-toggle">
-                  <p class="lang-box__title">Определить язык</p>
+                <div class="lang-box__dropdown dropdown-toggle">
+                  <p class="lang-box__title language_to"></p>
                   <img
                     src="./images/arrow.svg"
                     alt="Arrow icon"
                     class="lang-box__arrow"
                   />
                 </div>
-                <!-- <ul class="lang-box__list dropdown-menu">
-                  <li class="lang-box__item" data-lang="en">Английский</li>
-                  <li class="lang-box__item" data-lang="ru">Русский</li>
-                </ul> -->
+                <ul class="lang-box__list dropdown-menu">
+                  <li class="lang-box__item detect_lang">Определить язык</li>
+                  <li class="lang-box__item lang_en">Английский</li>
+                  <li class="lang-box__item lang_ru">Русский</li>
+                </ul>
               </div>
             </div>
             <button class="translator-box__button" onclick="sendText()">
@@ -133,9 +138,9 @@
                 </h2>
               </div>
               <ul class="style__list dropdown-menu">
-                <li class="style__item">Официальный</li>
-                <li class="style__item">Повседневный</li>
-                <li class="style__item">Научный</li>
+                <li class="style__item style_official">Официальный</li>
+                <li class="style__item style_conversation">Повседневный</li>
+                <li class="style__item style_science">Научный</li>
               </ul>
             </div>
           </section>
@@ -161,7 +166,10 @@
               Давайте уточним контекст для наиболее качественного перевода
             </h2>
             <div class="popup__title-box">
-              <textarea readonly class="popup__correction"></textarea>
+              <textarea
+                readonly
+                class="popup__correction correction_question"
+              ></textarea>
             </div>
 
             <div class="popup__buttons">
@@ -203,7 +211,10 @@
 
             <div class="popup__input-section">
               <div class="popup__input-wrapper">
-                <textarea maxlength="200" class="popup__input"></textarea>
+                <textarea
+                  maxlength="200"
+                  class="popup__input correction_response"
+                ></textarea>
                 <div class="popup__controls">
                   <div class="popup__counter">
                     <span class="counterCurrent"></span>
@@ -232,7 +243,7 @@
               <textarea
                 maxlength="3000"
                 placeholder="Введите текст для перевода."
-                class="translator-box__text_mobile"
+                class="translator-box__text_mobile source_text"
               ></textarea>
               <div class="source__copyCounter_mobile">
                 <div class="source__counter_mobile">
@@ -255,7 +266,10 @@
             </div>
             <div class="target_mobile">
               <div class="translator-box__divider_mobile"></div>
-              <textarea readonly class="translator-box__text_mobile"></textarea>
+              <textarea
+                readonly
+                class="translator-box__text_mobile target_text"
+              ></textarea>
               <img
                 src="./images/copy.svg"
                 alt="копировать текст"
@@ -266,7 +280,10 @@
 
           <section class="context_mobile">
             <div class="context__title-box_mobile">
-              <textarea readonly class="context__correction_mobile"></textarea>
+              <textarea
+                readonly
+                class="context__correction_mobile correction_question"
+              ></textarea>
               <aside class="context__info_mobile">
                 <img
                   class="context__info-icon_mobile"
@@ -334,7 +351,7 @@
               <div class="context__input-wrapper_mobile">
                 <textarea
                   maxlength="200"
-                  class="context__input_mobile"
+                  class="context__input_mobile correction_response"
                 ></textarea>
                 <div class="context__controls_mobile">
                   <div class="context__counter_mobile">
@@ -368,21 +385,22 @@
             </div>
             <div class="setting__content_mobile">
               <div class="lang-box_mobile">
-                <div
-                  class="lang-box_mobile language_from lang-box--source_mobile"
-                >
+                <div class="lang-box_mobile lang-box--source_mobile">
                   <div class="lang-box__dropdown_mobile dropdown-toggle_mobile">
-                    <p class="lang-box__title_mobile">Определить язык</p>
+                    <p class="lang-box__title_mobile language_from"></p>
                     <img
                       src="./images/arrow.svg"
                       alt="Arrow icon"
                       class="lang-box__arrow_mobile"
                     />
                   </div>
-                  <!-- <ul class="lang-box__list_mobile dropdown-menu_mobile">
-                    <li class="lang-box__item_mobile" data-lang="en">Английский</li>
-                    <li class="lang-box__item_mobile" data-lang="ru">Русский</li>
-                  </ul> -->
+                  <ul class="lang-box__list_mobile dropdown-menu_mobile">
+                    <li class="lang-box__item_mobile detect_lang">
+                      Определить язык
+                    </li>
+                    <li class="lang-box__item_mobile lang_en">Английский</li>
+                    <li class="lang-box__item_mobile lang_ru">Русский</li>
+                  </ul>
                 </div>
 
                 <button class="lang-box__button_mobile">
@@ -393,11 +411,9 @@
                   />
                 </button>
 
-                <div
-                  class="lang-box_mobile language_to lang-box--target_mobile"
-                >
+                <div class="lang-box_mobile lang-box--target_mobile">
                   <div class="lang-box__dropdown_mobile dropdown-toggle_mobile">
-                    <p class="lang-box__title_mobile">Определить язык</p>
+                    <p class="lang-box__title_mobile language_to"></p>
                     <img
                       src="./images/arrow.svg"
                       alt="Arrow icon"
@@ -405,8 +421,11 @@
                     />
                   </div>
                   <ul class="lang-box__list_mobile dropdown-menu_mobile">
-                    <li class="lang-box__item_mobile" data-lang="en">Английский</li>
-                    <li class="lang-box__item_mobile" data-lang="ru">Русский</li>
+                    <li class="lang-box__item_mobile detect_lang">
+                      Определить язык
+                    </li>
+                    <li class="lang-box__item_mobile lang_en">Английский</li>
+                    <li class="lang-box__item_mobile lang_ru">Русский</li>
                   </ul>
                 </div>
               </div>
@@ -424,8 +443,11 @@
                   </h2>
                 </div>
                 <ul class="style__list_mobile dropdown-menu_mobile">
-                  <li class="style__item_mobile">Официальный</li>
-                  <li class="style__item_mobile">Повседневный</li>
+                  <li class="style__item_mobile style_official">Официальный</li>
+                  <li class="style__item_mobile style_conversation">
+                    Повседневный
+                  </li>
+                  <li class="style__item_mobile style_science">Научный</li>
                 </ul>
               </div>
 
