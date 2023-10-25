@@ -6,6 +6,17 @@ let baseTextGlobal;
 let translationGlobal;
 let contextField;
 
+
+const translationState = Object.freeze({
+  unknown: 0,
+  created: 1,
+  waitingForLanguage: 2,
+  waitingForContext: 3,
+  waitingForStyle: 4,
+  waitingForTranslation: 5,
+  finished: 6
+});
+
 const styleMapping = {
   OfficialStyle: "style_official",
   ConversationalStyle: "style_conversation",
