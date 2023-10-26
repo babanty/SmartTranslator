@@ -93,7 +93,7 @@ ul {
   text-align: center;
   color: #f5f5f5;
   font-size: 32px;
-  margin: 55px 0;
+  margin: 55px 0 0 0;
 }
 
 .translator-box {
@@ -109,7 +109,35 @@ ul {
   background-color: #26323e;
   border-radius: 13px;
 }
-
+.title-box {
+  position: relative;
+}
+.new-translate {
+  border: 1px #adbfeb solid;
+  width: 250px;
+  height: 50px;
+  padding: 0 15px;
+  position: absolute;
+  right: -100px;
+  top: 47px;
+  border-radius: 13px;
+  color: #f5f5f5;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  justify-content: space-between;
+}
+.new-translate__text {
+  font-size: 24px;
+}
+.state {
+  text-align: center;
+  font-size: 17px;
+  color: #f5f5f5;
+  margin-top: 18px;
+  margin-bottom: 18px;
+}
 .source {
   grid-column: 1;
   display: flex;
@@ -589,7 +617,25 @@ ul {
   }
   .title {
     font-size: 24px;
-    margin: 35px 0;
+    margin: 35px 0 0 0;
+  }
+  .new-translate {
+    width: 180px;
+    height: 40px;
+    padding: auto;
+    top: 27px;
+    right: -80px;
+  }
+  .new-translate__img {
+    width: 20px;
+    height: 20px;
+  }
+  .state {
+    margin: 10px 0;
+    font-size: 14px;
+  }
+  .new-translate__text {
+    font-size: 16px;
   }
   .translator-box {
     width: 701px;
@@ -721,7 +767,25 @@ ul {
   }
   .title {
     font-size: 28px;
-    margin: 40px 0;
+    margin: 40px 0 0 0;
+  }
+  .new-translate {
+    width: 220px;
+    height: 45px;
+    padding: auto;
+    top: 32px;
+    right: -80px;
+  }
+  .new-translate__img {
+    width: 20px;
+    height: 20px;
+  }
+  .state {
+    margin: 18px 0;
+    font-size: 14px;
+  }
+  .new-translate__text {
+    font-size: 16px;
   }
   .translator-box {
     width: 1001px;
@@ -782,8 +846,22 @@ ul {
   text-align: center;
   padding: 15px 0;
 }
+.state_mobile {
+  text-align: center;
+  font-size: 14px;
+  color: #c4d0ee;
+  margin-bottom: 17px;
+}
+.translator-box__new-button_mobile {
+  position: absolute;
+  top: -35px;
+  right: 12px;
+}
 .source_mobile {
   margin: 0 12px;
+  position: relative;
+}
+.translator-box_mobile {
   position: relative;
 }
 .translator-box__text_mobile {
@@ -1220,6 +1298,9 @@ ul {
   }
   .source_mobile {
     margin: 0 20px;
+  }
+  .translator-box__new-button_mobile {
+    right: 20px;
   }
   .context_mobile {
     width: 80%;
