@@ -232,7 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
 */
 
 document.addEventListener("DOMContentLoaded", function () {
-  let languageFrom, languageTo;
 
   // 1. Инициализация languageFrom и languageTo на основе текущих значений заголовков
   const fromTitleElement = document.querySelector(
@@ -461,19 +460,23 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-function openPopup(data) {
-  // Заполнение текстовой области данными, если это необходимо
-  const question = data.Contexts[0].Question;
-
-  // Заполнение текстовой области данными
-  document.querySelector(".popup__correction").value = question;
-  document.querySelector(".context__correction_mobile").value = question;
-
+function openPopup(data = null) {
+  if (data) {
+      if (data.Contexts && data.Contexts.length > 0) {
+          const question = data.Contexts[0].Question;
+          if (question) {
+              document.querySelector(".popup__correction").value = question;
+              document.querySelector(".context__correction_mobile").value = question;
+          }
+      }
+  }
+  
   document.querySelector(".popup").classList.add("popup_active");
-  document
-    .querySelector(".context_mobile")
-    .classList.add("context_mobile_active");
+  document.querySelector(".context_mobile").classList.add("context_mobile_active");
+  document.querySelector(".popup_mobile").classList.add("popup_mobile_active");
 }
+
+
 
 document.addEventListener("DOMContentLoaded", function () {
   document.body.classList.remove("noscroll");
@@ -561,3 +564,20 @@ function fetchData() {
       console.error("Error:", error);
     });
 }
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  // Находим кнопку с классом 'new-translate' и добавляем обработчик события 'click'
+  let newTranslateButton = document.querySelector('.new-translate');
+  newTranslateButton.addEventListener('click', function() {
+      window.onload();
+  });
+
+  // Находим кнопку с классом 'translator-box__new-button_mobile' и добавляем обработчик события 'click'
+  let newButtonMobile = document.querySelector('.translator-box__new-button_mobile');
+  newButtonMobile.addEventListener('click', function() {
+      openPopup();
+  });
+});
+
+

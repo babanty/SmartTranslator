@@ -774,7 +774,7 @@ ul {
   .new-translate {
     width: 220px;
     height: 45px;
-    padding: auto;
+    padding: 15px;
     top: 32px;
     right: -80px;
   }
@@ -787,7 +787,7 @@ ul {
     font-size: 14px;
   }
   .new-translate__text {
-    font-size: 16px;
+    font-size: 20px;
   }
   .translator-box {
     width: 1001px;
