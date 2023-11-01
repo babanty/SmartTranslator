@@ -127,16 +127,48 @@ ul {
   align-items: center;
   gap: 10px;
   justify-content: space-between;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.new-translate_active {
+  opacity: 1;
 }
 .new-translate__text {
   font-size: 24px;
 }
-.state {
+.web-state {
   text-align: center;
   font-size: 17px;
   color: #f5f5f5;
   margin-top: 18px;
   margin-bottom: 18px;
+}
+
+.loading-dots::after {
+  content: "...";
+  display: inline-block;
+  font-size: 2em;
+  opacity: 0;
+  animation: loadingDots 1s steps(5, end) infinite;
+}
+
+@keyframes loadingDots {
+  0%, 20% {
+    content: ".";
+    opacity: 1;
+  }
+  40% {
+    content: "..";
+    opacity: 1;
+  }
+  60% {
+    content: "...";
+    opacity: 1;
+  }
+  80%, 100% {
+    opacity: 0;
+  }
 }
 .source {
   grid-column: 1;
@@ -280,7 +312,9 @@ ul {
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
+.translator-box__button:disabled {
+  background-color: #717982;
+}
 .settings {
   display: flex;
   margin: 25px 0 100px;
@@ -632,7 +666,7 @@ ul {
     width: 20px;
     height: 20px;
   }
-  .state {
+  .web-state {
     margin: 10px 0;
     font-size: 14px;
   }
@@ -782,7 +816,7 @@ ul {
     width: 20px;
     height: 20px;
   }
-  .state {
+  .web-state {
     margin: 18px 0;
     font-size: 14px;
   }
@@ -858,6 +892,12 @@ ul {
   position: absolute;
   top: -35px;
   right: 12px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.translator-box__new-button_mobile_active {
+  opacity: 1;
 }
 .source_mobile {
   margin: 0 12px;

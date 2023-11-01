@@ -61,7 +61,10 @@ app.post("/api/translation", (req, res) => {
   };
 
   console.log("Полученные данные:", req.body);
-  res.send(waitingContextEntityTestData); // отправьте нужный объект в зависимости от логики вашего приложения
+  
+  setTimeout(() => {
+    res.send(waitingContextEntityTestData);
+  }, 5000); 
 });
 
 app.listen(PORT, () => {
