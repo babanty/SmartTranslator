@@ -574,7 +574,6 @@ function fetchData() {
     targetTextElement.value = "";
   }
 
-  // Начать анимацию перед отправкой запроса
   startAnimation();
 
   fetch("http://localhost:3000/api/translation", {
@@ -586,7 +585,6 @@ function fetchData() {
   })
     .then((response) => response.json())
     .then((data) => {
-      // Остановить анимацию при получении ответа
       stopAnimation();
 
       if (
@@ -597,7 +595,6 @@ function fetchData() {
       }
     })
     .catch((error) => {
-      // Остановить анимацию, если возникла ошибка
       stopAnimation();
       console.error("Error:", error);
     });
@@ -637,7 +634,7 @@ function startAnimation() {
 
   textElements.forEach((element) => {
     const textLength = element.value.length;
-    const translationSpeed = 10; // Пример скорости перевода, измените по необходимости
+    const translationSpeed = 13; 
 
     showElement(".state");
     disableButton(".translator-box__button");
@@ -676,12 +673,11 @@ document.addEventListener("DOMContentLoaded", function () {
     window.onload();
   });
 
-  // Находим кнопку с классом 'translator-box__new-button_mobile' и добавляем обработчик события 'click'
+
   let newButtonMobile = document.querySelector(
     ".translator-box__new-button_mobile"
   );
   newButtonMobile.addEventListener("click", function () {
-    // Только делаем мобильный попап активным, не вызывая openPopup()
     document
       .querySelector(".popup_mobile")
       .classList.add("popup_mobile_active");
