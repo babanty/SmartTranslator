@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartTranslator.Infrastructure\SmartTranslator.Infrastructure.csproj" />
     <ProjectReference Include="..\SmartTranslator.TranslationCore.Abstractions\SmartTranslator.TranslationCore.Abstractions.csproj" />
     <ProjectReference Include="..\SmartTranslator.TranslationCore.Enums\SmartTranslator.TranslationCore.Enums.csproj" />
   </ItemGroup>
