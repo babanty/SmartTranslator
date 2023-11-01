@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using OpenAI.ObjectModels.RequestModels;
+using SmartTranslator.Infrastructure.Extensions;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Abstractions.Models;
@@ -74,7 +75,7 @@ where clarifyingQuestion is the field where you need to enter a clarifying quest
         var evaluationJson = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable);
         try
         {
-            var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson);
+            var result = JsonConvert.DeserializeObject<EvaluationResponse>(evaluationJson.ExtractJson());
             return result!;
         }
         catch (Exception ex)
@@ -110,7 +111,7 @@ Determine which one the sentence '{text}' corresponds to in the format JSON:
     }}
   ]
 }} , where percent can be from 0 to 1, where 0 is absolutely not matching, and 1 is a complete match.
-Give probabilities of all said styles. Your answer should only be the said json, no additional text.";
+Give probabilities of all said styles.";
 
         var messages = new List<ChatMessage>()
         {
@@ -120,7 +121,7 @@ Give probabilities of all said styles. Your answer should only be the said json,
         var evaluationJson = await _gptHttpClient.Send(messages, GptModel.Gpt4Stable);
         try
         {
-            var result = JsonConvert.DeserializeObject<StyleDefinitionResult>(evaluationJson);
+            var result = JsonConvert.DeserializeObject<StyleDefinitionResult>(evaluationJson.ExtractJson());
             return result!;
         }
         catch (Exception ex)

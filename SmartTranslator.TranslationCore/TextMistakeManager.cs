@@ -3,6 +3,7 @@ using OpenAI.ObjectModels.RequestModels;
 using SmartTranslator.TranslationCore.Abstractions;
 using SmartTranslator.TranslationCore.Abstractions.Exceptions;
 using SmartTranslator.TranslationCore.Enums;
+using SmartTranslator.Infrastructure.Extensions;
 
 namespace SmartTranslator.TranslationCore;
 
@@ -40,7 +41,7 @@ public class TextMistakeManager : ITextMistakeManager
 
         try
         {
-            var result = JsonConvert.DeserializeObject<SpellingCorrectorResponse>(correctSentence);
+            var result = JsonConvert.DeserializeObject<SpellingCorrectorResponse>(correctSentence.ExtractJson());
             return result!.Text;
         }
         catch (Exception ex)
