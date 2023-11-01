@@ -15,7 +15,18 @@
         </header>
 
         <main class="main">
-          <h1 class="title">Переводчик, который вас понимает</h1>
+          <div class="title-box">
+            <h1 class="title">Переводчик, который вас понимает</h1>
+            <button class="new-translate">
+              <p class="new-translate__text">Новый перевод</p>
+              <img
+                src="./images/refresh.svg"
+                alt=""
+                class="new-translate__img"
+              />
+            </button>
+          </div>
+          <p class="web-state state"></p>
           <!-- поле -->
           <section class="translator-box">
             <div class="source">
@@ -238,7 +249,11 @@
         </header>
 
         <main class="main_mobile">
+          <p class="state_mobile state"></p>
           <section class="translator-box_mobile">
+            <button class="translator-box__new-button_mobile">
+              <img src="./images/refresh.svg" alt="Новый перевод" />
+            </button>
             <div class="source_mobile">
               <textarea
                 maxlength="3000"

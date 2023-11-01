@@ -6,7 +6,6 @@ let baseTextGlobal;
 let translationGlobal;
 let contextField;
 
-
 const translationState = Object.freeze({
   unknown: 0,
   created: 1,
@@ -14,7 +13,7 @@ const translationState = Object.freeze({
   waitingForContext: 3,
   waitingForStyle: 4,
   waitingForTranslation: 5,
-  finished: 6
+  finished: 6,
 });
 
 const styleMapping = {
@@ -43,7 +42,6 @@ window.onload = function () {
       languageTo = data.LanguageTo;
       translationStyle = data.TranslationStyle;
       contextField = data.Context;
-
 
       const sourceTextFields = document.querySelectorAll(".source_text");
 
@@ -115,13 +113,12 @@ document.addEventListener("DOMContentLoaded", function () {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(textData),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Ошибка запроса: " + response.statusText);
-        }
-        return response.json();
-      })
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Ошибка запроса: " + response.statusText);
+      }
+      return response.json();
+    });
   };
 });
 
@@ -165,6 +162,39 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
+// скрытие и показ кнопки newtranslate
+function updateClassBasedOnTextContent() {
+  const sourceElement = document.querySelector(".translator-box .source_text");
+  const sourceMobileElement = document.querySelector(
+    ".translator-box_mobile .source_text"
+  );
+  const newTranslateButton = document.querySelector(".new-translate");
+  const newButtonMobile = document.querySelector(
+    ".translator-box__new-button_mobile"
+  );
+
+  if (sourceElement && sourceElement.value.trim() !== "") {
+    newTranslateButton.classList.add("new-translate_active");
+  } else {
+    newTranslateButton.classList.remove("new-translate_active");
+  }
+
+  if (sourceMobileElement && sourceMobileElement.value.trim() !== "") {
+    newButtonMobile.classList.add("translator-box__new-button_mobile_active");
+  } else {
+    newButtonMobile.classList.remove(
+      "translator-box__new-button_mobile_active"
+    );
+  }
+}
+
+document
+  .querySelector(".translator-box .source_text")
+  .addEventListener("input", updateClassBasedOnTextContent);
+document
+  .querySelector(".translator-box_mobile .source_text")
+  .addEventListener("input", updateClassBasedOnTextContent);
 
 /* 
 2. Регулировка размера шрифта для textarea.
@@ -232,8 +262,6 @@ document.addEventListener("DOMContentLoaded", function () {
 */
 
 document.addEventListener("DOMContentLoaded", function () {
-  let languageFrom, languageTo;
-
   // 1. Инициализация languageFrom и languageTo на основе текущих значений заголовков
   const fromTitleElement = document.querySelector(
     ".language_from .lang-box__title"
@@ -461,13 +489,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
-function openPopup(data) {
-  // Заполнение текстовой области данными, если это необходимо
-  const question = data.Contexts[0].Question;
-
-  // Заполнение текстовой области данными
-  document.querySelector(".popup__correction").value = question;
-  document.querySelector(".context__correction_mobile").value = question;
+function openPopup(data = null) {
+  if (data) {
+    if (data.Contexts && data.Contexts.length > 0) {
+      const question = data.Contexts[0].Question;
+      if (question) {
+        document.querySelector(".popup__correction").value = question;
+        document.querySelector(".context__correction_mobile").value = question;
+      }
+    }
+  }
 
   document.querySelector(".popup").classList.add("popup_active");
   document
@@ -538,26 +569,158 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function fetchData() {
+  const targetTextElement = document.querySelector(".target_text");
+  if (targetTextElement.value !== "") {
+    targetTextElement.value = "";
+  }
+
+  startAnimation();
+
   fetch("http://localhost:3000/api/translation", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      // ваш запрос
-    }),
+    body: JSON.stringify({}),
   })
     .then((response) => response.json())
     .then((data) => {
+      stopAnimation();
+
       if (
         data.State === "WaitingForContext" &&
         data.Contexts[0].Response === null
       ) {
-        openPopup(data); 
-        
+        openPopup(data);
       }
     })
     .catch((error) => {
+      stopAnimation();
       console.error("Error:", error);
     });
+}
+
+let animationFrameId; // идентификатор кадра анимации
+let showElement = (elemName) =>
+  document
+    .querySelectorAll(elemName)
+    .forEach((elem) => (elem.style.opacity = "1"));
+
+let hideElement = (elemName) =>
+  document
+    .querySelectorAll(elemName)
+    .forEach((elem) => (elem.style.opacity = "0"));
+
+let disableButton = (elemName) =>
+  document.querySelectorAll(elemName).forEach((elem) => (elem.disabled = true));
+
+let enableButton = (elemName) =>
+  document
+    .querySelectorAll(elemName)
+    .forEach((elem) => (elem.disabled = false));
+
+let showDots = (elemName) =>
+  document
+    .querySelectorAll(elemName)
+    .forEach((elem) => elem.classList.add("loading-dots"));
+
+let hideDots = (elemName) =>
+  document
+    .querySelectorAll(elemName)
+    .forEach((elem) => elem.classList.remove("loading-dots"));
+
+function startAnimation() {
+  const textElements = document.querySelectorAll(".source_text");
+
+  textElements.forEach((element) => {
+    const textLength = element.value.length;
+    const translationSpeed = 13; 
+
+    showElement(".state");
+    disableButton(".translator-box__button");
+    showDots(".state");
+
+    let startTime;
+    function animate(time) {
+      if (!startTime) startTime = time;
+      const currentTime = (time - startTime) / 1000;
+
+      let currentAnimationFrame = getCurrentAnimationFrame(
+        currentTime,
+        textLength,
+        translationSpeed
+      );
+      let statusText = getStatusText(currentAnimationFrame);
+
+      insertTextIntoStateSelector(statusText);
+
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    animationFrameId = requestAnimationFrame(animate);
+  });
+}
+function stopAnimation() {
+  hideElement(".state");
+  enableButton(".translator-box__button");
+  hideDots(".state");
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  // Находим кнопку с классом 'new-translate' и добавляем обработчик события 'click'
+  let newTranslateButton = document.querySelector(".new-translate");
+  newTranslateButton.addEventListener("click", function () {
+    window.onload();
+  });
+
+
+  let newButtonMobile = document.querySelector(
+    ".translator-box__new-button_mobile"
+  );
+  newButtonMobile.addEventListener("click", function () {
+    document
+      .querySelector(".popup_mobile")
+      .classList.add("popup_mobile_active");
+  });
+});
+
+function insertTextIntoStateSelector(text) {
+  let stateElements = document.querySelectorAll(".state");
+
+  stateElements.forEach((element) => {
+    element.innerHTML = text;
+  });
+}
+const LoadingStatuses = {
+  DETERMINING_STYLE: "Определяем стиль",
+  DETERMINING_LANGUAGE: "Определяем язык",
+  TRANSLATING_TEXT: "Переводим текст",
+  CORRECTING_SPELLING: "Поправляем орфографию",
+};
+
+function getStatusText(key) {
+  return LoadingStatuses[key];
+}
+
+function getCurrentAnimationFrame(currentTime, textLength, translationSpeed) {
+  const totalDuration = textLength / translationSpeed;
+  const frameDurations = [
+    totalDuration * 0.23,
+    totalDuration * 0.23,
+    totalDuration * 0.31,
+    totalDuration * 0.23,
+  ];
+
+  let elapsedTime = 0;
+  const statusKeys = Object.keys(LoadingStatuses);
+
+  for (let i = 0; i < frameDurations.length; i++) {
+    elapsedTime += frameDurations[i];
+
+    if (currentTime < elapsedTime) {
+      return statusKeys[i];
+    }
+  }
+
+  return statusKeys[3];
 }
